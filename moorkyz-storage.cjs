@@ -5,7 +5,7 @@ const fs = require("node:fs");
 const path = require("node:path");
 const crypto = require("node:crypto");
 const zlib = require("node:zlib");
-const { Transform, Readable } = require("node:stream");
+const { Transform } = require("node:stream");
 const { pipeline } = require("node:stream/promises");
 
 const LOG_RE = /^log_\d{4}-\d{2}-\d{2}-\d{2}-\d{2}-\d{2}-\d{3}\.log$/;
@@ -134,7 +134,17 @@ function registerLog(root, filename, pid = process.pid) {
       JSON.stringify({ pid, token, log: path.basename(file) }),
       { flag: "wx", mode: 0o600 },
     );
-    fs.renameSync(temporary, lease);
+    // Publish without replacing an existing writer's protection. A second
+    // registrant must not release the first writer's lease when it closes.
+    try {
+      fs.linkSync(temporary, lease);
+    } catch (error) {
+      if (error.code === "EEXIST")
+        throw new Error(
+          `Log already registered: ${path.relative(root, file)}. Close its writer or run maintenance to clear a dead lease.`,
+        );
+      throw error;
+    }
   } finally {
     if (fs.existsSync(temporary)) fs.unlinkSync(temporary);
   }
@@ -378,7 +388,7 @@ function dosTime(date) {
   };
 }
 
-/** ZIP entries use DEFLATE and UTF-8; classic ZIP limits are enforced before deletion. */
+/** Nonempty ZIP entries use DEFLATE; UTF-8 paths and classic ZIP limits are enforced. */
 async function writeZip(fd, entries) {
   let offset = 0;
   const append = (bytes) => {
@@ -397,11 +407,15 @@ async function writeZip(fd, entries) {
     entry.dos = dosTime(entry.stat.mtime);
     entry.crc = 0;
     entry.size = 0;
+    // Empty files and directories have no file data in the ZIP format.
+    entry.empty = entry.directory || entry.stat.size === 0;
+    entry.method = entry.empty ? 0 : 8;
+    entry.flags = entry.empty ? 0x800 : 0x808;
     const local = Buffer.alloc(30);
     local.writeUInt32LE(0x04034b50, 0);
     local.writeUInt16LE(20, 4);
-    local.writeUInt16LE(0x808, 6);
-    local.writeUInt16LE(8, 8);
+    local.writeUInt16LE(entry.flags, 6);
+    local.writeUInt16LE(entry.method, 8);
     local.writeUInt16LE(entry.dos.time, 10);
     local.writeUInt16LE(entry.dos.date, 12);
     local.writeUInt16LE(name.length, 26);
@@ -419,25 +433,25 @@ async function writeZip(fd, entries) {
         callback(null, chunk);
       },
     });
-    const source = entry.directory
-      ? Readable.from([])
-      : fs.createReadStream(entry.file);
-    await pipeline(
-      source,
-      measure,
-      zlib.createDeflateRaw({ level: 6 }),
-      async (chunks) => {
-        for await (const chunk of chunks) append(chunk);
-      },
-    );
+    if (!entry.empty)
+      await pipeline(
+        fs.createReadStream(entry.file),
+        measure,
+        zlib.createDeflateRaw({ level: 6 }),
+        async (chunks) => {
+          for await (const chunk of chunks) append(chunk);
+        },
+      );
     entry.hash = hash.digest("hex");
     entry.compressedSize = offset - entry.dataOffset;
-    const descriptor = Buffer.alloc(16);
-    descriptor.writeUInt32LE(0x08074b50, 0);
-    descriptor.writeUInt32LE(entry.crc, 4);
-    descriptor.writeUInt32LE(entry.compressedSize, 8);
-    descriptor.writeUInt32LE(entry.size, 12);
-    append(descriptor);
+    if (!entry.empty) {
+      const descriptor = Buffer.alloc(16);
+      descriptor.writeUInt32LE(0x08074b50, 0);
+      descriptor.writeUInt32LE(entry.crc, 4);
+      descriptor.writeUInt32LE(entry.compressedSize, 8);
+      descriptor.writeUInt32LE(entry.size, 12);
+      append(descriptor);
+    }
   }
   const centralOffset = offset;
   for (const entry of entries) {
@@ -446,8 +460,8 @@ async function writeZip(fd, entries) {
     central.writeUInt32LE(0x02014b50, 0);
     central.writeUInt16LE((3 << 8) | 20, 4);
     central.writeUInt16LE(20, 6);
-    central.writeUInt16LE(0x808, 8);
-    central.writeUInt16LE(8, 10);
+    central.writeUInt16LE(entry.flags, 8);
+    central.writeUInt16LE(entry.method, 10);
     central.writeUInt16LE(entry.dos.time, 12);
     central.writeUInt16LE(entry.dos.date, 14);
     central.writeUInt32LE(entry.crc, 16);
@@ -470,10 +484,93 @@ async function writeZip(fd, entries) {
   end.writeUInt32LE(centralOffset, 16);
   append(end);
   fs.fsyncSync(fd);
+  return {
+    centralOffset,
+    centralSize: offset - centralOffset - end.length,
+    size: offset,
+  };
 }
 
-async function verifyZip(filename, entries) {
+function verifyZipRecords(filename, entries, layout) {
+  const fd = fs.openSync(filename, "r");
+  const invalid = () => {
+    throw new Error(
+      "Archive record verification failed; source files were preserved.",
+    );
+  };
+  const read = (offset, length) => {
+    const bytes = Buffer.alloc(length);
+    if (fs.readSync(fd, bytes, 0, length, offset) !== length) invalid();
+    return bytes;
+  };
+  try {
+    if (fs.fstatSync(fd).size !== layout.size) invalid();
+    let centralOffset = layout.centralOffset;
+    for (const entry of entries) {
+      const expectedName = Buffer.from(entry.name, "utf8");
+      const local = read(entry.offset, 30);
+      if (
+        local.readUInt32LE(0) !== 0x04034b50 ||
+        local.readUInt16LE(4) !== 20 ||
+        local.readUInt16LE(6) !== entry.flags ||
+        local.readUInt16LE(8) !== entry.method ||
+        local.readUInt16LE(26) !== expectedName.length ||
+        local.readUInt16LE(28) !== 0 ||
+        !read(entry.offset + 30, expectedName.length).equals(expectedName)
+      )
+        invalid();
+      if (!entry.empty) {
+        const descriptor = read(entry.dataOffset + entry.compressedSize, 16);
+        if (
+          descriptor.readUInt32LE(0) !== 0x08074b50 ||
+          descriptor.readUInt32LE(4) !== entry.crc ||
+          descriptor.readUInt32LE(8) !== entry.compressedSize ||
+          descriptor.readUInt32LE(12) !== entry.size
+        )
+          invalid();
+      }
+      const central = read(centralOffset, 46);
+      if (
+        central.readUInt32LE(0) !== 0x02014b50 ||
+        central.readUInt16LE(6) !== 20 ||
+        central.readUInt16LE(8) !== entry.flags ||
+        central.readUInt16LE(10) !== entry.method ||
+        central.readUInt32LE(16) !== entry.crc ||
+        central.readUInt32LE(20) !== entry.compressedSize ||
+        central.readUInt32LE(24) !== entry.size ||
+        central.readUInt16LE(28) !== expectedName.length ||
+        central.readUInt16LE(30) !== 0 ||
+        central.readUInt16LE(32) !== 0 ||
+        central.readUInt16LE(34) !== 0 ||
+        central.readUInt32LE(42) !== entry.offset ||
+        !read(centralOffset + 46, expectedName.length).equals(expectedName)
+      )
+        invalid();
+      centralOffset += 46 + expectedName.length;
+    }
+    const end = read(centralOffset, 22);
+    if (
+      centralOffset !== layout.centralOffset + layout.centralSize ||
+      end.readUInt32LE(0) !== 0x06054b50 ||
+      end.readUInt16LE(4) !== 0 ||
+      end.readUInt16LE(6) !== 0 ||
+      end.readUInt16LE(8) !== entries.length ||
+      end.readUInt16LE(10) !== entries.length ||
+      end.readUInt32LE(12) !== layout.centralSize ||
+      end.readUInt32LE(16) !== layout.centralOffset ||
+      end.readUInt16LE(20) !== 0
+    )
+      invalid();
+  } finally {
+    fs.closeSync(fd);
+  }
+}
+
+async function verifyZip(filename, entries, layout) {
+  // Payload integrity alone does not prove that ZIP readers can locate it.
+  verifyZipRecords(filename, entries, layout);
   for (const entry of entries) {
+    if (entry.empty) continue;
     let crc = 0;
     let size = 0;
     const hash = crypto.createHash("sha256");
@@ -598,10 +695,10 @@ async function archivePaths(root, inputs, options = {}) {
     // A concurrent maintainer must not prune this ZIP before source removal finishes.
     releaseLease = archiveLease(root, reserved.filename);
     fd = fs.openSync(temporary, "wx", 0o600);
-    await writeZip(fd, entries);
+    const layout = await writeZip(fd, entries);
     fs.closeSync(fd);
     fd = undefined;
-    await verifyZip(temporary, entries);
+    await verifyZip(temporary, entries, layout);
     for (const entry of entries) {
       scopedPath(root, entry.file);
       if (
@@ -689,31 +786,17 @@ async function maintainStorage(root, options = {}) {
     throw new Error(
       "All excess logs are active; stop a service before exceeding the log limit.",
     );
-  // Malformed logs and expired logs from the same maintenance run share one ZIP.
-  const archived = [];
-  if (discard.length)
-    archived.push(
-      await archivePaths(
-        root,
-        discard.map(({ file }) => file),
-        { ...options, policy },
-      ),
-    );
+  const selected = discard.map(({ file }) => file);
   if (options.includeTrash) {
     const trash = scopedPath(root, "trash");
-    const items = fs.readdirSync(trash).map((name) => path.join(trash, name));
-    if (items.length)
-      archived.push(
-        await archivePaths(root, items, {
-          ...options,
-          policy,
-          protectedPaths: [
-            ...(options.protectedPaths || []),
-            ...archived.map(({ filename }) => filename),
-          ],
-        }),
-      );
+    selected.push(
+      ...fs.readdirSync(trash).map((name) => path.join(trash, name)),
+    );
   }
+  // Everything selected by one maintenance operation shares one verified ZIP.
+  const archived = selected.length
+    ? [await archivePaths(root, selected, { ...options, policy })]
+    : [];
   const pruned = pruneArchives(
     root,
     policy,

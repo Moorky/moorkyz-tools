@@ -54,9 +54,18 @@ function unzip(filename) {
       30 +
       bytes.readUInt16LE(local + 26) +
       bytes.readUInt16LE(local + 28);
-    const contents = zlib.inflateRawSync(
-      bytes.subarray(start, start + compressed),
-    );
+    const method = bytes.readUInt16LE(offset + 10);
+    assert.ok(method === 0 || method === 8);
+    if (bytes.readUInt32LE(offset + 24) === 0) {
+      assert.equal(
+        method,
+        0,
+        "Empty entries use stored mode without file data",
+      );
+      assert.equal(compressed, 0);
+    }
+    const data = bytes.subarray(start, start + compressed);
+    const contents = method === 0 ? data : zlib.inflateRawSync(data);
     assert.equal(zlib.crc32(contents), bytes.readUInt32LE(offset + 16));
     assert.equal(contents.length, bytes.readUInt32LE(offset + 24));
     files.set(name, contents);
@@ -113,6 +122,7 @@ test("archives one batch including binary bytes, Unicode paths and empty directo
   fs.mkdirSync(path.join(root, "folder", "empty"), { recursive: true });
   const binary = Buffer.from(Array.from({ length: 256 }, (_, index) => index));
   fs.writeFileSync(path.join(root, "folder", "ä.bin"), binary);
+  fs.writeFileSync(path.join(root, "folder", "empty.txt"), "");
   fs.writeFileSync(path.join(root, "two.txt"), "second file");
   const result = await storage.archivePaths(
     root,
@@ -123,6 +133,7 @@ test("archives one batch including binary bytes, Unicode paths and empty directo
   assert.deepEqual(files.get("folder/ä.bin"), binary);
   assert.equal(files.get("two.txt").toString(), "second file");
   assert.ok(files.has("folder/empty/"));
+  assert.equal(files.get("folder/empty.txt").length, 0);
   assert.equal(fs.readdirSync(path.join(root, "archive")).length, 1);
   assert.equal(fs.existsSync(path.join(root, "folder")), false);
   assert.equal(fs.existsSync(path.join(root, "two.txt")), false);
@@ -184,6 +195,49 @@ test("preserves all original bytes when archive writing runs out of space", asyn
   assert.equal(fs.readFileSync(source, "utf8"), "keep all original bytes");
   assert.deepEqual(fs.readdirSync(path.join(root, "archive")), []);
 });
+
+for (const record of [
+  "local header",
+  "descriptor",
+  "central directory",
+  "end record",
+]) {
+  test(`preserves sources when the ZIP ${record} is corrupted before verification`, async () => {
+    const root = fixture();
+    const source = path.join(root, "keep.txt");
+    fs.writeFileSync(source, "recovery bytes must remain readable");
+    const original = fs.fsyncSync;
+    fs.fsyncSync = (fd) => {
+      original(fd);
+      const temporary = fs
+        .readdirSync(path.join(root, "archive"))
+        .find((name) => name.endsWith(".tmp"));
+      const bytes = fs.readFileSync(path.join(root, "archive", temporary));
+      const signatures = {
+        "local header": Buffer.from([0x50, 0x4b, 0x03, 0x04]),
+        descriptor: Buffer.from([0x50, 0x4b, 0x07, 0x08]),
+        "central directory": Buffer.from([0x50, 0x4b, 0x01, 0x02]),
+        "end record": Buffer.from([0x50, 0x4b, 0x05, 0x06]),
+      };
+      const offset = bytes.indexOf(signatures[record]);
+      assert.ok(offset >= 0);
+      fs.writeSync(fd, Buffer.from([0]), 0, 1, offset);
+    };
+    try {
+      await assert.rejects(
+        storage.archivePaths(root, [source], { policy }),
+        /record verification failed/,
+      );
+    } finally {
+      fs.fsyncSync = original;
+    }
+    assert.equal(
+      fs.readFileSync(source, "utf8"),
+      "recovery bytes must remain readable",
+    );
+    assert.deepEqual(fs.readdirSync(path.join(root, "archive")), []);
+  });
+}
 
 test("refuses internal and external junctions before removing any batch member", async () => {
   const root = fixture();
@@ -306,6 +360,41 @@ test("archives all staged trash as one batch", async () => {
   assert.equal(result.archived.length, 1);
   assert.equal(unzip(result.archived[0].filename).size, 2);
   assert.deepEqual(fs.readdirSync(path.join(root, "trash")), []);
+});
+
+test("archives malformed logs and staged trash from one maintenance call in one ZIP", async () => {
+  const root = fixture();
+  fs.writeFileSync(path.join(root, "logs", "wrong.log"), "log");
+  fs.writeFileSync(path.join(root, "trash", "retired.txt"), "retired");
+  const result = await storage.maintainStorage(root, {
+    policy,
+    includeTrash: true,
+  });
+  assert.equal(result.archived.length, 1);
+  const files = unzip(result.archived[0].filename);
+  assert.equal(files.get("logs/wrong.log").toString(), "log");
+  assert.equal(files.get("trash/retired.txt").toString(), "retired");
+  assert.deepEqual(fs.readdirSync(path.join(root, "logs")), []);
+  assert.deepEqual(fs.readdirSync(path.join(root, "trash")), []);
+});
+
+test("a duplicate log registration cannot replace a live writer's protection", async () => {
+  const root = fixture();
+  const active = storage.createLog(root);
+  const release = storage.registerLog(root, active);
+  assert.throws(
+    () => storage.registerLog(root, active),
+    /Log already registered/,
+  );
+  assert.deepEqual(storage.registeredLogPaths(root), [active]);
+  await assert.rejects(
+    storage.archivePaths(root, [active], { policy }),
+    /active service log/,
+  );
+  release();
+  assert.deepEqual(storage.registeredLogPaths(root), []);
+  const releaseAgain = storage.registerLog(root, active);
+  releaseAgain();
 });
 
 test("all storage callers protect registered live logs and release dead leases", async () => {

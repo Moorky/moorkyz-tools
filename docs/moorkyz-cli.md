@@ -173,12 +173,13 @@ canonical file with `createLog(projectRoot)` and retain the returned release cal
 maintenance automatically protects live PID leases in `.moorkyz/log-leases/`, even when a different
 CLI or application runs it. Call the callback after closing the log stream; dead process leases are
 cleaned automatically. A reused PID conservatively keeps its old log protected until inspection.
+Registering the same log twice is refused without replacing the first writer's lease.
 Callers should run maintenance before opening a new log and periodically while running.
 Use `maintainStorage(root, { reserveLogs: 1 })` before creating the next managed log to make room
 without temporarily exceeding the cap.
 
 Place disposable project files in `trash/`, then run `moorkyz maintain` to compress all staged
-items as a batch. Routine background maintenance rotates logs; explicit maintenance also empties
+items and selected logs together in one verified ZIP. Routine background maintenance rotates logs; explicit maintenance also empties
 staged trash. Files deleted by an editor, OS command or unrelated tool cannot be intercepted by this
 CLI. Route deletions that need recovery through `moorkyz archive` or its code API:
 
@@ -193,7 +194,9 @@ operations, or serialize library calls in your application. Archive names are
 `archive/log_yyyy-mm-dd-hh-mm-ss-mmm.zip`, even for one file. Entries preserve relative paths, UTF-8
 names, file permissions and empty directories. Compression streams with bounded buffers; classic
 ZIP limits (less than 4 GiB per file/archive and at most 65534 entries) fail safely before removal.
-Every ZIP is flushed and decompressed to verify CRC32 and SHA-256 before source removal. Source
+Every ZIP is flushed and its local headers, descriptors, central directory and end record are
+verified before source removal. Nonempty entries are decompressed to verify CRC32 and SHA-256;
+empty files and directories use stored entries with no file data. Source
 identity and content are checked again before unlinking; directories are removed only when empty.
 The project root, Git metadata, runtime state, archive directory, symlinks/junctions and special files
 cannot be selected. Stop writers before archiving mutable data: simultaneous changes can leave
