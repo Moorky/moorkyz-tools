@@ -49,9 +49,10 @@ On narrow screens the credit sits above the links.
 The lower-left `Stay in Touch?` link navigates to `https://moorkyz.com/contact`;
 the lower-right `More projects?` link navigates to `https://moorkyz.com/projects`.
 Both are un-underlined white text with no icons; only the center credit keeps
-its Moorkyz mark. Hover and keyboard focus brighten either link with the same
-glow; keyboard focus
-also retains a visible outline. All artwork and animation are local, with no new
+its Moorkyz mark. Hover and keyboard focus use the same restrained, single
+8 px blue-white glow at 40% opacity, without stacked shadows or a drop-shadow
+filter. Keyboard focus also retains a visible outline.
+All artwork and animation are local, with no new
 dependencies or automatic external requests.
 
 ## Moorkyz Toolbar Builder

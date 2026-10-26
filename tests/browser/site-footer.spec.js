@@ -188,10 +188,10 @@ test("footer matches the live fade and glint and disables motion when requested"
   await expect(page.getByRole("contentinfo")).toHaveCSS("opacity", "1");
 });
 
-test("both side links have matching hover and keyboard glow and navigate by text or Enter", async ({
+test("both side links have matching subtle hover and keyboard glow and navigate by text or Enter", async ({
   page,
   browserName,
-}) => {
+}, testInfo) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
   const footer = page.getByRole("contentinfo");
@@ -204,8 +204,16 @@ test("both side links have matching hover and keyboard glow and navigate by text
     await expect(link).toHaveCSS("text-shadow", "none");
     await expect(link).toHaveCSS("filter", "none");
     await link.hover();
-    await expect(link).not.toHaveCSS("text-shadow", "none");
-    await expect(link).not.toHaveCSS("filter", "none");
+    await expect(link).toHaveCSS(
+      "text-shadow",
+      "rgba(150, 190, 255, 0.4) 0px 0px 8px",
+    );
+    await expect(link).toHaveCSS("filter", "none");
+    if (link === contact) {
+      await footer.screenshot({
+        path: testInfo.outputPath("footer-subtle-contact-hover.png"),
+      });
+    }
     glows.push(
       await link.evaluate((element) => [
         getComputedStyle(element).textShadow,
@@ -216,7 +224,11 @@ test("both side links have matching hover and keyboard glow and navigate by text
     await expect(link).toHaveCSS("text-shadow", "none");
     await page.keyboard.press("Tab");
     await link.focus();
-    await expect(link).not.toHaveCSS("text-shadow", "none");
+    await expect(link).toHaveCSS(
+      "text-shadow",
+      "rgba(150, 190, 255, 0.4) 0px 0px 8px",
+    );
+    await expect(link).toHaveCSS("filter", "none");
     await expect(link).toHaveCSS("outline-style", "solid");
     await expect(link).toHaveCSS("outline-color", "rgb(255, 255, 255)");
     await link.blur();

@@ -373,17 +373,11 @@ html[data-theme="dark"] .tool-id {
 .footer-link {
   white-space: nowrap;
   color: #fff;
-  transition:
-    text-shadow 180ms ease,
-    filter 180ms ease;
+  transition: text-shadow 180ms ease;
 }
 .footer-link:hover,
 .footer-link:focus-visible {
-  text-shadow:
-    0 0 6px #fff,
-    0 0 16px #dcebff,
-    0 0 28px #96beff;
-  filter: drop-shadow(0 0 6px #dcebff);
+  text-shadow: 0 0 8px rgb(150 190 255 / 40%);
 }
 .footer-projects {
   justify-self: end;
