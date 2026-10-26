@@ -2,7 +2,7 @@
 
 ## Intended deployment
 
-VideoCrunch is a single-user Windows application bound to `127.0.0.1`, not a remotely exposed download service. Local users and other software running as the same Windows account are inside its trust boundary. Do not forward its port, bind to all interfaces, or reverse-proxy it onto the internet.
+Moorky Video Crunch is a single-user Windows application bound to `127.0.0.1`, not a remotely exposed download service. Local users and other software running as the same Windows account are inside its trust boundary. Do not forward its port, bind to all interfaces, or reverse-proxy it onto the internet.
 
 The server validates Host/Origin and cross-site fetch metadata, requires a per-process request token for new jobs, validates input, passes arguments without shell interpolation, and serves only allowlisted export files with realpath containment. Generated page HTML is preserved as data but is never served by the web app. Browser content restrictions prevent external script loading.
 

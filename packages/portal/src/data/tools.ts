@@ -27,7 +27,7 @@ export interface ToolDefinition {
 export const TOOLS: readonly ToolDefinition[] = [
   {
     slug: "toolbar",
-    title: "Toolbar Builder",
+    title: "Moorky Toolbar Builder",
     category: "SMALL WEB TOOL",
     monogram: "tb",
     version: "1.0.0 local preview",
@@ -56,7 +56,7 @@ export const TOOLS: readonly ToolDefinition[] = [
   },
   {
     slug: "videocrunch",
-    title: "VideoCrunch",
+    title: "Moorky Video Crunch",
     category: "VIDEO WORKSPACE",
     monogram: "vc",
     version: "1.0.0 local preview",
@@ -98,7 +98,7 @@ export const TOOLS: readonly ToolDefinition[] = [
   },
   {
     slug: "directory-cleaner",
-    title: "Directory Cleaner",
+    title: "Moorky Directory Cleaner",
     category: "LOCAL FILE UTILITY",
     monogram: "dc",
     version: "1.0.0 local preview",

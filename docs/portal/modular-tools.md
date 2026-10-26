@@ -2,8 +2,8 @@
 
 ## Approved scope
 
-On 2026-10-23 the user requested a growing tool catalog, complete VideoCrunch
-integration, common detail pages, and the live moorkyz.com footer. Follow-up
+On 2026-10-23 the user requested a growing tool catalog, complete Moorky Video
+Crunch integration, common detail pages, and the live moorkyz.com footer. Follow-up
 approval selected a **local web service**, with public hosting, authentication,
 multi-user workers and infrastructure off. The live site had no discoverable
 footer game; the user explicitly selected its current footer without a game
@@ -20,7 +20,7 @@ SDK-specific tests and active specifications. Their history and audits are
 preserved. `/tools/toolbar` now contains only a compact, independent builder.
 The old large Playground and Studio routes intentionally return 404.
 
-## Compact Toolbar Builder
+## Moorky Toolbar Builder
 
 The browser-only builder edits at most eight labels/URLs, light/dark appearance,
 top/bottom position and accent border. Native links provide keyboard navigation;
@@ -51,10 +51,10 @@ and copied into the standalone portal's public assets. Selecting a file fetches
 only the first-party source bundle; the viewer renders source as text and never
 executes it. Clipboard/download failures remain visible and source stays
 selectable. A future distribution license must be settled before distributing
-VideoCrunch: its original no-selected-license notice is retained and the
+Moorky Video Crunch: its original no-selected-license notice is retained and the
 parent project's Apache-2.0 license must not be assumed to relicense it.
 
-## Directory Cleaner
+## Moorky Directory Cleaner
 
 The [standalone guide](../../tools/directory-cleaner/README.md) describes its
 shared engine, CLI, service, receipts and supported bounds. The portal's rule
@@ -86,7 +86,7 @@ an HTTP timeout; polling starts only for an explicitly accepted/resumed run and
 is released on disconnect/unmount. Closing the view does not cancel confirmed
 work. Failures are explicit, processing stops and synced recovery receipts remain.
 
-## VideoCrunch localhost service
+## Moorky Video Crunch localhost service
 
 The complete tracked source from the provided VideoExports project is imported
 under [`tools/videocrunch`](../../tools/videocrunch/), without modifying that
@@ -145,6 +145,5 @@ pnpm test:videocrunch:browser
 The separate real-service browser configuration uses isolated synthetic media,
 temporary exports/history and loopback fixture ports 8876/8877, with explicit
 teardown. It requires the Windows/native prerequisites and runs serially; it is
-not a mandatory dependency of the standard browser suite. Directory Cleaner has
-a separate real-service browser configuration using disposable files and port
-8878. No personal files or third-party videos are used for verification.
+not a mandatory dependency of the standard browser suite. Moorky Directory Cleaner has
+a separate real-service browser configuration using disposable files and port 8878. No personal files or third-party videos are used for verification.

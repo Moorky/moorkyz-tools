@@ -5,14 +5,17 @@ import path from "node:path";
 import { pathToFileURL } from "node:url";
 import AxeBuilder from "@axe-core/playwright";
 
-test("compact Toolbar Builder previews, copies and downloads independent small HTML", async ({
+test("Moorky Toolbar Builder previews, copies and downloads independent small HTML", async ({
   page,
 }) => {
   const errors = [];
   page.on("pageerror", (error) => errors.push(error.message));
   await page.goto("/tools/toolbar");
   await expect(
-    page.getByRole("heading", { name: "Toolbar Builder", exact: true }),
+    page.getByRole("heading", {
+      name: "Moorky Toolbar Builder",
+      exact: true,
+    }),
   ).toBeVisible();
   await expect(page.locator(".compact-builder")).toBeVisible();
   const bounds = await page.locator(".compact-builder").boundingBox();
@@ -90,7 +93,7 @@ test("compact Toolbar Builder previews, copies and downloads independent small H
   expect(errors).toEqual([]);
 });
 
-test("Directory Cleaner settings and script downloads work with service off and zero native requests", async ({
+test("Moorky Directory Cleaner settings and script downloads work with service off and zero native requests", async ({
   page,
 }) => {
   const calls = [];
@@ -144,7 +147,7 @@ test("native header/search navigation remains independent and old SDK routes are
     .click();
   const dialog = page.getByRole("dialog", { name: "Find your next step." });
   await dialog.getByRole("searchbox").fill("directory");
-  await dialog.getByRole("link", { name: /Directory Cleaner/ }).click();
+  await dialog.getByRole("link", { name: /Moorky Directory Cleaner/ }).click();
   await expect(page).toHaveURL(/\/tools\/directory-cleaner$/);
   await expect(page.locator(".mzk-toolbar-host")).toHaveCount(0);
   for (const route of ["/studio", "/tools/toolbar/playground"]) {

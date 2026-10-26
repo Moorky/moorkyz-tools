@@ -9,7 +9,10 @@ test("project identity is consistent across branding, metadata, assets and prefe
   request,
 }) => {
   await page.goto(origin);
-  await expect(page.locator(".brand")).toHaveText("tools.moorkyz.com");
+  await expect(page.locator(".brand strong")).toHaveText("tools.moorkyz.com");
+  const brandId = page.locator("#moorkyz-tools-name");
+  await expect(brandId).toHaveText("moorkyz-tools-name");
+  await expect(brandId).toHaveCSS("font-family", /DM Mono/);
   await expect(page).toHaveTitle(/tools\.moorkyz\.com/);
   await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
     "href",
@@ -59,7 +62,9 @@ test("project identity is consistent across branding, metadata, assets and prefe
   await page.reload();
   await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
   await page.goto(`${origin}/tools/directory-cleaner`);
-  await expect(page).toHaveTitle("Directory Cleaner — tools.moorkyz.com");
+  await expect(page).toHaveTitle(
+    "Moorky Directory Cleaner — tools.moorkyz.com",
+  );
 });
 
 test("catalog cards open complete tool pages, source tree and dormant local service", async ({
@@ -75,10 +80,12 @@ test("catalog cards open complete tool pages, source tree and dormant local serv
   await expect(page.locator(".tool-card").first()).toContainText(
     "Design, preview and export",
   );
-  await page.getByRole("link", { name: "VideoCrunch", exact: true }).click();
+  await page
+    .getByRole("link", { name: "Moorky Video Crunch", exact: true })
+    .click();
   await expect(page).toHaveURL(`${origin}/tools/videocrunch`);
   await expect(
-    page.getByRole("heading", { name: "VideoCrunch", exact: true }),
+    page.getByRole("heading", { name: "Moorky Video Crunch", exact: true }),
   ).toBeVisible();
   await expect(page.locator("dt", { hasText: "Release Date" })).toBeVisible();
   await expect(page.locator("dt", { hasText: "Updated On" })).toBeVisible();

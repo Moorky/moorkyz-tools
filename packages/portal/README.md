@@ -5,8 +5,8 @@ SDK dependency. Native header/navigation, theme and local search remain
 independent of the individual tools.
 
 - `/`: cards generated from `src/data/tools.ts`.
-- `/tools/toolbar`: small standalone Toolbar Builder with native preview and
-  single HTML Copy/Download; no Studio or package generation.
+- `/tools/toolbar`: small standalone Moorky Toolbar Builder with native preview
+  and single HTML Copy/Download; no Studio or package generation.
 - `/tools/videocrunch`: metadata, complete source and optional native workspace.
 - `/tools/directory-cleaner`: rules, downloadable settings/script, non-mutating
   preview and explicitly confirmed archive/move operations through an optional

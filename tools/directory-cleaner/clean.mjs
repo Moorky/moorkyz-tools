@@ -5,7 +5,7 @@ async function run() {
   const args = process.argv.slice(2);
   if (args.length === 0 || args[0] === "--help") {
     console.log(
-      'Directory Cleaner (Node.js 22+)\nPreview only: node clean.mjs --settings settings.json --plan preview.json\nApply preview: node clean.mjs --apply preview.json --confirm "APPLY <preview-id>"\nDelete always archives; originals are never overwritten. A plan file is created exclusively, not replaced.',
+      'Moorky Directory Cleaner (Node.js 22+)\nPreview only: node clean.mjs --settings settings.json --plan preview.json\nApply preview: node clean.mjs --apply preview.json --confirm "APPLY <preview-id>"\nDelete always archives; originals are never overwritten. A plan file is created exclusively, not replaced.',
     );
     return;
   }

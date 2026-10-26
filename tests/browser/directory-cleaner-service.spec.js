@@ -3,7 +3,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import os from "node:os";
 
-test("real Directory Cleaner preview, Keep priority, move and archive preserve fixture bytes", async ({
+test("real Moorky Directory Cleaner preview, Keep priority, move and archive preserve fixture bytes", async ({
   page,
 }) => {
   const root = await fs.mkdtemp(

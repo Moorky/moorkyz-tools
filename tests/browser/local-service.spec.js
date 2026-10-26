@@ -15,10 +15,10 @@ test("integrated local service runs real exports, preserves downloads and stops 
     [],
   );
   await page
-    .getByRole("button", { name: "Open VideoCrunch workspace" })
+    .getByRole("button", { name: "Open Moorky Video Crunch workspace" })
     .click();
   const workspace = page.frameLocator(
-    'iframe[title="VideoCrunch local workspace"]',
+    'iframe[title="Moorky Video Crunch local workspace"]',
   );
   await expect(workspace.locator("#submit-button")).toBeEnabled();
   await workspace
@@ -50,14 +50,14 @@ test("integrated local service runs real exports, preserves downloads and stops 
     .toBeGreaterThanOrEqual(2);
   await player.close();
   await page
-    .getByRole("button", { name: "Close VideoCrunch workspace" })
+    .getByRole("button", { name: "Close Moorky Video Crunch workspace" })
     .click();
   await expect(page.locator("iframe")).toHaveCount(0);
   const afterClose = requests.length;
   await page.waitForTimeout(2500);
   expect(requests.length).toBe(afterClose);
   await page
-    .getByRole("button", { name: "Open VideoCrunch workspace" })
+    .getByRole("button", { name: "Open Moorky Video Crunch workspace" })
     .click();
   await expect(workspace.locator("#submit-button")).toBeEnabled();
   expect(
@@ -66,7 +66,7 @@ test("integrated local service runs real exports, preserves downloads and stops 
     ),
   ).toHaveLength(2);
   await page
-    .getByRole("button", { name: "Close VideoCrunch workspace" })
+    .getByRole("button", { name: "Close Moorky Video Crunch workspace" })
     .click();
   expect(errors).toEqual([]);
 });
@@ -79,25 +79,25 @@ test("unavailable service errors are visible and reconnectable", async ({
       status: 502,
       contentType: "application/json",
       body: JSON.stringify({
-        error: "Cannot reach VideoCrunch. Start the local service.",
+        error: "Cannot reach Moorky Video Crunch. Start the local service.",
       }),
     }),
   );
   await page.goto(`${origin}/tools/videocrunch`);
   await page
-    .getByRole("button", { name: "Open VideoCrunch workspace" })
+    .getByRole("button", { name: "Open Moorky Video Crunch workspace" })
     .click();
   await expect(
     page.locator(".local-tool-workspace").getByRole("alert"),
-  ).toContainText("Cannot reach VideoCrunch");
+  ).toContainText("Cannot reach Moorky Video Crunch");
   await page.unroute("**/api/local-tools/videocrunch/api/config");
   await page.getByRole("button", { name: "Retry connection" }).click();
   await expect(
     page
-      .frameLocator('iframe[title="VideoCrunch local workspace"]')
+      .frameLocator('iframe[title="Moorky Video Crunch local workspace"]')
       .locator("#submit-button"),
   ).toBeEnabled();
   await page
-    .getByRole("button", { name: "Close VideoCrunch workspace" })
+    .getByRole("button", { name: "Close Moorky Video Crunch workspace" })
     .click();
 });

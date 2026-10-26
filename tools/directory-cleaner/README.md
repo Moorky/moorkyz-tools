@@ -1,4 +1,4 @@
-# Directory Cleaner
+# Moorky Directory Cleaner
 
 An independent Node.js 22+ local tool. No runtime dependencies, automatic
 downloads, permanent deletion, scheduled cleanup or public service.

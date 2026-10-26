@@ -1,4 +1,4 @@
-# Toolbar Builder
+# Moorky Toolbar Builder
 
 A small independent HTML/CSS generator, not an SDK. `builder.mjs` validates up to
 eight labeled links, light/dark appearance, accent border and top/bottom position.

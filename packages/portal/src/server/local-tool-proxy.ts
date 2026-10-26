@@ -13,7 +13,7 @@ export async function proxyLocalTool(
   const settings =
     tool === "videocrunch"
       ? {
-          label: "VideoCrunch",
+          label: "Moorky Video Crunch",
           flag: "TOOLS_MOORKYZ_COM_VIDEOCRUNCH_ENABLED",
           port: "TOOLS_MOORKYZ_COM_VIDEOCRUNCH_PORT",
           fallback: "8765",
@@ -21,7 +21,7 @@ export async function proxyLocalTool(
           limit: 16384,
         }
       : {
-          label: "Directory Cleaner",
+          label: "Moorky Directory Cleaner",
           flag: "TOOLS_MOORKYZ_COM_DIRECTORY_CLEANER_ENABLED",
           port: "TOOLS_MOORKYZ_COM_DIRECTORY_CLEANER_PORT",
           fallback: "8766",

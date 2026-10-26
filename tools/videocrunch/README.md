@@ -1,4 +1,4 @@
-# VideoCrunch
+# Moorky Video Crunch
 
 A private, Windows-first video workspace: paste an authorized video link, download the original, make a browser-friendly MP4, and watch it offline. Charcoal/violet UI, live PowerShell-blue terminal, no account, no hosted uploads.
 

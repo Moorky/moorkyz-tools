@@ -118,7 +118,9 @@ export function DirectoryCleaner({ enabled }: { readonly enabled: boolean }) {
         abort.current?.signal ?? null,
       );
       if (!isCleanerConnection(data))
-        throw new Error("Directory Cleaner returned an invalid configuration.");
+        throw new Error(
+          "Moorky Directory Cleaner returned an invalid configuration.",
+        );
       if (abort.current?.signal.aborted) return;
       setToken(data.token);
       if (data.activeRunId)

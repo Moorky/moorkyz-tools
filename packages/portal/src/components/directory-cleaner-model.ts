@@ -269,7 +269,7 @@ export async function cleanerRequest(
     throw new Error(
       record(data) && typeof data.error === "string"
         ? data.error
-        : `Directory Cleaner request failed (${response.status}).`,
+        : `Moorky Directory Cleaner request failed (${response.status}).`,
     );
   return data;
 }

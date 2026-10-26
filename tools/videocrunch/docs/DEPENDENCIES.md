@@ -17,4 +17,4 @@ Automatic setup requests packages from winget's community catalog and accepts th
 
 Before redistribution, review licenses from the actual upstream versions. Node.js, yt-dlp, FFmpeg, and FFmpeg's included codecs have their own notices/conditions; FFmpeg distribution obligations vary with build configuration. This repository does not relicense or bundle them.
 
-The repository owner has not yet selected a distribution license for VideoCrunch itself. Do not infer MIT or another open-source license from the presence of source code.
+The repository owner has not yet selected a distribution license for Moorky Video Crunch itself. Do not infer MIT or another open-source license from the presence of source code.

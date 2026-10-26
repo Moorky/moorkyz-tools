@@ -56,7 +56,7 @@ export function createApplication() {
       if (request.method === "GET" && url.pathname === "/api/config") {
         response.end(
           JSON.stringify({
-            name: "Directory Cleaner",
+            name: "Moorky Directory Cleaner",
             version: 1,
             token,
             deleteBehavior: "archive",
@@ -142,7 +142,7 @@ export function createApplication() {
               run.result = await applyPlan(saved.plan, body.confirmation);
               run.status = run.result.status;
             } catch (error) {
-              console.error("Directory Cleaner apply failed:", error);
+              console.error("Moorky Directory Cleaner apply failed:", error);
               run.status = "failed";
               run.error = error.message;
             } finally {
@@ -158,7 +158,7 @@ export function createApplication() {
       }
     } catch (error) {
       const status = error instanceof CleanerError ? error.status : 500;
-      if (status === 500) console.error("Directory Cleaner:", error);
+      if (status === 500) console.error("Moorky Directory Cleaner:", error);
       response.writeHead(status);
       response.end(
         JSON.stringify({
@@ -200,7 +200,7 @@ if (
   });
   application.server.listen(port, "127.0.0.1", () =>
     console.log(
-      `Directory Cleaner: http://127.0.0.1:${port}. Keep this terminal open. Delete always archives.`,
+      `Moorky Directory Cleaner: http://127.0.0.1:${port}. Keep this terminal open. Delete always archives.`,
     ),
   );
   for (const signal of ["SIGINT", "SIGTERM"])

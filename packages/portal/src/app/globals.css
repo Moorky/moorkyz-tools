@@ -198,6 +198,14 @@ pre {
   display: block;
   font-size: 0.9rem;
 }
+.brand-id {
+  display: block;
+  color: var(--muted);
+  font:
+    0.6rem/1.2 "DM Mono",
+    monospace;
+  letter-spacing: 0.04em;
+}
 .brand-product {
   font-size: 0.65rem;
   color: var(--muted);
