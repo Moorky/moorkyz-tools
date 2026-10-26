@@ -19,10 +19,6 @@ export default function HomePage() {
       <SiteHeader />
       <main id="main-content" tabIndex={-1} className="tools-home">
         <section id="home" className="section-shell catalog-hero" tabIndex={-1}>
-          <p className="eyebrow">
-            <span className="status-dot" aria-hidden="true" /> tools.moorkyz.com
-            WORKBENCH
-          </p>
           <h1>A little more useful.</h1>
           <p className="hero-lede">
             Thoughtful tools. Less friction.
