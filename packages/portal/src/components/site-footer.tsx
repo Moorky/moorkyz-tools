@@ -17,14 +17,9 @@ function FooterLogo() {
 export function SiteFooter() {
   return (
     <footer className="website-footer">
-      <nav aria-label="Related projects">
-        <a
-          className="footer-link"
-          href="https://evidence.moorkyz.com"
-          target="_blank"
-          rel="noreferrer"
-        >
-          Evidence workspace
+      <nav aria-label="Contact">
+        <a className="footer-link" href="https://moorkyz.com/contact">
+          Stay in Touch?
         </a>
       </nav>
       <p className="footer-note">
@@ -36,10 +31,8 @@ export function SiteFooter() {
       <a
         className="footer-link footer-projects"
         href="https://moorkyz.com/projects"
-        aria-label="More projects? Moorkyz"
       >
-        <span>More projects?</span>
-        <FooterLogo />
+        More projects?
       </a>
     </footer>
   );

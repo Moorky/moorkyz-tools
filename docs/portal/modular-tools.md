@@ -40,12 +40,15 @@ Its centered `made /w` mark and copyright credit use the live moorkyz.com stylin
 a 0.9-second fade-in after 0.4 seconds and a single 2.4-second separator glint
 after 1.5 seconds. Reduced-motion preferences disable both animations.
 The footer stays in document flow rather than covering tool workspaces.
-At the default font size it is approximately 70 px tall, about 35% shorter than
-the previous 107 px footer. On narrow screens the credit sits above the links.
-The existing Evidence workspace link remains available at the lower left.
-A single un-underlined white `More projects?` link and font-sized Moorkyz SVG
-sit at the lower right and navigate to `https://moorkyz.com/projects`.
-Hover and keyboard focus brighten the complete link with a glow; keyboard focus
+At the default font size it is approximately 56 px tall, a further 20% reduction
+from the previous 69.6 px footer. The centered credit sits lower, with both side
+links aligned even nearer the bottom at matching font sizes and heights.
+On narrow screens the credit sits above the links.
+The lower-left `Stay in Touch?` link navigates to `https://moorkyz.com/contact`;
+the lower-right `More projects?` link navigates to `https://moorkyz.com/projects`.
+Both are un-underlined white text with no icons; only the center credit keeps
+its Moorkyz mark. Hover and keyboard focus brighten either link with the same
+glow; keyboard focus
 also retains a visible outline. All artwork and animation are local, with no new
 dependencies or automatic external requests.
 

@@ -76,15 +76,10 @@ test("project identity is consistent across branding, metadata, assets and prefe
   await expect(
     page.getByRole("link", { name: "GitHub", exact: true }),
   ).toHaveAttribute("href", "https://github.com/Moorky/moorkyz-tools");
-  const evidence = page
+  const contact = page
     .locator(".website-footer")
-    .getByRole("link", { name: "Evidence workspace", exact: true });
-  await expect(evidence).toHaveAttribute(
-    "href",
-    "https://evidence.moorkyz.com",
-  );
-  await expect(evidence).toHaveAttribute("target", "_blank");
-  await expect(evidence).toHaveAttribute("rel", "noreferrer");
+    .getByRole("link", { name: "Stay in Touch?", exact: true });
+  await expect(contact).toHaveAttribute("href", "https://moorkyz.com/contact");
   const manifest = await request.get(`${origin}/site.webmanifest`);
   expect(manifest.ok()).toBe(true);
   expect(await manifest.json()).toMatchObject({

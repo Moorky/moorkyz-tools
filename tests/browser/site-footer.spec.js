@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 
-test("shared footer preserves credits and has one complete projects link on every route", async ({
+test("shared footer preserves credits and has text-only contact and projects links on every route", async ({
   page,
 }) => {
   for (const route of [
@@ -19,7 +19,7 @@ test("shared footer preserves credits and has one complete projects link on ever
       `made /w© ${new Date().getUTCFullYear()}Moorkyz`,
     );
     const projects = footer.getByRole("link", {
-      name: "More projects? Moorkyz",
+      name: "More projects?",
       exact: true,
     });
     await expect(projects).toHaveAttribute(
@@ -27,21 +27,22 @@ test("shared footer preserves credits and has one complete projects link on ever
       "https://moorkyz.com/projects",
     );
     await expect(projects).toHaveText("More projects?");
-    await expect(projects.locator("svg")).toHaveAttribute(
-      "aria-hidden",
-      "true",
-    );
-    await expect(projects.locator("svg")).toHaveAttribute("focusable", "false");
+    await expect(projects.locator("svg, img")).toHaveCount(0);
+    await expect(footer.locator("nav svg, nav img")).toHaveCount(0);
+    await expect(footer.locator(".footer-note svg")).toHaveCount(1);
+    await expect(
+      footer.getByRole("link", { name: "Stay in Touch?", exact: true }),
+    ).toHaveAttribute("href", "https://moorkyz.com/contact");
     await expect(
       footer.getByRole("link", { name: "Evidence workspace", exact: true }),
-    ).toHaveAttribute("href", "https://evidence.moorkyz.com");
+    ).toHaveCount(0);
     await expect(
       footer.getByRole("link", { name: "Moorkyz", exact: true }),
     ).toHaveAttribute("href", "https://moorkyz.com");
   }
 });
 
-test("footer is 35 percent shorter, centered and bottom-right aligned in both themes", async ({
+test("footer is another 20 percent shorter with lower credit and matching bottom-aligned links", async ({
   page,
 }, testInfo) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
@@ -59,22 +60,21 @@ test("footer is 35 percent shorter, centered and bottom-right aligned in both th
       const metrics = await footer.evaluate((element) => {
         const projects = element.querySelector(".footer-projects");
         const credit = element.querySelector(".footer-note");
-        const evidence = element.querySelector("nav");
-        const logo = projects.querySelector("svg");
+        const contact = element.querySelector("nav a");
         const rect = (node) => node.getBoundingClientRect().toJSON();
         return {
           footer: rect(element),
           projects: rect(projects),
           credit: rect(credit),
-          evidence: rect(evidence),
-          logo: rect(logo),
-          fontSize: parseFloat(getComputedStyle(projects).fontSize),
+          contact: rect(contact),
+          projectsFont: getComputedStyle(projects).fontSize,
+          contactFont: getComputedStyle(contact).fontSize,
           position: getComputedStyle(element).position,
           background: getComputedStyle(element).backgroundImage,
           fits: document.documentElement.scrollWidth <= innerWidth,
         };
       });
-      expect(1 - metrics.footer.height / 107.2).toBeCloseTo(0.35, 2);
+      expect(1 - metrics.footer.height / 69.6).toBeCloseTo(0.2, 2);
       expect(metrics.position).toBe("relative");
       expect(metrics.background).toContain("rgb(3, 6, 14)");
       expect(metrics.fits).toBe(true);
@@ -83,30 +83,28 @@ test("footer is 35 percent shorter, centered and bottom-right aligned in both th
         0,
       );
       expect(metrics.footer.right - metrics.projects.right).toBeCloseTo(16, 0);
-      expect(metrics.footer.bottom - metrics.projects.bottom).toBeLessThan(10);
+      expect(metrics.footer.bottom - metrics.projects.bottom).toBeCloseTo(2, 0);
       expect(metrics.projects.height).toBeGreaterThanOrEqual(24);
       expect(metrics.projects.y).toBeGreaterThanOrEqual(
         width <= 700 ? metrics.credit.bottom : metrics.credit.y,
       );
-      expect(metrics.evidence.right).toBeLessThanOrEqual(metrics.projects.x);
+      expect(metrics.contact.y).toBeCloseTo(metrics.projects.y, 1);
+      expect(metrics.contact.height).toBeCloseTo(metrics.projects.height, 1);
+      expect(metrics.contactFont).toBe(metrics.projectsFont);
+      expect(metrics.contact.x - metrics.footer.x).toBeCloseTo(16, 0);
+      expect(metrics.contact.right).toBeLessThanOrEqual(metrics.projects.x);
+      expect(metrics.projects.bottom - metrics.credit.bottom).toBeGreaterThan(
+        0,
+      );
       if (width > 700) {
-        expect(metrics.evidence.right).toBeLessThan(metrics.credit.x);
+        expect(metrics.contact.right).toBeLessThan(metrics.credit.x);
         expect(metrics.credit.right).toBeLessThan(metrics.projects.x);
+        expect(metrics.footer.bottom - metrics.credit.bottom).toBeCloseTo(8, 0);
       }
-      expect(metrics.logo.width).toBeCloseTo(metrics.fontSize, 1);
-      expect(metrics.logo.height).toBeCloseTo(metrics.fontSize, 1);
-      await expect(footer.locator(".footer-projects")).toHaveCSS(
-        "color",
-        "rgb(255, 255, 255)",
-      );
-      await expect(footer.locator(".footer-projects svg")).toHaveCSS(
-        "color",
-        "rgb(255, 255, 255)",
-      );
-      await expect(footer.locator(".footer-projects")).toHaveCSS(
-        "text-decoration-line",
-        "none",
-      );
+      for (const link of await footer.locator(".footer-link").all()) {
+        await expect(link).toHaveCSS("color", "rgb(255, 255, 255)");
+        await expect(link).toHaveCSS("text-decoration-line", "none");
+      }
       if (width === 320 || width === 1440) {
         await footer.screenshot({
           path: testInfo.outputPath(`footer-${theme}-${width}.png`),
@@ -164,29 +162,48 @@ test("footer matches the live fade and glint and disables motion when requested"
       .evaluate((element) => [
         getComputedStyle(element).animationName,
         getComputedStyle(element, "::after").animationName,
-        getComputedStyle(element.querySelector(".footer-projects"))
-          .transitionProperty,
+        ...[...element.querySelectorAll(".footer-link")].map(
+          (link) => getComputedStyle(link).transitionProperty,
+        ),
       ]),
-  ).toEqual(["none", "none", "none"]);
+  ).toEqual(["none", "none", "none", "none"]);
   await expect(page.getByRole("contentinfo")).toHaveCSS("opacity", "1");
 });
 
-test("projects text and SVG glow on hover or keyboard focus and activate the same link", async ({
+test("both side links have matching hover and keyboard glow and navigate by text or Enter", async ({
   page,
   browserName,
 }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
-  const projects = page.getByRole("link", { name: "More projects? Moorkyz" });
-  await projects.scrollIntoViewIfNeeded();
-  await page.mouse.move(0, 0);
-  await expect(projects).toHaveCSS("text-shadow", "none");
-  await expect(projects).toHaveCSS("filter", "none");
-  await projects.hover();
-  await expect(projects).not.toHaveCSS("text-shadow", "none");
-  await expect(projects).not.toHaveCSS("filter", "none");
-  await page.mouse.move(0, 0);
-  await expect(projects).toHaveCSS("text-shadow", "none");
+  const footer = page.getByRole("contentinfo");
+  const projects = footer.getByRole("link", { name: "More projects?" });
+  const contact = footer.getByRole("link", { name: "Stay in Touch?" });
+  const glows = [];
+  for (const link of [contact, projects]) {
+    await link.scrollIntoViewIfNeeded();
+    await page.mouse.move(0, 0);
+    await expect(link).toHaveCSS("text-shadow", "none");
+    await expect(link).toHaveCSS("filter", "none");
+    await link.hover();
+    await expect(link).not.toHaveCSS("text-shadow", "none");
+    await expect(link).not.toHaveCSS("filter", "none");
+    glows.push(
+      await link.evaluate((element) => [
+        getComputedStyle(element).textShadow,
+        getComputedStyle(element).filter,
+      ]),
+    );
+    await page.mouse.move(0, 0);
+    await expect(link).toHaveCSS("text-shadow", "none");
+    await page.keyboard.press("Tab");
+    await link.focus();
+    await expect(link).not.toHaveCSS("text-shadow", "none");
+    await expect(link).toHaveCSS("outline-style", "solid");
+    await expect(link).toHaveCSS("outline-color", "rgb(255, 255, 255)");
+    await link.blur();
+  }
+  expect(glows[0]).toEqual(glows[1]);
   const creditLink = page
     .getByRole("contentinfo")
     .getByRole("link", { name: "Moorkyz", exact: true });
@@ -199,7 +216,7 @@ test("projects text and SVG glow on hover or keyboard focus and activate the sam
   await expect(projects).toHaveCSS("outline-style", "solid");
   await expect(projects).toHaveCSS("outline-color", "rgb(255, 255, 255)");
 
-  await page.route("https://moorkyz.com/projects", (route) =>
+  await page.route("https://moorkyz.com/{projects,contact}", (route) =>
     route.fulfill({
       contentType: "text/html",
       body: "<title>Projects destination</title>",
@@ -208,6 +225,13 @@ test("projects text and SVG glow on hover or keyboard focus and activate the sam
   await page.keyboard.press("Enter");
   await expect(page).toHaveURL("https://moorkyz.com/projects");
   await page.goto("/");
-  await page.locator(".footer-projects svg").click();
+  await page.getByRole("link", { name: "More projects?" }).click();
   await expect(page).toHaveURL("https://moorkyz.com/projects");
+  await page.goto("/");
+  await page.getByRole("link", { name: "Stay in Touch?" }).click();
+  await expect(page).toHaveURL("https://moorkyz.com/contact");
+  await page.goto("/");
+  await page.getByRole("link", { name: "Stay in Touch?" }).focus();
+  await page.keyboard.press("Enter");
+  await expect(page).toHaveURL("https://moorkyz.com/contact");
 });
