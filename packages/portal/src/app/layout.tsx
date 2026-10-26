@@ -7,8 +7,8 @@ import "./tools.css";
 export const metadata: Metadata = {
   metadataBase: new URL("https://tools.moorkyz.com"),
   title: {
-    default: "tools.moorkyz.com",
-    template: "%s — tools.moorkyz.com",
+    default: "Moorkyz Tools",
+    template: "%s — Moorkyz Tools",
   },
   description:
     "Independent tools for building interfaces and working with video. Local-first workspaces, clear guides and useful source files.",
@@ -17,6 +17,7 @@ export const metadata: Metadata = {
       { url: "/favicon.ico", type: "image/x-icon" },
       { url: "/favicon-16x16.png", type: "image/png", sizes: "16x16" },
       { url: "/favicon-32x32.png", type: "image/png", sizes: "32x32" },
+      { url: "/moorkyz-tools.svg", type: "image/svg+xml", sizes: "any" },
     ],
     apple: [
       {
@@ -26,14 +27,15 @@ export const metadata: Metadata = {
       },
     ],
   },
+  manifest: "/site.webmanifest",
   alternates: {
     canonical: "/",
   },
   openGraph: {
     type: "website",
     url: "https://tools.moorkyz.com/",
-    siteName: "tools.moorkyz.com",
-    title: "tools.moorkyz.com — A little more useful.",
+    siteName: "Moorkyz Tools",
+    title: "Moorkyz Tools — A little more useful.",
     description:
       "Explore independent tools for interfaces and video, with local workspaces and clear setup guides.",
     images: [
@@ -41,13 +43,13 @@ export const metadata: Metadata = {
         url: "/tools.moorkyz.com-mark.png",
         width: 512,
         height: 512,
-        alt: "tools.moorkyz.com",
+        alt: "Moorkyz Tools",
       },
     ],
   },
   twitter: {
     card: "summary",
-    title: "tools.moorkyz.com — A little more useful.",
+    title: "Moorkyz Tools — A little more useful.",
     description: "Local-first tools for interfaces and video.",
     images: ["/tools.moorkyz.com-mark.png"],
   },

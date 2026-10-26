@@ -9,13 +9,13 @@ export function SiteHeader() {
       <a className="brand" href="/#home">
         <img
           className="header-logo"
-          src="/tools.moorkyz.com-mark.png"
-          width={112}
-          height={56}
+          src="/moorkyz-tools.svg"
+          width={64}
+          height={64}
           alt=""
         />
         <span>
-          <strong>tools.moorkyz.com</strong>
+          <strong>Moorkyz Tools</strong>
         </span>
       </a>
       <nav className="header-links" aria-label="Main navigation">

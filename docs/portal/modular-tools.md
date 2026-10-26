@@ -25,6 +25,14 @@ catalog card and detail heading also shows its stable registry `id`, such as
 `moorkyz-tools-video-crunch`, in small muted DM Mono text beneath the title.
 These visible identifiers do not change routes, script names or API identifiers.
 
+## Portal branding
+
+The shared header uses the owner's black crossed-tools SVG and the display name
+**Moorkyz Tools**. A white backing keeps the black mark visible in both themes.
+The same artwork supplies SVG/ICO/PNG favicons, touch/Android icons and social
+preview imagery. Browser titles and the web manifest use the display name;
+the domain, repository identity and theme-storage key remain unchanged.
+
 ## Moorkyz Toolbar Builder
 
 The browser-only builder edits at most eight labels/URLs, light/dark appearance,

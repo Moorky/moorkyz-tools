@@ -4,7 +4,7 @@ import { SiteFooter } from "../components/site-footer";
 import { TOOLS } from "../data/tools";
 
 export const metadata: Metadata = {
-  title: "tools.moorkyz.com - A little more useful.",
+  title: "A little more useful. — Moorkyz Tools",
   alternates: { canonical: "/" },
   description:
     "Independent tools for building interfaces and working with video. Explore what each tool does, how to use it and how to get started.",

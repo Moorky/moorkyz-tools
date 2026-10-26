@@ -50,8 +50,8 @@ test("project identity is consistent across branding, metadata, assets and prefe
   request,
 }) => {
   await page.goto(origin);
-  await expect(page.locator(".brand strong")).toHaveText("tools.moorkyz.com");
-  await expect(page).toHaveTitle(/tools\.moorkyz\.com/);
+  await expect(page.locator(".brand strong")).toHaveText("Moorkyz Tools");
+  await expect(page).toHaveTitle("A little more useful. — Moorkyz Tools");
   await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
     "href",
     "https://tools.moorkyz.com",
@@ -62,7 +62,7 @@ test("project identity is consistent across branding, metadata, assets and prefe
   );
   await expect(page.locator('meta[property="og:site_name"]')).toHaveAttribute(
     "content",
-    "tools.moorkyz.com",
+    "Moorkyz Tools",
   );
   await expect(page.locator('meta[property="og:image"]')).toHaveAttribute(
     "content",
@@ -70,7 +70,7 @@ test("project identity is consistent across branding, metadata, assets and prefe
   );
   await expect(page.locator('meta[name="twitter:title"]')).toHaveAttribute(
     "content",
-    "tools.moorkyz.com — A little more useful.",
+    "Moorkyz Tools — A little more useful.",
   );
   await expect(
     page.getByRole("link", { name: "GitHub", exact: true }),
@@ -87,8 +87,8 @@ test("project identity is consistent across branding, metadata, assets and prefe
   const manifest = await request.get(`${origin}/site.webmanifest`);
   expect(manifest.ok()).toBe(true);
   expect(await manifest.json()).toMatchObject({
-    name: "tools.moorkyz.com",
-    short_name: "tools.moorkyz.com",
+    name: "Moorkyz Tools",
+    short_name: "Moorkyz Tools",
   });
   const mark = await request.get(`${origin}/tools.moorkyz.com-mark.png`);
   expect(mark.ok()).toBe(true);
@@ -100,9 +100,7 @@ test("project identity is consistent across branding, metadata, assets and prefe
   await page.reload();
   await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
   await page.goto(`${origin}/tools/directory-cleaner`);
-  await expect(page).toHaveTitle(
-    "Moorkyz Directory Cleaner — tools.moorkyz.com",
-  );
+  await expect(page).toHaveTitle("Moorkyz Directory Cleaner — Moorkyz Tools");
 });
 
 test("catalog cards open complete tool pages, source tree and dormant local service", async ({
