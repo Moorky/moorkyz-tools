@@ -9,8 +9,8 @@ multi-user workers and infrastructure off. The live site had no discoverable
 footer game; the user explicitly selected its current footer without a game
 until a reference is supplied.
 
-The homepage is the catalog. `/tools/toolbar`, `/tools/videocrunch` and
-`/tools/directory-cleaner` provide
+The homepage is the catalog. `/tools/toolbar`, `/tools/videocrunch`,
+`/tools/directory-cleaner` and `/tools/mediarecover` provide
 Title, Release Date, Updated On, Description, Use Cases and Setup. Local script
 tools additionally show **Tool immediately after Description**: a file hierarchy,
 selectable console-style source, copy/download per file and a complete ZIP.
@@ -66,6 +66,60 @@ executes it. Clipboard/download failures remain visible and source stays
 selectable. A future distribution license must be settled before distributing
 Moorkyz Video Crunch: its original no-selected-license notice is retained and the
 parent project's Apache-2.0 license must not be assumed to relicense it.
+
+## Moorkyz Media Recover
+
+`/tools/mediarecover` explains the independent **Moorkyz Media Recover** Windows
+desktop application. Its standalone project is **Moorky/moorkyz-tools-mediarecover**,
+not this portal. No remote repository or public executable release is created by
+this integration. The page states **Not yet released** and offers no fake binary
+download. It is not a browser filesystem workspace and has no native HTTP route,
+iframe, background connection, upload or service-enable flag.
+
+The independent source compiles and a self-contained x64 package was produced,
+but desktop runtime acceptance is **blocked**: this machine's Windows Application
+Control rejects unsigned application assemblies with `0x800711C7`. The earlier
+12-group synthetic suite passed before final hardening; the final expanded suite
+and WPF launch did not complete. No desktop screenshot, phone-transfer validation
+or production-readiness claim is made. Automatic device reconnect, embedded
+capture-date parsing and several advanced options remain deferred, as documented
+in the pinned desktop README. Do not disable machine policy to run this preview.
+
+The shared sequence remains header/metadata, Description, Tool, Use Cases, Setup,
+then Downloads. Workflow, grouped features and candid recovery/integrity limits
+are inside Description, before the source browser. Catalog cards, metadata and
+local search derive from the registry; search also matches route slugs.
+
+### Pinned source, not a second codebase
+
+The text snapshot under [`tools/mediarecover`](../../tools/mediarecover) is
+redistributed solely for source inspection/download. Edit the independent app,
+not this snapshot. Its explicit
+[`allowlist`](../../tools/mediarecover.files.json) excludes outputs, state,
+media, packages and Git internals.
+[`SOURCE-PROVENANCE.json`](../../tools/mediarecover/SOURCE-PROVENANCE.json)
+records the independent project identity, SHA-256 of every included original file
+and a deterministic tree hash. This pins local content, not an invented remote
+commit or release.
+Git attributes disable line-ending conversion for this snapshot so the pinned
+original bytes survive Windows and non-Windows checkouts. Upstream third-party
+notice whitespace is retained verbatim.
+
+Refresh deliberately from the independent project:
+
+```powershell
+node scripts\sync-mediarecover-source.mjs C:\path\to\moorkyz-tools-mediarecover
+pnpm build
+node --test tests\tooling\mediarecover-snapshot.test.js tests\tooling\tools-catalog.test.js
+pnpm check:source
+```
+
+The sync validates the complete allowlist before copying and rejects traversal,
+linked source components and non-UTF-8 text. Source generation refuses a snapshot
+whose recorded provenance no longer matches its bytes. Builds need neither the
+sibling project nor its desktop process. Download all is a source ZIP, never a
+portable application package. Windows requirements, state/report paths and USB
+authorization steps are documented on the tool page and in the snapshot's README.
 
 ## Moorkyz Directory Cleaner
 

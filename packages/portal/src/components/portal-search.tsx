@@ -55,7 +55,7 @@ export function PortalSearch() {
   const terms = query.toLowerCase().trim().split(/\s+/).filter(Boolean);
   const results = PORTAL_REFERENCE.filter((entry) =>
     terms.every((term) =>
-      `${entry.title} ${entry.text}`.toLowerCase().includes(term),
+      `${entry.title} ${entry.text} ${entry.href}`.toLowerCase().includes(term),
     ),
   );
   return (

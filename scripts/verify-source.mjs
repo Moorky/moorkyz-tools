@@ -17,7 +17,9 @@ const patterns = [
 ];
 for (const path of paths) {
   if (
-    !/\.(?:[cm]?[jt]sx?|ps1|json|ya?ml|md|html|css|cmd|sh)$/.test(path) &&
+    !/\.(?:[cm]?[jt]sx?|ps1|json|ya?ml|md|html|css|cmd|sh|cs|xaml|csproj|slnx?|props|targets)$/.test(
+      path,
+    ) &&
     !/(?:^|\/)(?:Dockerfile|LICENSE)$/.test(path)
   )
     continue;

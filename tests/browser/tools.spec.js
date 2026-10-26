@@ -11,6 +11,7 @@ test("every card displays the Moorkyz name and its subtle monospace identifier",
   const tools = [
     ["toolbar", "Moorkyz Toolbar Builder", "moorkyz-tools-toolbar-builder"],
     ["videocrunch", "Moorkyz Video Crunch", "moorkyz-tools-video-crunch"],
+    ["mediarecover", "Moorkyz Media Recover", "moorkyz-tools-mediarecover"],
     [
       "directory-cleaner",
       "Moorkyz Directory Cleaner",
@@ -112,7 +113,7 @@ test("catalog cards open complete tool pages, source tree and dormant local serv
   await expect(
     page.getByRole("heading", { name: "A little more useful." }),
   ).toBeVisible();
-  await expect(page.locator(".tool-card")).toHaveCount(3);
+  await expect(page.locator(".tool-card")).toHaveCount(4);
   await expect(page.locator(".tool-card").first()).toContainText(
     "Design, preview and export",
   );
@@ -239,6 +240,7 @@ test("tool catalog and detail pages remain accessible and fit mobile in both the
     "/tools/toolbar",
     "/tools/videocrunch",
     "/tools/directory-cleaner",
+    "/tools/mediarecover",
   ]) {
     await page.goto(`${origin}${route}`);
     await page.emulateMedia({ reducedMotion: "reduce" });

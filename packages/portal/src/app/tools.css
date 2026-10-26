@@ -182,10 +182,20 @@ html[data-theme="dark"] .tool-id {
   padding-inline-start: 0.5rem;
   margin-block: 1.5rem;
 }
-.tool-setup h3 {
+.tool-setup h3,
+.tool-setup h4 {
   font-size: 1rem;
   font-weight: 600;
   margin-bottom: 0.5rem;
+}
+.tool-features {
+  display: grid;
+  gap: 1rem;
+  max-width: 55rem;
+}
+.tool-features dd {
+  margin: 0.25rem 0 0;
+  color: var(--muted);
 }
 .tool-setup pre {
   padding: 1rem;

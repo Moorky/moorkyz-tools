@@ -1,0 +1,10 @@
+**/bin/
+**/obj/
+artifacts/
+.fixtures/
+.vs/
+*.user
+*.db*
+*.part
+*.mp4
+*.m4a

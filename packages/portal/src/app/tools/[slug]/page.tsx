@@ -81,6 +81,44 @@ export default async function ToolPage({ params }: Props) {
         >
           <h2 id="description-heading">Description</h2>
           <p>{tool.description}</p>
+          {tool.howItWorks && (
+            <>
+              <h3>How it works</h3>
+              <ol className="tool-setup">
+                {tool.howItWorks.map((step) => (
+                  <li key={step.title}>
+                    <h4>{step.title}</h4>
+                    <p>{step.text}</p>
+                  </li>
+                ))}
+              </ol>
+            </>
+          )}
+          {tool.features && (
+            <>
+              <h3>Features</h3>
+              <dl className="tool-features">
+                {tool.features.map((feature) => (
+                  <div key={feature.title}>
+                    <dt>
+                      <strong>{feature.title}</strong>
+                    </dt>
+                    <dd>{feature.text}</dd>
+                  </div>
+                ))}
+              </dl>
+            </>
+          )}
+          {tool.limitations && (
+            <>
+              <h3>Scope & limitations</h3>
+              <ul>
+                {tool.limitations.map((limitation) => (
+                  <li key={limitation}>{limitation}</li>
+                ))}
+              </ul>
+            </>
+          )}
         </section>
         {(tool.source || tool.workspace === "toolbar") && (
           <section id="tool" aria-labelledby="tool-heading" tabIndex={-1}>
@@ -89,11 +127,14 @@ export default async function ToolPage({ params }: Props) {
               <CompactToolbarBuilder nonce={nonce} />
             )}
             {tool.source && (
-              <ToolSourceBrowser
-                key={tool.source.bundle}
-                bundle={tool.source.bundle}
-                files={tool.source.files}
-              />
+              <>
+                {tool.source.notice && <p>{tool.source.notice}</p>}
+                <ToolSourceBrowser
+                  key={tool.source.bundle}
+                  bundle={tool.source.bundle}
+                  files={tool.source.files}
+                />
+              </>
             )}
           </section>
         )}
@@ -125,6 +166,16 @@ export default async function ToolPage({ params }: Props) {
             ))}
           </ol>
         </section>
+        {tool.downloadNotice && (
+          <section
+            id="downloads"
+            aria-labelledby="downloads-heading"
+            tabIndex={-1}
+          >
+            <h2 id="downloads-heading">Downloads</h2>
+            <p>{tool.downloadNotice}</p>
+          </section>
+        )}
         {tool.workspace && tool.workspace !== "toolbar" && (
           <section
             id="workspace"

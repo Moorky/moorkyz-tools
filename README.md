@@ -13,10 +13,17 @@ the **Moorkyz Toolbar Builder** is now a small standalone HTML generator, not a 
 - **Moorkyz Directory Cleaner** - filename/relative-path patterns, creation-date bounds
   and file-size thresholds; Keep, Move and Delete (archive only). Available as a
   local service and a standalone script. Preview, then explicitly confirm changes.
+- **Moorkyz Media Recover** - independent Windows desktop media backup/recovery
+  development preview, with an explanation-first page at `/tools/mediarecover`.
+  The standalone project is `Moorky/moorkyz-tools-mediarecover`; no executable
+  release is publicly available. The portal never scans device or local files.
 
 Every local script tool has a source hierarchy, console-style viewer, per-file
 Copy/Download and a complete ZIP. See the [portal guide](docs/portal/modular-tools.md)
 and [Directory Cleaner guide](tools/directory-cleaner/README.md).
+Media Recover source is a curated, SHA-256-pinned text snapshot, not a second
+editable application. See [snapshot provenance](tools/mediarecover/SOURCE-PROVENANCE.json)
+and the [portal integration guide](docs/portal/modular-tools.md).
 
 ## Development
 

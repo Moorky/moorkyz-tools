@@ -1,9 +1,10 @@
 import { readFile, writeFile, mkdir, realpath } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { verifyMediaRecoverSnapshot } from "./sync-mediarecover-source.mjs";
 
 const root = fileURLToPath(new URL("..", import.meta.url));
-const bundles = ["videocrunch", "directory-cleaner"];
+const bundles = ["videocrunch", "directory-cleaner", "mediarecover"];
 
 function crc32(bytes) {
   let crc = 0xffffffff;
@@ -82,6 +83,8 @@ export async function prepareToolSources() {
     )
       throw new Error(`Invalid source manifest: ${bundle}`);
     const sourceRoot = await realpath(path.join(root, "tools", bundle));
+    if (bundle === "mediarecover")
+      await verifyMediaRecoverSnapshot(sourceRoot, names);
     const files = await Promise.all(
       names.map(async (name) => {
         const file = await realpath(path.join(sourceRoot, name));

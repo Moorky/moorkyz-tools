@@ -79,6 +79,25 @@ Implementation semantics:
 - Local services remain independently opt-in and loopback-only. No hosting,
   telemetry, automatic installs or unattended scheduled cleanup.
 
+## 2026-10-26: Moorkyz Media Recover
+
+The user supplied the full Media Recover implementation prompt:
+
+- Exact product name **Moorkyz Media Recover**, independent standalone project
+  **Moorky/moorkyz-tools-mediarecover**, portal slug **mediarecover**.
+- A real Windows desktop runtime, with read-only local-folder and authorized
+  WPD/MTP sources, staging, integrity evidence, durable state and explicit reports.
+  Recovery does not mean deleted/private phone data extraction.
+- The portal's existing shared detail-page sequence is preserved. Workflow,
+  grouped features and limitations follow Description, before source/workspace.
+- No browser filesystem simulation or new local HTTP service. Public descriptions,
+  source and setup remain independent of the desktop process.
+- Source distribution is an explicit allowlisted, content-pinned text snapshot
+  from the independent project. The source ZIP is not an executable release.
+  Downloads say **Not yet released** until a release is actually published.
+- No remote repository creation, Git initialization, pushing, publishing,
+  deployment, signing or native prerequisite installation is performed.
+
 ## Change authority
 
 Reversible implementation details/tests/docs can proceed autonomously. New

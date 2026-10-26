@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <UseWPF>true</UseWPF>
+    <AssemblyName>MoorkyzMediaRecover</AssemblyName>
+    <RootNamespace>Moorkyz.Tools.MediaRecover.App</RootNamespace>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Moorkyz.MediaRecover.Core\Moorkyz.MediaRecover.Core.csproj" />
+    <ProjectReference Include="..\Moorkyz.MediaRecover.Providers.Local\Moorkyz.MediaRecover.Providers.Local.csproj" />
+    <ProjectReference Include="..\Moorkyz.MediaRecover.Providers.Wpd\Moorkyz.MediaRecover.Providers.Wpd.csproj" />
+    <ProjectReference Include="..\Moorkyz.MediaRecover.Storage\Moorkyz.MediaRecover.Storage.csproj" />
+    <ProjectReference Include="..\Moorkyz.MediaRecover.Reporting\Moorkyz.MediaRecover.Reporting.csproj" />
+  </ItemGroup>
+</Project>

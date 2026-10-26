@@ -85,3 +85,30 @@ test("source ZIP rejects escaping and malformed paths", () => {
     );
   }
 });
+
+test("Media Recover is an independent unreleased desktop tool with explanation-first metadata", () => {
+  const tool = findTool("mediarecover");
+  assert.equal(tool.title, "Moorkyz Media Recover");
+  assert.equal(tool.id, "moorkyz-tools-mediarecover");
+  assert.equal(tool.workspace, undefined);
+  assert.equal(tool.releaseDate, null);
+  assert.match(tool.downloadNotice, /Not yet released/);
+  assert.match(tool.description, /cannot scan your computer or phone/);
+  assert.deepEqual(
+    tool.howItWorks.map((step) => step.title),
+    [
+      "Choose source",
+      "Scan",
+      "Review",
+      "Recover",
+      "Verify",
+      "Open saved folder",
+    ],
+  );
+  assert.equal(tool.features.length, 5);
+  assert.match(tool.limitations.join(" "), /does not mean undeleting/);
+  assert.match(
+    tool.setup.map((step) => step.text).join(" "),
+    /moorkyz-tools-mediarecover/,
+  );
+});

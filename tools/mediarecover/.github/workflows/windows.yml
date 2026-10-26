@@ -1,0 +1,26 @@
+name: Windows build and synthetic tests
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      - name: Strict build
+        shell: pwsh
+        run: .\scripts\build.ps1
+      - name: Dependency-free synthetic tests
+        shell: pwsh
+        run: .\scripts\test.ps1
+      - name: Local self-contained package
+        shell: pwsh
+        run: .\scripts\publish.ps1
+      - name: Validate source allowlist
+        shell: pwsh
+        run: .\scripts\source-manifest.ps1

@@ -3,3 +3,6 @@
 *.cjs text eol=lf
 tools.moorkyz.com text eol=lf
 *.cmd text eol=crlf
+# Preserve pinned source bytes and verbatim upstream notices across checkouts.
+tools/mediarecover/** -text whitespace=trailing-space,space-before-tab,cr-at-eol
+tools/mediarecover/third-party/wpf-10.0.11-NOTICES.txt -whitespace
