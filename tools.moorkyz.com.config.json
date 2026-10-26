@@ -5,7 +5,8 @@
       "cwd": "packages/portal",
       "dev": "dev",
       "prod": "start",
-      "url": "http://localhost:3001"
+      "url": "http://127.0.0.1:3001",
+      "startupTimeoutMs": 60000
     }
   }
 }

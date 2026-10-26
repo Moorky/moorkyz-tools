@@ -39,7 +39,7 @@ test("retired identifier detection distinguishes the feature from project naming
     ".moorkyz/",
     "moorkyz.cjs",
     "moorkyz status",
-    "Moorky Toolbar Builder",
+    "Moorkyz Toolbar Builder",
     "tools/toolbar-builder/builder.mjs",
     "/tools/toolbar",
     "Toolbar settings",

@@ -4,9 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "node ../../scripts/prepare-tool-sources.mjs && node scripts/run-next.mjs dev",
+    "dev": "node ../../scripts/prepare-tool-sources.mjs && node scripts/run-next.mjs dev --hostname 127.0.0.1",
     "build": "node ../../scripts/prepare-tool-sources.mjs && node scripts/run-next.mjs build && node scripts/prepare-standalone.mjs",
-    "start": "node scripts/run-next.mjs start",
+    "start": "node scripts/run-next.mjs start --hostname 127.0.0.1",
     "lint": "eslint src",
     "typecheck": "tsc --noEmit"
   },

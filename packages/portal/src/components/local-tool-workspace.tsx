@@ -26,7 +26,7 @@ export function LocalToolWorkspace({ enabled }: { readonly enabled: boolean }) {
             "error" in data &&
             typeof data.error === "string"
               ? data.error
-              : `Moorky Video Crunch connection failed (${response.status}).`;
+              : `Moorkyz Video Crunch connection failed (${response.status}).`;
           throw new Error(message);
         }
         if (
@@ -36,7 +36,7 @@ export function LocalToolWorkspace({ enabled }: { readonly enabled: boolean }) {
           typeof data.token !== "string"
         )
           throw new Error(
-            "Moorky Video Crunch returned an invalid configuration. Check the local service terminal.",
+            "Moorkyz Video Crunch returned an invalid configuration. Check the local service terminal.",
           );
         if (!controller.signal.aborted) setReady(true);
       } catch (cause) {
@@ -44,7 +44,7 @@ export function LocalToolWorkspace({ enabled }: { readonly enabled: boolean }) {
           setError(
             cause instanceof Error
               ? cause.message
-              : "Could not connect to Moorky Video Crunch.",
+              : "Could not connect to Moorkyz Video Crunch.",
           );
       }
     }
@@ -54,9 +54,9 @@ export function LocalToolWorkspace({ enabled }: { readonly enabled: boolean }) {
   if (!enabled) {
     return (
       <p className="tool-service-notice" role="status">
-        Moorky Video Crunch connection is off. Follow Setup to start the Windows
-        service and explicitly enable the portal connection. No service requests
-        or background polling run while it is off.
+        Moorkyz Video Crunch connection is off. Follow Setup to start the
+        Windows service and explicitly enable the portal connection. No service
+        requests or background polling run while it is off.
       </p>
     );
   }
@@ -77,12 +77,12 @@ export function LocalToolWorkspace({ enabled }: { readonly enabled: boolean }) {
         }}
       >
         {opened
-          ? "Close Moorky Video Crunch workspace"
-          : "Open Moorky Video Crunch workspace"}
+          ? "Close Moorkyz Video Crunch workspace"
+          : "Open Moorkyz Video Crunch workspace"}
       </button>
       {opened && !ready && !error && (
         <p role="status">
-          Connecting to your local Moorky Video Crunch service...
+          Connecting to your local Moorkyz Video Crunch service...
         </p>
       )}
       {opened && error && (
@@ -95,7 +95,7 @@ export function LocalToolWorkspace({ enabled }: { readonly enabled: boolean }) {
       )}
       {opened && ready && (
         <iframe
-          title="Moorky Video Crunch local workspace"
+          title="Moorkyz Video Crunch local workspace"
           src="/api/local-tools/videocrunch/index.html"
           className="local-tool-frame"
         />

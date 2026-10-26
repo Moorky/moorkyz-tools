@@ -372,7 +372,7 @@ async function main() {
     app.server.listen(port, '127.0.0.1', resolve);
   });
   const url = `http://127.0.0.1:${port}`;
-  console.log(`\n  Moorky Video Crunch is ready at ${url}\n  Keep this terminal open. Press Ctrl+C to stop.\n`);
+  console.log(`\n  Moorkyz Video Crunch is ready at ${url}\n  Keep this terminal open. Press Ctrl+C to stop.\n`);
   if (process.argv.includes('--open')) {
     execFile('powershell.exe', ['-NoProfile', '-NonInteractive', '-Command', `Start-Process '${url}'`],
       { windowsHide: true, env: powerShellEnvironment() },

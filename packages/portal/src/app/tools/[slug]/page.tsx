@@ -45,6 +45,7 @@ export default async function ToolPage({ params }: Props) {
           </span>
           <p className="eyebrow">{tool.category}</p>
           <h1>{tool.title}</h1>
+          <small className="tool-id">{tool.id}</small>
           <p className="hero-lede">{tool.summary}</p>
           <dl className="tool-metadata">
             <div>

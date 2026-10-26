@@ -3,6 +3,7 @@ import cleanerFiles from "../../../../tools/directory-cleaner.files.json" with {
 
 export interface ToolDefinition {
   readonly slug: string;
+  readonly id: string;
   readonly title: string;
   readonly category: string;
   readonly monogram: string;
@@ -27,7 +28,8 @@ export interface ToolDefinition {
 export const TOOLS: readonly ToolDefinition[] = [
   {
     slug: "toolbar",
-    title: "Moorky Toolbar Builder",
+    id: "moorkyz-tools-toolbar-builder",
+    title: "Moorkyz Toolbar Builder",
     category: "SMALL WEB TOOL",
     monogram: "tb",
     version: "1.0.0 local preview",
@@ -56,7 +58,8 @@ export const TOOLS: readonly ToolDefinition[] = [
   },
   {
     slug: "videocrunch",
-    title: "Moorky Video Crunch",
+    id: "moorkyz-tools-video-crunch",
+    title: "Moorkyz Video Crunch",
     category: "VIDEO WORKSPACE",
     monogram: "vc",
     version: "1.0.0 local preview",
@@ -98,7 +101,8 @@ export const TOOLS: readonly ToolDefinition[] = [
   },
   {
     slug: "directory-cleaner",
-    title: "Moorky Directory Cleaner",
+    id: "moorkyz-tools-directory-cleaner",
+    title: "Moorkyz Directory Cleaner",
     category: "LOCAL FILE UTILITY",
     monogram: "dc",
     version: "1.0.0 local preview",

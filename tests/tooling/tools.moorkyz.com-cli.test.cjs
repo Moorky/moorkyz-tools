@@ -113,3 +113,14 @@ test("invalid renamed configuration reports its exact filename", () => {
     /tools\.moorkyz\.com\.config\.json must contain a JSON object/,
   );
 });
+
+test("rejects invalid startup timeouts before launching a project", () => {
+  const folder = fixture();
+  writeFileSync(
+    path.join(folder, "tools.moorkyz.com.config.json"),
+    JSON.stringify({ projects: { portal: { startupTimeoutMs: 0 } } }),
+  );
+  const result = run(folder, ["start"]);
+  assert.equal(result.status, 1);
+  assert.match(result.stderr, /startupTimeoutMs.*1000 to 300000/);
+});

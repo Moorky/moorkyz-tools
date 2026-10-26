@@ -18,7 +18,21 @@ From the repository root in PowerShell:
 
 On macOS/Linux, use `sh ./tools.moorkyz.com`. The `audit` command creates an unfilled report from `docs/audits/TEMPLATE.md`; fill in observed evidence before considering the task complete.
 
-`tools.moorkyz.com.config.json` selects `packages/portal` as the default project, using its `dev` script for `start` and its `start` script for `start --prod`. The portal prefers `http://localhost:3001`; if that port is occupied, the CLI selects the next available port and records the runtime URL. The production command requires a prior portal build.
+`tools.moorkyz.com.config.json` selects `packages/portal` as the default project, using its `dev` script for `start` and its `start` script for `start --prod`. The portal prefers `http://127.0.0.1:3001`; if that port is occupied, the CLI selects an available port and records the runtime URL. The production command requires a prior portal build and sets `NODE_ENV=production`.
+
+Startup waits for an HTTP 2xx/3xx response and a verified supervisor heartbeat,
+not just a spawned process or open TCP port. The portal allows 60 seconds;
+other configurations default to 20 seconds and can set `startupTimeoutMs`
+from 1000 to 300000. A failed startup prints recent log lines and stops only
+its own tracked instance. The portal's dev and production scripts bind to
+`127.0.0.1` by default.
+
+pnpm dependency verification fails explicitly when the installation is out of
+sync. Run `pnpm install --frozen-lockfile` deliberately; starting a service must
+not automatically reinstall dependencies. An already-running manual Next.js
+dev server in the same workspace must be stopped by its owner before using a
+managed dev instance. The launcher does not kill an unrelated server or remove
+its development lock.
 
 After `start` or `restart` succeeds, the CLI opens the actual runtime URL in the default browser in
 an interactive terminal. Lifecycle, list, and status output show the recorded runtime URL. Browser

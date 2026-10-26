@@ -16,13 +16,6 @@ export function SiteHeader() {
         />
         <span>
           <strong>tools.moorkyz.com</strong>
-          <small
-            className="brand-id"
-            id="moorkyz-tools-name"
-            aria-hidden="true"
-          >
-            moorkyz-tools-name
-          </small>
         </span>
       </a>
       <nav className="header-links" aria-label="Main navigation">

@@ -1,4 +1,4 @@
-# Working on Moorky Video Crunch
+# Working on Moorkyz Video Crunch
 
 - Keep this a Windows-first, localhost-only application. Do not expose the service to the network, add hosted uploads, or bypass DRM/authentication.
 - Read [the architecture](docs/ARCHITECTURE.md) and [contribution guidelines](CONTRIBUTING.md) before changing behavior.

@@ -118,8 +118,10 @@ Copy `moorkyz.config.example.json` to `moorkyz.config.json`, then update the pro
 - The CLI sets `PORT` and recognizes Vite/Astro scripts, passing their `--port` argument.
   Other servers can use `"portArgs": ["--port", "{port}"]` in their project settings. Arguments
   are constrained to safe CLI tokens. `startupTimeoutMs` defaults to 20000 (allowed: 1000–300000).
-  Startup success requires a verified supervisor heartbeat and a TCP listener, not an HTTP health
-  response; use application/container health checks for production readiness.
+  Startup success requires a verified supervisor heartbeat and an HTTP 2xx/3xx response from
+  the configured URL. A transient TCP listener or an HTTP error does not count as ready.
+  Failed startup prints the final log lines and stops the CLI-managed instance.
+  This local startup check does not replace application/container production health checks.
 - Starting a project that is already running replaces its existing CLI-managed instance first;
   unrelated processes are left running.
 - `moorkyz logs worker --follow` follows one project's output.

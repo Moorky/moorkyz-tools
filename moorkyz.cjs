@@ -699,18 +699,23 @@ async function maintain(config, includeTrash = false) {
     }),
   );
 }
-function connectable(port, host) {
-  return new Promise((resolve) => {
-    const socket = net.createConnection({ port, host });
-    const done = (result) => {
-      socket.destroy();
-      resolve(result);
-    };
-    socket.setTimeout(300);
-    socket.once("connect", () => done(true));
-    socket.once("error", () => done(false));
-    socket.once("timeout", () => done(false));
-  });
+async function ready(url, timeout) {
+  try {
+    const response = await fetch(url, {
+      redirect: "manual",
+      signal: AbortSignal.timeout(timeout),
+    });
+    await response.body?.cancel();
+    return response.status >= 200 && response.status < 400;
+  } catch (error) {
+    if (
+      error instanceof TypeError ||
+      error.name === "TimeoutError" ||
+      error.name === "AbortError"
+    )
+      return false;
+    throw error;
+  }
 }
 async function startOne(project, mode, config, attempts = 0, excluded = []) {
   const name = project.name;
@@ -797,11 +802,8 @@ async function startOne(project, mode, config, attempts = 0, excluded = []) {
     await sleep(100);
     if (
       running(name) &&
-      (
-        await Promise.all(
-          portHosts(new URL(url)).map((host) => connectable(port, host)),
-        )
-      ).some(Boolean)
+      (await ready(url, Math.max(1, Math.min(2000, deadline - Date.now())))) &&
+      running(name)
     ) {
       info(
         `Started '${name}' (${mode}; supervisor PID ${proc.pid}). URL: ${url}. Logs: ${path.relative(ROOT, log)}`,
@@ -820,7 +822,7 @@ async function startOne(project, mode, config, attempts = 0, excluded = []) {
     return startOne(project, mode, config, attempts + 1, [...excluded, port]);
   }
   console.error(
-    `Could not confirm '${name}' listening at ${url} within ${project.startupTimeoutMs} ms. ${project.portArgs ? "Check portArgs and the service logs." : "The script must use PORT or accept configured portArgs."} Inspect: moorkyz logs ${name}\n${diagnostic}`,
+    `Could not confirm '${name}' responding successfully over HTTP at ${url} within ${project.startupTimeoutMs} ms. ${project.portArgs ? "Check portArgs and the service logs." : "The script must use PORT or accept configured portArgs."} Inspect: moorkyz logs ${name}\n${diagnostic}`,
   );
   return false;
 }

@@ -63,6 +63,7 @@ export default function HomePage() {
                     </span>
                   </a>
                 </h3>
+                <small className="tool-id">{tool.id}</small>
                 <p>{tool.summary}</p>
                 <div className="tool-card-bottom">
                   <span>{tool.version}</span>

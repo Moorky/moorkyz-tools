@@ -2,15 +2,15 @@
 
 A growing catalog of independent tools, with clear setup, readable source and
 local-first workspaces. The former SDK and Studio have been removed;
-the **Toolbar Builder** is now a small standalone HTML generator, not a framework.
+the **Moorkyz Toolbar Builder** is now a small standalone HTML generator, not a framework.
 
 ## Tools
 
-- **Toolbar Builder** - compact link editor, live preview, Copy and one-file HTML
+- **Moorkyz Toolbar Builder** - compact link editor, live preview, Copy and one-file HTML
   download. No SDK, adapters, service or installation required for the output.
-- **VideoCrunch** - optional Windows localhost video downloader/compressor;
+- **Moorkyz Video Crunch** - optional Windows localhost video downloader/compressor;
   original source bytes remain preserved. Its complete source is included.
-- **Directory Cleaner** - filename/relative-path patterns, creation-date bounds
+- **Moorkyz Directory Cleaner** - filename/relative-path patterns, creation-date bounds
   and file-size thresholds; Keep, Move and Delete (archive only). Available as a
   local service and a standalone script. Preview, then explicitly confirm changes.
 
@@ -27,6 +27,16 @@ pnpm build
 pnpm check
 pnpm check:source
 ```
+
+For a managed background portal, use `.\moorkyz.cmd start` (or the
+repository-specific `.\tools.moorkyz.com.cmd start`), then `status`, `logs`,
+`restart` or `stop` with the same launcher. The shared launcher prefers
+`http://127.0.0.1:4320`; the repository-specific launcher prefers
+`http://127.0.0.1:3001`. Both print the actual selected URL and wait for a
+successful HTTP response. Do not run a manual and managed Next.js development
+server in the same workspace at once. All portal scripts bind to loopback by
+default. Dependencies that are out of sync produce an explicit error rather
+than an automatic reinstall; run the frozen install above when needed.
 
 Use Node.js 22+ and the pinned pnpm version. Browser tests use installed
 Chromium/Firefox/WebKit; `pnpm exec playwright install` prepares them for development.

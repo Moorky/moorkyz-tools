@@ -87,6 +87,18 @@
   color: var(--muted);
   min-height: 5rem;
 }
+.tool-id {
+  display: block;
+  margin-block: -0.25rem 0.75rem;
+  color: #686868;
+  font:
+    0.65rem/1.5 "DM Mono",
+    monospace;
+  overflow-wrap: anywhere;
+}
+html[data-theme="dark"] .tool-id {
+  color: #b8b8b8;
+}
 .tool-monogram {
   display: inline-grid;
   place-items: center;

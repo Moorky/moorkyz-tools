@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import { proxyLocalTool } from "../../packages/portal/src/server/local-tool-proxy.ts";
 
-test("Moorky Directory Cleaner gateway is independently off, fixed-loopback, bounded and token-specific", async (t) => {
+test("Moorkyz Directory Cleaner gateway is independently off, fixed-loopback, bounded and token-specific", async (t) => {
   const keys = [
     "TOOLS_MOORKYZ_COM_DIRECTORY_CLEANER_ENABLED",
     "TOOLS_MOORKYZ_COM_DIRECTORY_CLEANER_PORT",

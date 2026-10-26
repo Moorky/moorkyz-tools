@@ -4,15 +4,53 @@ import { readFile } from "node:fs/promises";
 
 const origin = `http://127.0.0.1:${process.env.TOOLS_MOORKYZ_COM_PORTAL_PORT ?? process.env.PORTAL_TEST_PORT ?? "4174"}`;
 
+test("every card displays the Moorkyz name and its subtle monospace identifier", async ({
+  page,
+}) => {
+  await page.goto(origin);
+  const tools = [
+    ["toolbar", "Moorkyz Toolbar Builder", "moorkyz-tools-toolbar-builder"],
+    ["videocrunch", "Moorkyz Video Crunch", "moorkyz-tools-video-crunch"],
+    [
+      "directory-cleaner",
+      "Moorkyz Directory Cleaner",
+      "moorkyz-tools-directory-cleaner",
+    ],
+  ];
+  for (const [slug, title, id] of tools) {
+    const card = page.locator(".tool-card").filter({
+      has: page.getByRole("heading", { name: title, exact: true }),
+    });
+    const identifier = card.locator(".tool-id");
+    await expect(identifier).toBeVisible();
+    await expect(identifier).toHaveText(id);
+    await expect(identifier).toHaveCSS("font-family", /DM Mono/);
+    expect(
+      await identifier.evaluate((element) =>
+        Number.parseFloat(getComputedStyle(element).fontSize),
+      ),
+    ).toBeCloseTo(10.4, 1);
+    await expect(identifier).toHaveCSS("color", "rgb(104, 104, 104)");
+    await card.getByRole("link", { name: title, exact: true }).click();
+    await expect(page).toHaveURL(`${origin}/tools/${slug}`);
+    await expect(page.locator(".tool-detail-heading .tool-id")).toHaveText(id);
+    await page.goto(origin);
+  }
+  await page.getByRole("button", { name: /Switch to dark theme/ }).click();
+  await expect(page.locator(".tool-id").first()).toHaveCSS(
+    "color",
+    "rgb(184, 184, 184)",
+  );
+  expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
+  await expect(page.locator(".brand .tool-id")).toHaveCount(0);
+});
+
 test("project identity is consistent across branding, metadata, assets and preferences", async ({
   page,
   request,
 }) => {
   await page.goto(origin);
   await expect(page.locator(".brand strong")).toHaveText("tools.moorkyz.com");
-  const brandId = page.locator("#moorkyz-tools-name");
-  await expect(brandId).toHaveText("moorkyz-tools-name");
-  await expect(brandId).toHaveCSS("font-family", /DM Mono/);
   await expect(page).toHaveTitle(/tools\.moorkyz\.com/);
   await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
     "href",
@@ -63,7 +101,7 @@ test("project identity is consistent across branding, metadata, assets and prefe
   await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
   await page.goto(`${origin}/tools/directory-cleaner`);
   await expect(page).toHaveTitle(
-    "Moorky Directory Cleaner — tools.moorkyz.com",
+    "Moorkyz Directory Cleaner — tools.moorkyz.com",
   );
 });
 
@@ -81,11 +119,11 @@ test("catalog cards open complete tool pages, source tree and dormant local serv
     "Design, preview and export",
   );
   await page
-    .getByRole("link", { name: "Moorky Video Crunch", exact: true })
+    .getByRole("link", { name: "Moorkyz Video Crunch", exact: true })
     .click();
   await expect(page).toHaveURL(`${origin}/tools/videocrunch`);
   await expect(
-    page.getByRole("heading", { name: "Moorky Video Crunch", exact: true }),
+    page.getByRole("heading", { name: "Moorkyz Video Crunch", exact: true }),
   ).toBeVisible();
   await expect(page.locator("dt", { hasText: "Release Date" })).toBeVisible();
   await expect(page.locator("dt", { hasText: "Updated On" })).toBeVisible();

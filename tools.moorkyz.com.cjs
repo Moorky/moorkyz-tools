@@ -174,12 +174,22 @@ function cfg() {
     const prod = settings.prod ?? "start";
     if (![dev, prod].every((s) => typeof s === "string" && SCRIPT_RE.test(s)))
       die(`Invalid script name for '${name}'.`);
+    const startupTimeoutMs = settings.startupTimeoutMs ?? 20000;
+    if (
+      !Number.isInteger(startupTimeoutMs) ||
+      startupTimeoutMs < 1000 ||
+      startupTimeoutMs > 300000
+    )
+      die(
+        `startupTimeoutMs for '${name}' must be an integer from 1000 to 300000.`,
+      );
     projects[name] = {
       name,
       cwd,
       dev,
       prod,
       url: projectUrl(settings.url, name),
+      startupTimeoutMs,
     };
   }
   const defaultProject =
@@ -405,7 +415,14 @@ function worker(argv) {
     child = spawn(command, argv, {
       cwd: project.cwd,
       stdio: "inherit",
-      env: { ...process.env, PORT: String(state.port) },
+      env: {
+        ...process.env,
+        PORT: String(state.port),
+        NODE_ENV:
+          mode === "prod"
+            ? "production"
+            : process.env.NODE_ENV || "development",
+      },
       windowsHide: true,
     });
   } catch (e) {
@@ -497,9 +514,30 @@ async function startOne(project, mode) {
   }
   writeJsonAtomic(statePath(name), { ...state, pid: proc.pid });
   proc.unref();
-  for (let i = 0; i < 15; i++) {
-    sleep(150);
+  const deadline = Date.now() + project.startupTimeoutMs;
+  while (Date.now() < deadline) {
+    await new Promise((resolve) => setTimeout(resolve, 100));
+    let responding = false;
     if (running(name)) {
+      try {
+        const response = await fetch(url, {
+          redirect: "manual",
+          signal: AbortSignal.timeout(
+            Math.max(1, Math.min(2000, deadline - Date.now())),
+          ),
+        });
+        await response.body?.cancel();
+        responding = response.status >= 200 && response.status < 400;
+      } catch (error) {
+        if (
+          !(error instanceof TypeError) &&
+          error.name !== "TimeoutError" &&
+          error.name !== "AbortError"
+        )
+          throw error;
+      }
+    }
+    if (responding && running(name)) {
       info(
         `Started '${name}' (${mode}; supervisor PID ${proc.pid}). URL: ${url}. Logs: .tools.moorkyz.com/${name}.log`,
       );
@@ -508,8 +546,12 @@ async function startOne(project, mode) {
     }
     if (!alive(proc.pid)) break;
   }
+  if (running(name)) stopOne(project);
+  const diagnostic = exists(logPath(name))
+    ? fs.readFileSync(logPath(name), "utf8").split(/\r?\n/).slice(-16).join("\n")
+    : "No startup log was created.";
   console.error(
-    `Could not confirm startup for '${name}' at ${url}. Inspect logs with: tools.moorkyz.com logs ${name}`,
+    `Could not confirm '${name}' responding successfully over HTTP at ${url} within ${project.startupTimeoutMs} ms. Inspect logs with: tools.moorkyz.com logs ${name}\n${diagnostic}`,
   );
   return false;
 }
