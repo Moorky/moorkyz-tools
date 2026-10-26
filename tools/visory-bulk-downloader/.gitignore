@@ -1,0 +1,13 @@
+**/bin/
+**/obj/
+artifacts/
+.fixtures/
+.vs/
+*.user
+*.db
+*.db-wal
+*.db-shm
+*.part
+*.mp4
+*.webm
+*.zip

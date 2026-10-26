@@ -17,14 +17,20 @@ the **Moorkyz Toolbar Builder** is now a small standalone HTML generator, not a 
   development preview, with an explanation-first page at `/tools/mediarecover`.
   Its canonical desktop source lives in `tools/mediarecover`; no executable
   release is publicly available. The portal never scans device or local files.
+- **Moorkyz Visory Bulk Downloader** - unofficial Windows desktop hub that backs up the
+  cloud recordings your own Visory session can access, with resumable background
+  transfers, exact reports and a verified ZIP. Development preview: real-account
+  behavior is unverified and no executable release exists. Its canonical source and
+  docs live in [`tools/visory-bulk-downloader`](tools/visory-bulk-downloader/README.md);
+  the portal page never contacts Visory.
 
 Every local script tool has a source hierarchy, console-style viewer, per-file
 Copy/Download and a complete ZIP. See the [portal guide](docs/portal/modular-tools.md)
 and [Directory Cleaner guide](tools/directory-cleaner/README.md).
 All tool directories and canonical sources live under [tools](tools/) in this
 repository. Tools are independently usable; separate repositories are only
-created when a concrete need is approved. Media Recover's local editable source
-has an allowlisted, SHA-256-checked download manifest. See
+created when a concrete need is approved. Media Recover's and Visory Bulk Downloader's
+local editable sources have allowlisted, SHA-256-checked download manifests. See
 [source provenance](tools/mediarecover/SOURCE-PROVENANCE.json) and the
 [portal integration guide](docs/portal/modular-tools.md).
 

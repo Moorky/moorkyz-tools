@@ -2,9 +2,15 @@ import { readFile, writeFile, mkdir, realpath } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { verifyMediaRecoverSnapshot } from "./sync-mediarecover-source.mjs";
+import { verifyVisorySnapshot } from "./sync-visory-source.mjs";
 
 const root = fileURLToPath(new URL("..", import.meta.url));
-const bundles = ["videocrunch", "directory-cleaner", "mediarecover"];
+const bundles = [
+  "videocrunch",
+  "directory-cleaner",
+  "mediarecover",
+  "visory-bulk-downloader",
+];
 
 function crc32(bytes) {
   let crc = 0xffffffff;
@@ -85,6 +91,8 @@ export async function prepareToolSources() {
     const sourceRoot = await realpath(path.join(root, "tools", bundle));
     if (bundle === "mediarecover")
       await verifyMediaRecoverSnapshot(sourceRoot, names);
+    if (bundle === "visory-bulk-downloader")
+      await verifyVisorySnapshot(sourceRoot, names);
     const files = await Promise.all(
       names.map(async (name) => {
         const file = await realpath(path.join(sourceRoot, name));

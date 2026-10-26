@@ -108,7 +108,7 @@ test("catalog cards open complete tool pages, source tree and dormant local serv
   await expect(
     page.getByRole("heading", { name: "A little more useful." }),
   ).toBeVisible();
-  await expect(page.locator(".tool-card")).toHaveCount(4);
+  await expect(page.locator(".tool-card")).toHaveCount(5);
   await expect(page.locator(".tool-card").first()).toContainText(
     "Design, preview and export",
   );

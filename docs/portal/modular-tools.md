@@ -10,7 +10,8 @@ footer game; the user explicitly selected its current footer without a game
 until a reference is supplied.
 
 The homepage is the catalog. `/tools/toolbar`, `/tools/videocrunch`,
-`/tools/directory-cleaner` and `/tools/mediarecover` provide
+`/tools/directory-cleaner`, `/tools/mediarecover` and
+`/tools/visory-bulk-downloader` provide
 Title, Release Date, Updated On, Description, Use Cases and Setup. Local script
 tools additionally show **Tool immediately after Description**: a file hierarchy,
 selectable console-style source, copy/download per file and a complete ZIP.
@@ -145,6 +146,39 @@ provenance no longer matches its bytes. Builds need neither a sibling project
 nor the desktop process. Download all is a source ZIP, never a
 portable application package. Windows requirements, state/report paths and USB
 authorization steps are documented on the tool page and in the tool's README.
+
+## Moorkyz Visory Bulk Downloader
+
+`/tools/visory-bulk-downloader` explains the unofficial **Visory Bulk Downloader**
+Windows desktop hub (portal title **Moorkyz Visory Bulk Downloader**). Its canonical
+source, tests, build scripts and documentation live in
+[`tools/visory-bulk-downloader`](../../tools/visory-bulk-downloader); start with its
+[README](../../tools/visory-bulk-downloader/README.md) and
+[Visory integration contract](../../tools/visory-bulk-downloader/VISORY_INTEGRATION.md).
+The page follows the shared sequence (Description with workflow, features and
+limitations, Tool, Use Cases, Setup, Downloads). It states **Not yet released**, offers
+no binary download, and never contacts Visory, a native service or any other origin.
+
+The desktop app signs in through the official Visory web app in WebView2 and only
+observes allowlisted Visory/Firebase-project metadata; it does not use an invented API.
+Real-account behavior is unverified, and the page says so. Automated desktop tests use a
+loopback server, a mock provider and a labeled demo mode; their results and the
+Application Control blocks on the development machine are recorded in the tool's
+`TEST_REPORT.md`. Do not disable machine policy to run the preview.
+
+Source downloads use the [allowlist](../../tools/visory-bulk-downloader.files.json)
+and [`SOURCE-PROVENANCE.json`](../../tools/visory-bulk-downloader/SOURCE-PROVENANCE.json)
+with the same text-only, link-refusing, SHA-256 rules and EOL-preserving Git attributes
+as Media Recover. After reviewing local edits:
+
+```powershell
+node scripts\sync-visory-source.mjs
+node --test tests\tooling\visory-source.test.js tests\tooling\tools-catalog.test.js
+pnpm build
+```
+
+Build outputs, `.fixtures`, release artifacts, state databases and sessions stay
+outside the allowlist and are ignored by the tool's `.gitignore`.
 
 ## Moorkyz Directory Cleaner
 

@@ -113,6 +113,29 @@ Source downloads remain allowlisted and SHA-256 checked; updating local source
 requires explicitly refreshing its local provenance manifest. Runtime isolation,
 unpublished status, licensing and native validation limitations are unchanged.
 
+## 2026-10-26: Visory Bulk Downloader
+
+The user asked to add the "Visory Bulk Downloader — Portable Windows Edition" brief as a
+new tool for the site:
+
+- Product **Visory Bulk Downloader** (portal title **Moorkyz Visory Bulk Downloader**),
+  slug **visory-bulk-downloader**, canonical source `tools/visory-bulk-downloader` under
+  the tool source ownership decision. No separate repository.
+- The brief explicitly selects the stack: C#/.NET 10 WPF, Microsoft Edge WebView2,
+  Windows BITS, SQLite, optional Task Scheduler and a portable single-file EXE. The
+  desktop project's only package dependency is `Microsoft.Web.WebView2`; SQLite is the
+  Windows-supplied `winsqlite3.dll`. The portal gains no dependency.
+- Integration is limited to the user's own authorized session in the official Visory web
+  app. The app observes only allowlisted Visory/Firebase-project metadata, never invents
+  endpoints, labels the tool unofficial and reports real-account behavior as unverified.
+- Data stays local: tokens in memory, stored links DPAPI-protected, sign-in profile in
+  the Windows user profile with sign-out deletion, redacted reports (full URLs opt-in).
+- The portal page explains the tool and serves allowlisted, SHA-256-pinned source only.
+  It says **Not yet released**, makes no request to Visory and offers no binary.
+- No publishing, signing, pushing, scheduled-task creation or prerequisite installation
+  is performed. Application Control blocks on the development machine are reported, not
+  bypassed.
+
 ## Change authority
 
 Reversible implementation details/tests/docs can proceed autonomously. New

@@ -1,0 +1,286 @@
+{
+  "format": 1,
+  "repository": "Moorky/moorkyz-tools",
+  "sourceDirectory": "tools/visory-bulk-downloader",
+  "identity": "Visory Bulk Downloader",
+  "treeSha256": "d83099291fe857fcd164995f95d72ab4c8e92cbdf655ca8ef813b60507059c42",
+  "files": [
+    {
+      "path": ".gitignore",
+      "sha256": "7b3df4fb88b87839ac1b60aa1b3013abb207138fd4e1b10da84e831f9bd4842a"
+    },
+    {
+      "path": "AGENTS.md",
+      "sha256": "01805cd0cafb4c17cf4b1567eb2b91e3c49e468decfdc5380f0f1d9f9ca83555"
+    },
+    {
+      "path": "ARCHITECTURE.md",
+      "sha256": "f60292186678385193e91812f9b46c1079b581079ab9231341db62ea7eee2913"
+    },
+    {
+      "path": "Directory.Build.props",
+      "sha256": "20e5cc2d9d2c19f84dabda282e490edcc992015e89a234ade79d8d7996ad38ec"
+    },
+    {
+      "path": "LICENSE",
+      "sha256": "3aa77655a1fe6eda1c22407f703102dd4260452c08dc7a95b092bbc0de4b5f17"
+    },
+    {
+      "path": "README.md",
+      "sha256": "d762245d332264879a47a4f58931f610ae7174882982f626c61bda0a9444da24"
+    },
+    {
+      "path": "RELEASE_NOTES.md",
+      "sha256": "869e08d1fb396c610f0444e6db84d53b04e1c343c657e6a28ba83e824f50fb7f"
+    },
+    {
+      "path": "TEST_REPORT.md",
+      "sha256": "4a6e4360ffe47e7bdefa38d7098a02dce46aed29ba8632e51910a5d7a0a57294"
+    },
+    {
+      "path": "THIRD-PARTY-NOTICES.md",
+      "sha256": "c47518c533d09433902ca15ffa5580271c67682668450a83dac9fd80ba265e39"
+    },
+    {
+      "path": "VISORY_INTEGRATION.md",
+      "sha256": "0f86ce322076523a5a6422d24b20c597ec6afc7d08407a0e40fbe20abced89a6"
+    },
+    {
+      "path": "VisoryBulkDownloader.sln",
+      "sha256": "5230f8cc18ba3838624354fbcb01b390fdcd6c278658e8262cad6fd3c682b5d1"
+    },
+    {
+      "path": "scripts/build.ps1",
+      "sha256": "e790b483f85f50ad05faaa477446fb4970c92a940b6a38007021a574b532d2b2"
+    },
+    {
+      "path": "scripts/make-icon.ps1",
+      "sha256": "e27521f43710f0d992bee3b85c8d86be21b047f877143b4b43d02b3c24fed424"
+    },
+    {
+      "path": "scripts/publish.ps1",
+      "sha256": "d4ec4f2fe85c960cc7eadf3561333f279a0926d2ef1511c2be70c5e4529ed716"
+    },
+    {
+      "path": "scripts/test.ps1",
+      "sha256": "78b65f56e11a0704edafa1592e8792c9acc58c2800673e5875be180a7f599845"
+    },
+    {
+      "path": "src/VisoryBulkDownloader.App/app.ico.b64",
+      "sha256": "6e62bc729279b53c73627187b5db59d39ffbfb0d358b53861747b6f67dd00199"
+    },
+    {
+      "path": "src/VisoryBulkDownloader.App/app.manifest",
+      "sha256": "149412e19cc66928c416e9412090d964c325223f7bada40f2781ea6def1dbe7a"
+    },
+    {
+      "path": "src/VisoryBulkDownloader.App/App.xaml",
+      "sha256": "c4735f1456a6cb04fa092de7cd9e4825596c3e5055f5dbb8a7959371507b75e8"
+    },
+    {
+      "path": "src/VisoryBulkDownloader.App/App.xaml.cs",
+      "sha256": "896ef5b368752ce75eecae47a727ca9c39a72dfd929cb6b2119b552b68012401"
+    },
+    {
+      "path": "src/VisoryBulkDownloader.App/Converters.cs",
+      "sha256": "c91a98747fe130e9449762822b7136ea826699bdfe735d972896288b80155ea3"
+    },
+    {
+      "path": "src/VisoryBulkDownloader.App/Infrastructure.cs",
+      "sha256": "f755c96ead8fa824c05fea6b5c3aa049e1e24c8827a136d3d898f2997b57e4c8"
+    },
+    {
+      "path": "src/VisoryBulkDownloader.App/MainViewModel.cs",
+      "sha256": "2aa7851f79efa19390fca67b1cf866f5fa39059f52731ef900e62b5d1261253e"
+    },
+    {
+      "path": "src/VisoryBulkDownloader.App/MainViewModel.Pages.cs",
+      "sha256": "c3017553d582f57effc650f35f09a5eabd96f4b23979fc97659114014066ae37"
+    },
+    {
+      "path": "src/VisoryBulkDownloader.App/MainViewModel.Settings.cs",
+      "sha256": "d002fc5a311b1ba6eaf445569ed1b756b6b364c3fe8aaa899b61fcfe4f0d30aa"
+    },
+    {
+      "path": "src/VisoryBulkDownloader.App/MainWindow.xaml",
+      "sha256": "f66b5f38d532e7920f9405a990bec0e98609feb6180517b4ebce5b39c6a5389e"
+    },
+    {
+      "path": "src/VisoryBulkDownloader.App/MainWindow.xaml.cs",
+      "sha256": "d2d2b233a1c7cea3f88aca164a803c04aa63c84e956d574c8e3a3064baefdb8a"
+    },
+    {
+      "path": "src/VisoryBulkDownloader.App/Rows.cs",
+      "sha256": "1a19710d8cd023a00f5627c26cdc95b1fed407ec231941c8e3cf0f7150a388d0"
+    },
+    {
+      "path": "src/VisoryBulkDownloader.App/Shell.cs",
+      "sha256": "844c435963d5c136c64ec7c0ffa8a12651285b3c7954810188599b5d0b2642ff"
+    },
+    {
+      "path": "src/VisoryBulkDownloader.App/Themes/Palette.Dark.xaml",
+      "sha256": "1ffabe21f98b08ce3af9c4e2773e7eea7040e033dfaa2b4e20b05ba7bd4c048a"
+    },
+    {
+      "path": "src/VisoryBulkDownloader.App/Themes/Palette.HighContrast.xaml",
+      "sha256": "515c145b6ae26988b2e15df61c5a682288283c51a82c2dc28157de13d398ccdd"
+    },
+    {
+      "path": "src/VisoryBulkDownloader.App/Themes/Palette.Light.xaml",
+      "sha256": "cc258e3472beb8c75dcadcfec173ca2ec3d20d3a0e0e8e3b3be82a65eeb1d685"
+    },
+    {
+      "path": "src/VisoryBulkDownloader.App/Themes/Styles.xaml",
+      "sha256": "e4a0f7cd4ea77fa06fbb8fd6e6a125fc31d3a4098e2dae14fa725c0b7bd75dd8"
+    },
+    {
+      "path": "src/VisoryBulkDownloader.App/Views/ArchivesView.xaml",
+      "sha256": "bf299e10c4ef32bf920d81497b3c259a58ae6f6e0c8e1e36817471483e69af56"
+    },
+    {
+      "path": "src/VisoryBulkDownloader.App/Views/DashboardView.xaml",
+      "sha256": "60a65cf52b9ea0eb3aae537106e32f0d9b91c81446994e69489d15276ba63558"
+    },
+    {
+      "path": "src/VisoryBulkDownloader.App/Views/DownloadsView.xaml",
+      "sha256": "5d5349b3487e1e99a6df234f160b384dc0c8a60b5b653e1a7527d829792c5542"
+    },
+    {
+      "path": "src/VisoryBulkDownloader.App/Views/RecordingsView.xaml",
+      "sha256": "6b90ce6de1fb2a2a441dcc5b417a4f1f14e3c737f65cb36ca0f80a9586eb14b8"
+    },
+    {
+      "path": "src/VisoryBulkDownloader.App/Views/ReportsView.xaml",
+      "sha256": "5a596042b5fb8f7159b7e6639047613e10c477f5b0cbc8712aa9329038c513dd"
+    },
+    {
+      "path": "src/VisoryBulkDownloader.App/Views/SettingsView.xaml",
+      "sha256": "f35859e3fe071db40b38a9be45cbd08bf62f494f8d7035bdaa691dd741216969"
+    },
+    {
+      "path": "src/VisoryBulkDownloader.App/Views/Views.xaml.cs",
+      "sha256": "4b0bdd46bd9c7becafee70e97de0ce80e06af3b448d415a747230f2283f1fa90"
+    },
+    {
+      "path": "src/VisoryBulkDownloader.App/Visory/ScanWindow.xaml",
+      "sha256": "f7cd641bb6cfb43d7f07c0c4e8aeb5e304d44b107ed984a3d4fab33094534cd4"
+    },
+    {
+      "path": "src/VisoryBulkDownloader.App/Visory/ScanWindow.xaml.cs",
+      "sha256": "bb8d1e5152a78db03f49183f91c3938bf19889b8a891b63f22487128c7bb9c90"
+    },
+    {
+      "path": "src/VisoryBulkDownloader.App/Visory/VisoryRecordingProvider.cs",
+      "sha256": "ec0369471387ff9059b8db29fcea49e02fc9b0a72d6bc9d89b852edec0c8ceae"
+    },
+    {
+      "path": "src/VisoryBulkDownloader.App/VisoryBulkDownloader.App.csproj",
+      "sha256": "b98b689fd53dfca48f0027ab30c0bc4605e35f62293590142553d89b2617e015"
+    },
+    {
+      "path": "src/VisoryBulkDownloader.Core/Archive/ArchiveService.cs",
+      "sha256": "9d75b4610b9059f87b46449ee33d6d21a2a166e531891329d1d500c2566cb9d8"
+    },
+    {
+      "path": "src/VisoryBulkDownloader.Core/Backup/BackupCoordinator.cs",
+      "sha256": "248821567ee6a424fc2196cb0fcb79bf1d2d4481f6e2492e6d370d3a89129bf8"
+    },
+    {
+      "path": "src/VisoryBulkDownloader.Core/Download/Bits.cs",
+      "sha256": "743787ddda3a12e6109de87d5df988153cfb9cb7fb9cd6b5ce0fef5c84f6a4f1"
+    },
+    {
+      "path": "src/VisoryBulkDownloader.Core/Download/DestinationPlanner.cs",
+      "sha256": "1d32ed5cfce5ed7da86038982260de8228ed04357362f48291381a10a18f8dee"
+    },
+    {
+      "path": "src/VisoryBulkDownloader.Core/Download/DownloadEngine.cs",
+      "sha256": "6dcaa22db2ac6289ea3b876affba18fffa33f72d417901151e66021449eab774"
+    },
+    {
+      "path": "src/VisoryBulkDownloader.Core/Download/HttpTransfer.cs",
+      "sha256": "ef76177f428c875aba76e88bcf261949871e9fd08ad234f67ff7e4d8f5f87c71"
+    },
+    {
+      "path": "src/VisoryBulkDownloader.Core/Infrastructure/Dpapi.cs",
+      "sha256": "7ed43545634725f5c5fc37b5629340ece02b7d18d2ec31c2d22ecde3b5e9901b"
+    },
+    {
+      "path": "src/VisoryBulkDownloader.Core/Infrastructure/Format.cs",
+      "sha256": "1cb548c03822d958782320e8e40486fb2da268bf3d96388d6f818c48331dd981"
+    },
+    {
+      "path": "src/VisoryBulkDownloader.Core/Infrastructure/PathSafety.cs",
+      "sha256": "f42a653d5e66bd3400ae4d566b86375926b86d544ed4003e9faec0bbea514e65"
+    },
+    {
+      "path": "src/VisoryBulkDownloader.Core/Infrastructure/Scheduling.cs",
+      "sha256": "d0ce0813fb581dfde240cb4a66bf284e75dd690bc0dbd8d604d473bbe75c7ccf"
+    },
+    {
+      "path": "src/VisoryBulkDownloader.Core/Infrastructure/Settings.cs",
+      "sha256": "8412b393a6e06e5f3c8708bfa7cc9556cc0035534d55cdbe1c9b8192c0524414"
+    },
+    {
+      "path": "src/VisoryBulkDownloader.Core/Infrastructure/UrlPolicy.cs",
+      "sha256": "2983a57c87cbabd95a0d23fa39d4eed4afab3c1cdb33ec220912d6913fac93a1"
+    },
+    {
+      "path": "src/VisoryBulkDownloader.Core/Localization/Strings.cs",
+      "sha256": "71ef746f98b1e1da496bea48ed0bf48bf5452ae61a81f3f567fc1ff73685a060"
+    },
+    {
+      "path": "src/VisoryBulkDownloader.Core/Models.cs",
+      "sha256": "baf720c63fdca413b36ea66b4fb5fadbe14a72daf56c9a2ccc1dc625e4604cd0"
+    },
+    {
+      "path": "src/VisoryBulkDownloader.Core/Providers/Contracts.cs",
+      "sha256": "7f1a9df6531fce1fa6c4d34fb76e6031c1de5765fe485c45678e12de4249e064"
+    },
+    {
+      "path": "src/VisoryBulkDownloader.Core/Providers/DemoRecordingProvider.cs",
+      "sha256": "6f1a22ae1480c712dc7de855aac2b8d5009b0e0f6278334f3765e98cb29a176f"
+    },
+    {
+      "path": "src/VisoryBulkDownloader.Core/Providers/DiscoverySession.cs",
+      "sha256": "1797fc93f468c0c9678ae39a015d619563c4de30d844055bbb13d2dc14b85b0f"
+    },
+    {
+      "path": "src/VisoryBulkDownloader.Core/Reporting/RunLogger.cs",
+      "sha256": "009c5f901255092c415a6cb74e20a13af029f7d2dddaba28d6b5cb7f635ed6e4"
+    },
+    {
+      "path": "src/VisoryBulkDownloader.Core/Storage/Sqlite.cs",
+      "sha256": "60bb82f28471c3100353c85a76e81cae3ff0085f6047ccad9fdccb6183b2fa07"
+    },
+    {
+      "path": "src/VisoryBulkDownloader.Core/Storage/StateStore.cs",
+      "sha256": "0a2a3ee3d21c22aa1c38da1eea7a62559dbd4d0803f7c6f90f5c217ed9158d5a"
+    },
+    {
+      "path": "src/VisoryBulkDownloader.Core/VisoryBulkDownloader.Core.csproj",
+      "sha256": "e0a0a4862f7c06da67781c291d4cf100ffb2f2620df8f6e92397a7e5ac829e67"
+    },
+    {
+      "path": "tests/VisoryBulkDownloader.Tests/Harness.cs",
+      "sha256": "a7540f4bfdc039d121cbeaea3bc52cd7e16ef435f7a378d6740a71a8ac2946a5"
+    },
+    {
+      "path": "tests/VisoryBulkDownloader.Tests/Scenarios.cs",
+      "sha256": "f48bbddd0075a1af25c240d0ebb0ae04cb131e96b4ecd8ae2ddeff3bb89bed2a"
+    },
+    {
+      "path": "tests/VisoryBulkDownloader.Tests/TestServer.cs",
+      "sha256": "226b0eb5736db2106b3d1aebadfcb8f17a61c3ecd9d0be9cd8e87b8c5487e52d"
+    },
+    {
+      "path": "tests/VisoryBulkDownloader.Tests/VisoryBulkDownloader.Tests.csproj",
+      "sha256": "935ab2a29496c075b585084f3e0060c051cd571462821ed8c6e173c5cc4fdb06"
+    },
+    {
+      "path": "third-party/wpf-10.0.11-NOTICES.txt",
+      "sha256": "d9d14b48bbeaf60d2b528d8c086af1baaab70f2ebbaaf1ccb11c1c16a08bdaeb"
+    }
+  ],
+  "note": "Canonical UTF-8 source maintained in tools/visory-bulk-downloader in this repository, not a release. After local edits, refresh this manifest using node scripts/sync-visory-source.mjs."
+}

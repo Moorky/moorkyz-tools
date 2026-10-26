@@ -6,3 +6,5 @@ tools.moorkyz.com text eol=lf
 # Preserve pinned source bytes and verbatim upstream notices across checkouts.
 tools/mediarecover/** -text whitespace=trailing-space,space-before-tab,cr-at-eol
 tools/mediarecover/third-party/wpf-10.0.11-NOTICES.txt -whitespace
+tools/visory-bulk-downloader/** -text whitespace=trailing-space,space-before-tab,cr-at-eol
+tools/visory-bulk-downloader/third-party/wpf-10.0.11-NOTICES.txt -whitespace
