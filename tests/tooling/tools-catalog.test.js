@@ -109,6 +109,8 @@ test("Media Recover is an independent unreleased desktop tool with explanation-f
   assert.match(tool.limitations.join(" "), /does not mean undeleting/);
   assert.match(
     tool.setup.map((step) => step.text).join(" "),
-    /moorkyz-tools-mediarecover/,
+    /tools\/mediarecover within this repository/,
   );
+  assert.match(tool.source.notice, /Canonical source maintained/);
+  assert.doesNotMatch(tool.source.notice, /independent.*project|not a second/);
 });

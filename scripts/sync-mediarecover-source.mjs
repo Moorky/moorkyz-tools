@@ -1,11 +1,11 @@
 import { createHash } from "node:crypto";
-import { lstat, mkdir, readFile, realpath, writeFile } from "node:fs/promises";
+import { lstat, readFile, realpath, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = fileURLToPath(new URL("..", import.meta.url));
 export const provenanceName = "SOURCE-PROVENANCE.json";
-const repository = "Moorky/moorkyz-tools-mediarecover";
+const repository = "Moorky/moorkyz-tools";
 const digest = (bytes) => createHash("sha256").update(bytes).digest("hex");
 
 function validateNames(names) {
@@ -82,10 +82,11 @@ export async function createMediaRecoverSnapshot(sourceRoot, names) {
   const provenance = {
     format: 1,
     repository,
+    sourceDirectory: "tools/mediarecover",
     identity: "Moorkyz Media Recover",
     treeSha256: digest(JSON.stringify(hashes)),
     files: hashes,
-    note: "Pinned UTF-8 source snapshot, not a release. Refresh only from the independent project using scripts/sync-mediarecover-source.mjs; do not edit snapshot files in the portal.",
+    note: "Canonical UTF-8 source maintained in tools/mediarecover in this repository, not a release. After local edits, refresh this manifest using node scripts/sync-mediarecover-source.mjs. No external project is required.",
   };
   return { files, provenance };
 }
@@ -97,38 +98,31 @@ export async function verifyMediaRecoverSnapshot(sourceRoot, names) {
   );
   if (JSON.stringify(recorded) !== JSON.stringify(provenance))
     throw new Error(
-      "Media Recover snapshot provenance mismatch. Refresh the allowlisted snapshot from the independent project.",
+      "Media Recover source provenance mismatch. After reviewing local edits in tools/mediarecover, run node scripts\\sync-mediarecover-source.mjs.",
     );
   return provenance;
 }
 
-async function sync(sourceRoot) {
-  if (!sourceRoot)
+export async function updateMediaRecoverProvenance(sourceRoot, names) {
+  const target = path.join(sourceRoot, provenanceName);
+  await checkSnapshotOutput(target);
+  const { provenance } = await createMediaRecoverSnapshot(sourceRoot, names);
+  await writeFile(target, `${JSON.stringify(provenance, null, 2)}\n`);
+  return provenance;
+}
+
+async function sync() {
+  if (process.argv.length > 2)
     throw new Error(
-      "Usage: node scripts\\sync-mediarecover-source.mjs <standalone-source-directory>",
+      "External source directories are not supported. Edit tools\\mediarecover in this repository, then run node scripts\\sync-mediarecover-source.mjs without arguments.",
     );
   const names = JSON.parse(
     await readFile(path.join(root, "tools", "mediarecover.files.json"), "utf8"),
   );
   const output = path.join(root, "tools", "mediarecover");
-  if (path.resolve(sourceRoot).toLowerCase() === output.toLowerCase())
-    throw new Error("Refresh from the independent project, not the snapshot.");
-  const { files, provenance } = await createMediaRecoverSnapshot(
-    sourceRoot,
-    names,
-  );
-  for (const name of names) await checkSnapshotOutput(path.join(output, name));
-  for (const { name, bytes } of files) {
-    const target = path.join(output, name);
-    await mkdir(path.dirname(target), { recursive: true });
-    await writeFile(target, bytes);
-  }
-  await writeFile(
-    path.join(output, provenanceName),
-    `${JSON.stringify(provenance, null, 2)}\n`,
-  );
+  const provenance = await updateMediaRecoverProvenance(output, names);
   console.log(
-    `Pinned ${repository}: ${files.length} text files, tree SHA-256 ${provenance.treeSha256}. No release or remote operation performed.`,
+    `Updated ${repository} tools/mediarecover: ${provenance.files.length} local text files, tree SHA-256 ${provenance.treeSha256}. No source files copied, release or remote operation performed.`,
   );
 }
 
@@ -136,5 +130,5 @@ if (
   process.argv[1] &&
   path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)
 ) {
-  await sync(process.argv[2]);
+  await sync();
 }

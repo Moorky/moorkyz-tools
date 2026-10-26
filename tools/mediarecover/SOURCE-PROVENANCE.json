@@ -1,8 +1,9 @@
 {
   "format": 1,
-  "repository": "Moorky/moorkyz-tools-mediarecover",
+  "repository": "Moorky/moorkyz-tools",
+  "sourceDirectory": "tools/mediarecover",
   "identity": "Moorkyz Media Recover",
-  "treeSha256": "1ecf338fe65df3383e7e3f8428d1b3c7b9a96646dc76c753b35cdfb83f2733c3",
+  "treeSha256": "2daabd79c1f468af14731bf9f8c8f0794e2a79b90747541f4ef27a885dfddbf5",
   "files": [
     {
       "path": ".gitignore",
@@ -18,7 +19,7 @@
     },
     {
       "path": "AGENTS.md",
-      "sha256": "8bce8bb8364446eebab3c7c48e0a78d9a6750dc6ab41887c7b85022e7bc2eb73"
+      "sha256": "17ef89eca250f4c3e9256aed23ffee2b19a5aec04fab06d8ec87797ea71f9315"
     },
     {
       "path": "Directory.Build.props",
@@ -34,7 +35,7 @@
     },
     {
       "path": "README.md",
-      "sha256": "f7a06a80bda3492ebc286cd0a41de006125cb91da4ae25d9716e7bf699dcd5cb"
+      "sha256": "2e9640e7f2156d721e249cdcd9700a755a400f0f114f35b263342884fa3c6c9d"
     },
     {
       "path": "THIRD-PARTY-NOTICES.md",
@@ -50,7 +51,7 @@
     },
     {
       "path": "docs/verification.md",
-      "sha256": "10fc7527b2989862fff20c3fd2aa88605ed486eb20513abc484e437fda26d270"
+      "sha256": "3e76743f7e8272336586459b811ef801c0d1f246a636a549fcbb2922ed2d4d2f"
     },
     {
       "path": "scripts/build.ps1",
@@ -66,7 +67,7 @@
     },
     {
       "path": "scripts/source-manifest.ps1",
-      "sha256": "715f29bf7d6ebc6b383dd33bda63e30bef5aadba46b3fe018cdd50c08764e904"
+      "sha256": "9cd229bbc03d4e72e080a6c9c499c9a21e296e43b3bdf1538839749ce154bf73"
     },
     {
       "path": "scripts/test.ps1",
@@ -78,7 +79,7 @@
     },
     {
       "path": "source-files.json",
-      "sha256": "0229b4bf631419aea47077dc3596ff9b3aa9d1c3effaca7b16f2d6e5c75b29ae"
+      "sha256": "fc1d793fd4772d941e56caff7814425b363b9fbc1cfe2e8397d548ce6c8a28c9"
     },
     {
       "path": "src/Moorkyz.MediaRecover.App/app.manifest",
@@ -197,5 +198,5 @@
       "sha256": "d9d14b48bbeaf60d2b528d8c086af1baaab70f2ebbaaf1ccb11c1c16a08bdaeb"
     }
   ],
-  "note": "Pinned UTF-8 source snapshot, not a release. Refresh only from the independent project using scripts/sync-mediarecover-source.mjs; do not edit snapshot files in the portal."
+  "note": "Canonical UTF-8 source maintained in tools/mediarecover in this repository, not a release. After local edits, refresh this manifest using node scripts/sync-mediarecover-source.mjs. No external project is required."
 }

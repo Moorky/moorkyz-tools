@@ -31,9 +31,10 @@ finally { $sha256.Dispose() }
 New-Item -ItemType Directory -Path .\artifacts -Force | Out-Null
 @{
     product = 'Moorkyz Media Recover'
-    repository = 'moorkyz-tools-mediarecover'
+    repository = 'Moorky/moorkyz-tools'
+    sourceDirectory = 'tools/mediarecover'
     version = '0.1.0'
-    provenance = 'Uncommitted local implementation. No Git initialization, remote creation, commit or public release is asserted.'
+    provenance = 'Canonical source maintained in tools/mediarecover in the tools repository. This manifest does not assert a public release.'
     treeHashAlgorithm = 'SHA-256 over ordinal-sorted UTF-8 path LF lowercase-file-SHA256 LF'
     treeSha256 = $treeHash
     files = $files

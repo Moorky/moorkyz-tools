@@ -198,7 +198,7 @@ export const TOOLS: readonly ToolDefinition[] = [
       },
       {
         title: "Start the desktop application",
-        text: "No public executable release is available yet. Build the independently maintained moorkyz-tools-mediarecover source or use a locally verified portable package supplied by its maintainer. Extract the entire package before starting MoorkyzMediaRecover.exe; do not run source text in this viewer.",
+        text: "No public executable release is available yet. Build the canonical source in tools/mediarecover within this repository or use a locally verified portable package supplied by its maintainer. Extract the entire package before starting MoorkyzMediaRecover.exe; do not run source text in this viewer.",
       },
       {
         title: "Choose storage and review the scan",
@@ -215,7 +215,7 @@ export const TOOLS: readonly ToolDefinition[] = [
       bundle: "mediarecover",
       files: mediaRecoverFiles,
       notice:
-        "Pinned text source from the independent Moorky/moorkyz-tools-mediarecover project, not a second editable runtime. SOURCE-PROVENANCE.json records each original file's SHA-256 and the source tree hash. Refresh from that project rather than editing this snapshot. The ZIP contains buildable source, not a public executable release.",
+        "Canonical source maintained in tools/mediarecover in Moorky/moorkyz-tools. Edit it in this repository, then refresh SOURCE-PROVENANCE.json to record the allowlisted files' SHA-256 and source tree hash. The ZIP contains buildable source, not a public executable release.",
     },
   },
   {

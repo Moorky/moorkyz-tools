@@ -98,6 +98,21 @@ The user supplied the full Media Recover implementation prompt:
 - No remote repository creation, Git initialization, pushing, publishing,
   deployment, signing or native prerequisite installation is performed.
 
+## 2026-10-26: tool source ownership
+
+The user clarified that all tool directories belong inside the tools project.
+Tools remain independently usable, but their canonical source lives under
+`tools/` in **Moorky/moorkyz-tools**. Separate repositories are exceptions that
+require a concrete need and explicit approval, not the default for a new tool.
+Do not create nested Git repositories, submodules or sibling-source sync flows.
+
+This supersedes the earlier Media Recover standalone-repository and read-only
+import-snapshot decisions. `tools/mediarecover` is now its editable canonical
+source, including its existing desktop solution, tests and build scripts.
+Source downloads remain allowlisted and SHA-256 checked; updating local source
+requires explicitly refreshing its local provenance manifest. Runtime isolation,
+unpublished status, licensing and native validation limitations are unchanged.
+
 ## Change authority
 
 Reversible implementation details/tests/docs can proceed autonomously. New

@@ -29,6 +29,33 @@ function run(entrypoint, folder, ...args) {
   });
 }
 
+test("tools are local directories tracked by the parent repository, not nested repositories", () => {
+  const tools = fs
+    .readdirSync(path.join(root, "tools"), { withFileTypes: true })
+    .filter((entry) => entry.isDirectory() || entry.isSymbolicLink());
+  assert.ok(tools.length > 0);
+  for (const entry of tools) {
+    assert.equal(entry.isSymbolicLink(), false, entry.name);
+    assert.equal(
+      fs.existsSync(path.join(root, "tools", entry.name, ".git")),
+      false,
+      entry.name,
+    );
+  }
+  const tracked = spawnSync("git", ["ls-files", "--stage", "--", "tools"], {
+    cwd: root,
+    encoding: "utf8",
+  });
+  assert.equal(tracked.status, 0, tracked.stderr);
+  assert.doesNotMatch(
+    tracked.stdout,
+    /^160000 /m,
+    "No tool may be a Git submodule.",
+  );
+  for (const entry of tools)
+    assert.ok(tracked.stdout.includes(`\ttools/${entry.name}/`), entry.name);
+});
+
 test("root launchers delegate to one core and the storage API is a compatibility re-export", () => {
   for (const entrypoint of ["moorkyz.cjs", "tools.moorkyz.com.cjs"]) {
     assert.match(

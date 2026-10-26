@@ -51,7 +51,7 @@ test("Media Recover explains the independent desktop workflow, honest downloads 
     page.locator("#workspace, iframe, input[type=file]"),
   ).toHaveCount(0);
   await expect(page.locator("#tool")).toContainText(
-    "Moorky/moorkyz-tools-mediarecover",
+    "Canonical source maintained in tools/mediarecover in Moorky/moorkyz-tools",
   );
   expect(
     requests.filter(
@@ -79,7 +79,10 @@ test("desktop source snapshot is readable, downloadable and never executed", asy
   await expect(page.locator(".source-console h3")).toBeFocused();
   await expect(page.locator(".source-console pre")).toContainText("treeSha256");
   await expect(page.locator(".source-console pre")).toContainText(
-    "Moorky/moorkyz-tools-mediarecover",
+    '"repository": "Moorky/moorkyz-tools"',
+  );
+  await expect(page.locator(".source-console pre")).toContainText(
+    '"sourceDirectory": "tools/mediarecover"',
   );
   await expect(page.getByRole("button", { name: "Copy file" })).toBeVisible();
   const downloaded = page.waitForEvent("download");

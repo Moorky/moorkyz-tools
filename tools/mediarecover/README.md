@@ -2,13 +2,14 @@
 
 An offline Windows desktop app for safely copying **readable** video/audio from
 local folders and Windows Portable Devices (Android USB/MTP). Product repository:
-`Moorky/moorkyz-tools-mediarecover`. Version **0.1.0, unpublished local build**.
+`Moorky/moorkyz-tools`, canonical directory `tools/mediarecover`.
+Version **0.1.0, unpublished local build**.
 
 This is not undelete, encryption bypass, forensic extraction, or a guarantee that
 a recording is playable. No accounts, network calls, telemetry, local HTTP server,
 auto-update, service, administrative privilege, or mandatory third-party package.
-The independently maintained portal is `https://tools.moorkyz.com/tools/mediarecover`;
-this project does not host that page.
+The portal at `https://tools.moorkyz.com/tools/mediarecover` is maintained in the
+same repository. The desktop application remains independently usable.
 
 ## Start
 
@@ -109,6 +110,7 @@ do not download arbitrary DLLs. Normal SDK runtime/reference-pack restore may us
 NuGet when packs are not already installed. The application itself never connects.
 
 ```powershell
+Set-Location tools\mediarecover # From the repository root.
 .\scripts\build.ps1
 .\scripts\test.ps1
 .\scripts\publish.ps1
@@ -116,6 +118,10 @@ NuGet when packs are not already installed. The application itself never connect
 .\scripts\smoke.ps1
 .\scripts\source-manifest.ps1
 ```
+
+After editing this tool, refresh its downloadable-source hashes from the
+repository root with `node scripts\sync-mediarecover-source.mjs`. This updates
+only the local provenance manifest; it does not import a sibling project.
 
 Outputs: `artifacts\portable-win-x64\MoorkyzMediaRecover.exe`,
 `artifacts\Moorkyz-Media-Recover-0.1.0-win-x64.zip` and its SHA-256 file.

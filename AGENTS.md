@@ -13,6 +13,10 @@ describe older revisions and are not current product requirements.
 
 - Inspect the existing implementation and relevant documentation before edits.
 - Keep tools independent. Portal navigation must not depend on an individual tool.
+- Keep every tool's canonical source under `tools/` in this repository. Tools
+  remain independently usable, not separate repositories by default. A repository
+  split requires a concrete need and explicit approval; do not create nested Git
+  roots, submodules or sibling-source synchronization.
 - Preserve accessibility, keyboard operation, reduced motion, strict typing,
   CSP-safe rendering, local-first data handling and explicit error reporting.
 - Local services are opt-in, loopback-only and inactive while disabled. Do not

@@ -1,6 +1,7 @@
 {
   "product": "Moorkyz Media Recover",
-  "repository": "moorkyz-tools-mediarecover",
+  "repository": "Moorky/moorkyz-tools",
+  "sourceDirectory": "tools/mediarecover",
   "version": "0.1.0",
   "files": [
     ".gitignore",

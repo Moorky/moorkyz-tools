@@ -33,6 +33,22 @@ The same artwork supplies SVG/ICO/PNG favicons, touch/Android icons and social
 preview imagery. Browser titles and the web manifest use the display name;
 the domain, repository identity and theme-storage key remain unchanged.
 
+## Shared footer
+
+The homepage, tool details and contributing page share the dark Moorkyz footer.
+Its centered `made /w` mark and copyright credit use the live moorkyz.com styling:
+a 0.9-second fade-in after 0.4 seconds and a single 2.4-second separator glint
+after 1.5 seconds. Reduced-motion preferences disable both animations.
+The footer stays in document flow rather than covering tool workspaces.
+At the default font size it is approximately 70 px tall, about 35% shorter than
+the previous 107 px footer. On narrow screens the credit sits above the links.
+The existing Evidence workspace link remains available at the lower left.
+A single un-underlined white `More projects?` link and font-sized Moorkyz SVG
+sit at the lower right and navigate to `https://moorkyz.com/projects`.
+Hover and keyboard focus brighten the complete link with a glow; keyboard focus
+also retains a visible outline. All artwork and animation are local, with no new
+dependencies or automatic external requests.
+
 ## Moorkyz Toolbar Builder
 
 The browser-only builder edits at most eight labels/URLs, light/dark appearance,
@@ -70,56 +86,59 @@ parent project's Apache-2.0 license must not be assumed to relicense it.
 ## Moorkyz Media Recover
 
 `/tools/mediarecover` explains the independent **Moorkyz Media Recover** Windows
-desktop application. Its standalone project is **Moorky/moorkyz-tools-mediarecover**,
-not this portal. No remote repository or public executable release is created by
-this integration. The page states **Not yet released** and offers no fake binary
+desktop application. Its canonical source lives in **tools/mediarecover** within
+**Moorky/moorkyz-tools**, alongside the portal and the other tools. Independent
+use does not require a separate repository. No remote repository or public
+executable release is created. The page states **Not yet released** and offers no fake binary
 download. It is not a browser filesystem workspace and has no native HTTP route,
 iframe, background connection, upload or service-enable flag.
 
-The independent source compiles and a self-contained x64 package was produced,
+The desktop source compiled and a self-contained x64 package was produced,
 but desktop runtime acceptance is **blocked**: this machine's Windows Application
 Control rejects unsigned application assemblies with `0x800711C7`. The earlier
 12-group synthetic suite passed before final hardening; the final expanded suite
 and WPF launch did not complete. No desktop screenshot, phone-transfer validation
 or production-readiness claim is made. Automatic device reconnect, embedded
 capture-date parsing and several advanced options remain deferred, as documented
-in the pinned desktop README. Do not disable machine policy to run this preview.
+in the desktop README. Do not disable machine policy to run this preview.
 
 The shared sequence remains header/metadata, Description, Tool, Use Cases, Setup,
 then Downloads. Workflow, grouped features and candid recovery/integrity limits
 are inside Description, before the source browser. Catalog cards, metadata and
 local search derive from the registry; search also matches route slugs.
 
-### Pinned source, not a second codebase
+### Canonical source and checked downloads
 
-The text snapshot under [`tools/mediarecover`](../../tools/mediarecover) is
-redistributed solely for source inspection/download. Edit the independent app,
-not this snapshot. Its explicit
+The editable source under [`tools/mediarecover`](../../tools/mediarecover)
+belongs to this repository. All tools use this monorepo by default; a separate
+repository requires a concrete need and explicit approval. Its explicit
 [`allowlist`](../../tools/mediarecover.files.json) excludes outputs, state,
 media, packages and Git internals.
 [`SOURCE-PROVENANCE.json`](../../tools/mediarecover/SOURCE-PROVENANCE.json)
-records the independent project identity, SHA-256 of every included original file
+records repository/directory ownership, SHA-256 of every included source file
 and a deterministic tree hash. This pins local content, not an invented remote
 commit or release.
-Git attributes disable line-ending conversion for this snapshot so the pinned
-original bytes survive Windows and non-Windows checkouts. Upstream third-party
+Git attributes disable line-ending conversion for these sources so their checked
+bytes survive Windows and non-Windows checkouts. Upstream third-party
 notice whitespace is retained verbatim.
 
-Refresh deliberately from the independent project:
+After reviewing local source edits, refresh provenance from the repository root:
 
 ```powershell
-node scripts\sync-mediarecover-source.mjs C:\path\to\moorkyz-tools-mediarecover
+node scripts\sync-mediarecover-source.mjs
 pnpm build
 node --test tests\tooling\mediarecover-snapshot.test.js tests\tooling\tools-catalog.test.js
 pnpm check:source
 ```
 
-The sync validates the complete allowlist before copying and rejects traversal,
-linked source components and non-UTF-8 text. Source generation refuses a snapshot
-whose recorded provenance no longer matches its bytes. Builds need neither the
-sibling project nor its desktop process. Download all is a source ZIP, never a
+The compatibility-named sync command validates the complete allowlist and rejects
+traversal, linked source/output components and non-UTF-8 text. It only updates the
+local provenance manifest; external source arguments are rejected, and no source
+is copied or overwritten. Source generation refuses content whose recorded
+provenance no longer matches its bytes. Builds need neither a sibling project
+nor the desktop process. Download all is a source ZIP, never a
 portable application package. Windows requirements, state/report paths and USB
-authorization steps are documented on the tool page and in the snapshot's README.
+authorization steps are documented on the tool page and in the tool's README.
 
 ## Moorkyz Directory Cleaner
 

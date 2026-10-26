@@ -1,6 +1,7 @@
 # Verification and release conditions
 
-Run from this repository on Windows using the installed .NET 10 SDK.
+Run from `tools/mediarecover` in the tools repository on Windows using the
+installed .NET 10 SDK.
 
 ```powershell
 dotnet build .\Moorkyz.MediaRecover.sln -c Release --nologo

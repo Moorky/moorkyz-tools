@@ -1,7 +1,10 @@
 # Moorkyz Media Recover
 
-Identity: `Moorkyz Media Recover`, repository `moorkyz-tools-mediarecover`.
-Standalone Windows desktop app; the independent portal is maintained elsewhere.
+Identity: `Moorkyz Media Recover`, canonical directory `tools/mediarecover` in
+`Moorky/moorkyz-tools`. This independently usable Windows desktop app and its
+portal are maintained in the same repository. Follow the root AGENTS.md.
+Do not create a separate repository, nested Git root or external-source sync
+without a concrete need and explicit approval.
 
 - Read README, docs and the latest implementation audit before edits.
 - Sources are always read-only. No source write/delete/rename, Shell.CopyHere,
@@ -17,5 +20,7 @@ Standalone Windows desktop app; the independent portal is maintained elsewhere.
   `scripts\smoke.ps1` are local operations. Don't claim hardware/VM tests passed.
 - Keep the text-only `source-files.json` allowlist complete. Never include
   artifacts, private data, state, fixture output, Git, bin/obj or runtime caches.
+- After source edits, run `node scripts\sync-mediarecover-source.mjs` from the
+  repository root to refresh local source provenance before the portal build.
 - Record actual PASS/FAIL/NOT RUN/N/A in a task audit. No Git initialization or
   forced commit when there is no authorized baseline. Never push automatically.

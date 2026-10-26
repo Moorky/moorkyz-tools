@@ -27,6 +27,11 @@ moorkyz-tools/
 
 - Add tools to the existing catalog, using shared detail/source views. Portal
   navigation must remain independent of any one tool. Do not create another SDK.
+- Keep all canonical tool directories in `tools/`, tracked by this repository.
+  Independent use does not imply separate Git ownership. Split a repository only
+  for a concrete, explicitly approved need; do not add nested Git roots, submodules
+  or sibling-source sync requirements. Media Recover is edited in
+  [tools/mediarecover](../../tools/mediarecover), not in an external project.
 - Keep app-specific scripts with their workspace, project automation in
   [scripts](../../scripts/README.md), and reusable repository systems in
   [.template](../../.template/README.md). Each tooling folder has a README and
@@ -36,8 +41,8 @@ moorkyz-tools/
   preferred ports. The Windows profile installer remains explicit and optional.
 - Keep active docs in their subject folders and new evidence in
   [.audits](../../.audits/README.md). Historical audits stay at stable paths.
-- Source snapshots, generated text/ZIP assets and independent native services
-  keep their existing provenance, allowlists and opt-in boundaries.
+- Source manifests, generated text/ZIP assets and independent native services
+  retain content-hash verification, explicit allowlists and opt-in boundaries.
 
 ## Useful template systems, without unsafe replacement
 

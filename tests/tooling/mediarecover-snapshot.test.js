@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { execFileSync } from "node:child_process";
+import { execFileSync, spawnSync } from "node:child_process";
 import { test } from "node:test";
 import {
   mkdtemp,
@@ -17,6 +17,7 @@ import {
   checkSnapshotOutput,
   provenanceName,
   verifyMediaRecoverSnapshot,
+  updateMediaRecoverProvenance,
 } from "../../scripts/sync-mediarecover-source.mjs";
 
 test("Git checkout rules preserve every pinned desktop source byte", async () => {
@@ -55,10 +56,8 @@ test("desktop source snapshot is deterministic, pinned and rejects changed prove
     const first = await createMediaRecoverSnapshot(folder, names);
     const second = await createMediaRecoverSnapshot(folder, names);
     assert.deepEqual(first, second);
-    assert.equal(
-      first.provenance.repository,
-      "Moorky/moorkyz-tools-mediarecover",
-    );
+    assert.equal(first.provenance.repository, "Moorky/moorkyz-tools");
+    assert.equal(first.provenance.sourceDirectory, "tools/mediarecover");
     assert.match(first.provenance.treeSha256, /^[a-f0-9]{64}$/);
     assert.equal(first.files[0].bytes.toString(), "# Fixture\r\n");
     const target = path.join(folder, provenanceName);
@@ -80,6 +79,45 @@ test("desktop source snapshot is deterministic, pinned and rejects changed prove
     await assert.rejects(
       verifyMediaRecoverSnapshot(folder, names),
       /provenance mismatch/,
+    );
+  });
+});
+
+test("local source edits refresh only provenance and external-source CLI arguments are rejected", async () => {
+  await fixture(async (folder) => {
+    const names = ["README.md", provenanceName];
+    await updateMediaRecoverProvenance(folder, names);
+    const before = await readFile(path.join(folder, provenanceName), "utf8");
+    const bytes = Buffer.from("# Locally maintained source\r\n");
+    await writeFile(path.join(folder, "README.md"), bytes);
+    await assert.rejects(
+      verifyMediaRecoverSnapshot(folder, names),
+      /provenance mismatch/,
+    );
+    await updateMediaRecoverProvenance(folder, names);
+    assert.notEqual(
+      await readFile(path.join(folder, provenanceName), "utf8"),
+      before,
+    );
+    assert.deepEqual(await readFile(path.join(folder, "README.md")), bytes);
+    await verifyMediaRecoverSnapshot(folder, names);
+    const result = spawnSync(
+      process.execPath,
+      [
+        fileURLToPath(
+          new URL(
+            "../../scripts/sync-mediarecover-source.mjs",
+            import.meta.url,
+          ),
+        ),
+        folder,
+      ],
+      { encoding: "utf8" },
+    );
+    assert.equal(result.status, 1);
+    assert.match(
+      result.stderr,
+      /External source directories are not supported/,
     );
   });
 });
