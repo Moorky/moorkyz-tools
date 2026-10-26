@@ -1,0 +1,18 @@
+<Application x:Class="MoorkszVisoryMediaDownloader.App.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:app="clr-namespace:MoorkszVisoryMediaDownloader.App"
+             ShutdownMode="OnExplicitShutdown">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/MoorkszVisoryMediaDownloader;component/Themes/Palette.Light.xaml" />
+                <ResourceDictionary Source="/MoorkszVisoryMediaDownloader;component/Themes/Styles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <app:BoolToVisibilityConverter x:Key="Visible" />
+            <app:BoolToVisibilityConverter x:Key="Hidden" Invert="True" />
+            <app:PageVisibilityConverter x:Key="PageVisible" />
+            <app:ResourceBrushConverter x:Key="PaletteBrush" />
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

@@ -23,7 +23,7 @@ const root = fileURLToPath(new URL("../..", import.meta.url));
 const allowlist = async () =>
   JSON.parse(
     await readFile(
-      path.join(root, "tools", "visory-bulk-downloader.files.json"),
+      path.join(root, "tools", "visory-media-downloader.files.json"),
       "utf8",
     ),
   );
@@ -31,11 +31,12 @@ const allowlist = async () =>
 test("Visory source allowlist is complete, text-only and matches its recorded provenance", async () => {
   const names = await allowlist();
   const provenance = await verifyVisorySnapshot(
-    path.join(root, "tools", "visory-bulk-downloader"),
+    path.join(root, "tools", "visory-media-downloader"),
     names,
   );
   assert.equal(provenance.repository, "Moorky/moorkyz-tools");
-  assert.equal(provenance.sourceDirectory, "tools/visory-bulk-downloader");
+  assert.equal(provenance.sourceDirectory, "tools/visory-media-downloader");
+  assert.equal(provenance.identity, "Moorksz Visory Media Downloader");
   assert.equal(provenance.files.length, names.length - 1);
   for (const required of [
     "README.md",
@@ -43,11 +44,11 @@ test("Visory source allowlist is complete, text-only and matches its recorded pr
     "VISORY_INTEGRATION.md",
     "TEST_REPORT.md",
     "RELEASE_NOTES.md",
-    "VisoryBulkDownloader.sln",
+    "MoorkszVisoryMediaDownloader.sln",
     "scripts/publish.ps1",
-    "src/VisoryBulkDownloader.App/VisoryBulkDownloader.App.csproj",
-    "src/VisoryBulkDownloader.Core/Providers/DiscoverySession.cs",
-    "tests/VisoryBulkDownloader.Tests/Scenarios.cs",
+    "src/MoorkszVisoryMediaDownloader.App/MoorkszVisoryMediaDownloader.App.csproj",
+    "src/MoorkszVisoryMediaDownloader.Core/Providers/DiscoverySession.cs",
+    "tests/MoorkszVisoryMediaDownloader.Tests/Scenarios.cs",
   ])
     assert.ok(names.includes(required), required);
   assert.ok(
@@ -61,7 +62,7 @@ test("Visory source allowlist is complete, text-only and matches its recorded pr
 
 test("Git checkout rules preserve every Visory source byte", async () => {
   const names = (await allowlist()).filter((name) => name !== provenanceName);
-  const input = `${names.map((name) => `tools/visory-bulk-downloader/${name}`).join("\n")}\n`;
+  const input = `${names.map((name) => `tools/visory-media-downloader/${name}`).join("\n")}\n`;
   const options = { cwd: root, input, encoding: "utf8" };
   assert.equal(
     execFileSync("git", ["hash-object", "--stdin-paths"], options),
@@ -120,15 +121,15 @@ test("Visory allowlist rejects traversal, duplicates, state, binaries, caches an
       "state/settings.json",
       "recording.mp4",
       "visory-backup.db",
-      "VisoryBulkDownloader.exe",
+      "MoorkszVisoryMediaDownloader.exe",
     ])
       await assert.rejects(
         createVisorySnapshot(folder, [name, provenanceName]),
-        /Unsafe Visory Bulk Downloader source path/,
+        /Unsafe Moorksz Visory Media Downloader source path/,
       );
     await assert.rejects(
       createVisorySnapshot(folder, ["README.md"]),
-      /Invalid Visory Bulk Downloader source allowlist/,
+      /Invalid Moorksz Visory Media Downloader source allowlist/,
     );
     await writeFile(path.join(folder, "README.md"), Buffer.from([0, 255]));
     await assert.rejects(

@@ -1,7 +1,7 @@
 import videoCrunchFiles from "../../../../tools/videocrunch.files.json" with { type: "json" };
 import cleanerFiles from "../../../../tools/directory-cleaner.files.json" with { type: "json" };
 import mediaRecoverFiles from "../../../../tools/mediarecover.files.json" with { type: "json" };
-import visoryFiles from "../../../../tools/visory-bulk-downloader.files.json" with { type: "json" };
+import visoryFiles from "../../../../tools/visory-media-downloader.files.json" with { type: "json" };
 
 export interface ToolDefinition {
   readonly slug: string;
@@ -13,6 +13,7 @@ export interface ToolDefinition {
   readonly releaseDate: string | null;
   readonly updatedOn: string;
   readonly summary: string;
+  readonly usefulness?: number;
   readonly description: string;
   readonly howItWorks?: readonly {
     readonly title: string;
@@ -266,11 +267,12 @@ export const TOOLS: readonly ToolDefinition[] = [
     source: { bundle: "directory-cleaner", files: cleanerFiles },
   },
   {
-    slug: "visory-bulk-downloader",
-    id: "moorkyz-tools-visory-bulk-downloader",
-    title: "Moorkyz Visory Bulk Downloader",
+    slug: "visory-media-downloader",
+    id: "moorksz-tools-visory-media-downloader",
+    title: "Moorksz Visory Media Downloader",
     category: "CLOUD RECORDING BACKUP",
-    monogram: "vb",
+    usefulness: 10,
+    monogram: "vm",
     version: "0.1.0 development preview",
     releaseDate: null,
     updatedOn: "2026-10-26",
@@ -346,7 +348,7 @@ export const TOOLS: readonly ToolDefinition[] = [
       },
       {
         title: "Build the portable EXE",
-        text: "No public executable release exists yet. From tools/visory-bulk-downloader in this repository, build one self-contained VisoryBulkDownloader.exe with notices and documentation.",
+        text: "No public executable release exists yet. From tools/visory-media-downloader in this repository, build one self-contained MoorkszVisoryMediaDownloader.exe with notices and documentation.",
         command: ".\\scripts\\publish.ps1",
       },
       {
@@ -365,10 +367,10 @@ export const TOOLS: readonly ToolDefinition[] = [
     downloadNotice:
       "Not yet released. There is no public EXE, installer or signed build. Downloads in the Tool section are text source, not an executable release; a local build is not a published release. Nothing is installed, launched or connected by opening this page.",
     source: {
-      bundle: "visory-bulk-downloader",
+      bundle: "visory-media-downloader",
       files: visoryFiles,
       notice:
-        "Canonical source maintained in tools/visory-bulk-downloader in Moorky/moorkyz-tools. Edit it in this repository, then refresh SOURCE-PROVENANCE.json to record the allowlisted files' SHA-256 and source tree hash. The ZIP contains buildable source, not a public executable release.",
+        "Canonical source maintained in tools/visory-media-downloader in Moorky/moorkyz-tools. Edit it in this repository, then refresh SOURCE-PROVENANCE.json to record the allowlisted files' SHA-256 and source tree hash. The ZIP contains buildable source, not a public executable release.",
     },
   },
 ];

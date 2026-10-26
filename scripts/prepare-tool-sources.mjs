@@ -9,7 +9,7 @@ const bundles = [
   "videocrunch",
   "directory-cleaner",
   "mediarecover",
-  "visory-bulk-downloader",
+  "visory-media-downloader",
 ];
 
 function crc32(bytes) {
@@ -91,7 +91,7 @@ export async function prepareToolSources() {
     const sourceRoot = await realpath(path.join(root, "tools", bundle));
     if (bundle === "mediarecover")
       await verifyMediaRecoverSnapshot(sourceRoot, names);
-    if (bundle === "visory-bulk-downloader")
+    if (bundle === "visory-media-downloader")
       await verifyVisorySnapshot(sourceRoot, names);
     const files = await Promise.all(
       names.map(async (name) => {

@@ -1,0 +1,286 @@
+{
+  "format": 1,
+  "repository": "Moorky/moorkyz-tools",
+  "sourceDirectory": "tools/visory-media-downloader",
+  "identity": "Moorksz Visory Media Downloader",
+  "treeSha256": "ebce2f0448d4205b928718593890fad04072b3b252160fe4ce9c6da1672c755a",
+  "files": [
+    {
+      "path": ".gitignore",
+      "sha256": "7b3df4fb88b87839ac1b60aa1b3013abb207138fd4e1b10da84e831f9bd4842a"
+    },
+    {
+      "path": "AGENTS.md",
+      "sha256": "71a3895203328deb50e52abe866f49c57d600e48dcd2d2217a19c6b382dc2396"
+    },
+    {
+      "path": "ARCHITECTURE.md",
+      "sha256": "77c88b501a5dfb9ad4461c758743d023e0875a2805a51495f312c1f8521c2700"
+    },
+    {
+      "path": "Directory.Build.props",
+      "sha256": "959a971d8c49e3ab581ed1dc81caf81f9626f496f9f5f4a10b4d381ecfa14752"
+    },
+    {
+      "path": "LICENSE",
+      "sha256": "3aa77655a1fe6eda1c22407f703102dd4260452c08dc7a95b092bbc0de4b5f17"
+    },
+    {
+      "path": "README.md",
+      "sha256": "6fdf61883233be51ff2c6b16b2464039d3c9abedc8fceb226930f7e0aa08e5e6"
+    },
+    {
+      "path": "RELEASE_NOTES.md",
+      "sha256": "d7b70f83f36faa84f1e878d6b92a46097190f2f450c68ae5a1f205693e1cc6bf"
+    },
+    {
+      "path": "TEST_REPORT.md",
+      "sha256": "5a49366409ac099c0316bd3fc60d96a2f9cd5e745e11714b74be5ae67c3fc6fa"
+    },
+    {
+      "path": "THIRD-PARTY-NOTICES.md",
+      "sha256": "c47518c533d09433902ca15ffa5580271c67682668450a83dac9fd80ba265e39"
+    },
+    {
+      "path": "VISORY_INTEGRATION.md",
+      "sha256": "0f86ce322076523a5a6422d24b20c597ec6afc7d08407a0e40fbe20abced89a6"
+    },
+    {
+      "path": "MoorkszVisoryMediaDownloader.sln",
+      "sha256": "f385d6eda368fba2e9167d3e5774286521d7801b692363e80037cee6027e4b9e"
+    },
+    {
+      "path": "scripts/build.ps1",
+      "sha256": "175183eb5822a91e15315338fa3a731f182bfe8d7adbad712260a59f4ab729fa"
+    },
+    {
+      "path": "scripts/make-icon.ps1",
+      "sha256": "dc5cb90d5eb5f858404304e6b23d8e53391ee83451884a9d17db7475aac669fb"
+    },
+    {
+      "path": "scripts/publish.ps1",
+      "sha256": "dc8a0e68b4a99450e44a98d3eaa0c7231a14495404826a7c5729544e07ec6215"
+    },
+    {
+      "path": "scripts/test.ps1",
+      "sha256": "72e4204b19b3a84e9d1cb61e2ef2aef19b2dcb10f5ed68f794b425de5981d0f9"
+    },
+    {
+      "path": "src/MoorkszVisoryMediaDownloader.App/app.ico.b64",
+      "sha256": "6e62bc729279b53c73627187b5db59d39ffbfb0d358b53861747b6f67dd00199"
+    },
+    {
+      "path": "src/MoorkszVisoryMediaDownloader.App/app.manifest",
+      "sha256": "8e6207c2e7da2b173112c94fe1ed2bb49f9fce86bd199c4fcce5078d722559d5"
+    },
+    {
+      "path": "src/MoorkszVisoryMediaDownloader.App/App.xaml",
+      "sha256": "7ac73b0d62e3b53516922e345dee73f36b13ee0720230f3141dc1799dcbc37e0"
+    },
+    {
+      "path": "src/MoorkszVisoryMediaDownloader.App/App.xaml.cs",
+      "sha256": "6e6ebe0b5979f9367dbbbf0ea02050bea46ff50a75f71217a4e6baf6c93ac271"
+    },
+    {
+      "path": "src/MoorkszVisoryMediaDownloader.App/Converters.cs",
+      "sha256": "d3158cfd86be09b63860a2d4697bda94b38ef87e0e70a4b960c9329a1e8e92a3"
+    },
+    {
+      "path": "src/MoorkszVisoryMediaDownloader.App/Infrastructure.cs",
+      "sha256": "d6c3b6d9c4ffac42ce0a37e087298e44e0db05cca1547325e6f816841dec826f"
+    },
+    {
+      "path": "src/MoorkszVisoryMediaDownloader.App/MainViewModel.cs",
+      "sha256": "ad380b740bd49b60a34a097ae62df10e6321e35ba4553bd3a9ea001464e7df96"
+    },
+    {
+      "path": "src/MoorkszVisoryMediaDownloader.App/MainViewModel.Pages.cs",
+      "sha256": "17161679f1d09cceed5a7803b145a44e2453c75ae492c19b4193fbe0453bbb1b"
+    },
+    {
+      "path": "src/MoorkszVisoryMediaDownloader.App/MainViewModel.Settings.cs",
+      "sha256": "4e7ab61bb350a4246b6bf63f4b5764a62542fe890336eb0d3a4176855c30c0af"
+    },
+    {
+      "path": "src/MoorkszVisoryMediaDownloader.App/MainWindow.xaml",
+      "sha256": "04444e71ea0f7c2cf5d3a80573c4af0138ac20a17b53f685ebf652f4fe85dcdd"
+    },
+    {
+      "path": "src/MoorkszVisoryMediaDownloader.App/MainWindow.xaml.cs",
+      "sha256": "31a6f1d4d61885de192670cd81a416ae8149ba66ca6d4c1c815c2a447d747a02"
+    },
+    {
+      "path": "src/MoorkszVisoryMediaDownloader.App/Rows.cs",
+      "sha256": "f1384b24130cbb9d1468891ba0bcf30eddc83341d37f675076d6c94bafb85a75"
+    },
+    {
+      "path": "src/MoorkszVisoryMediaDownloader.App/Shell.cs",
+      "sha256": "e93c4ccfca8e14bf8c57295677893d3aaeebac5b6bb2d772ff54299096496a16"
+    },
+    {
+      "path": "src/MoorkszVisoryMediaDownloader.App/Themes/Palette.Dark.xaml",
+      "sha256": "1ffabe21f98b08ce3af9c4e2773e7eea7040e033dfaa2b4e20b05ba7bd4c048a"
+    },
+    {
+      "path": "src/MoorkszVisoryMediaDownloader.App/Themes/Palette.HighContrast.xaml",
+      "sha256": "515c145b6ae26988b2e15df61c5a682288283c51a82c2dc28157de13d398ccdd"
+    },
+    {
+      "path": "src/MoorkszVisoryMediaDownloader.App/Themes/Palette.Light.xaml",
+      "sha256": "cc258e3472beb8c75dcadcfec173ca2ec3d20d3a0e0e8e3b3be82a65eeb1d685"
+    },
+    {
+      "path": "src/MoorkszVisoryMediaDownloader.App/Themes/Styles.xaml",
+      "sha256": "e4a0f7cd4ea77fa06fbb8fd6e6a125fc31d3a4098e2dae14fa725c0b7bd75dd8"
+    },
+    {
+      "path": "src/MoorkszVisoryMediaDownloader.App/Views/ArchivesView.xaml",
+      "sha256": "0081b96a79b8f8cc4ae3f33b654fed7a40888fcd66f97da4108f0f558d4ebcf7"
+    },
+    {
+      "path": "src/MoorkszVisoryMediaDownloader.App/Views/DashboardView.xaml",
+      "sha256": "bd21cee8c828f0d9f05dea7ea935525acae4563d82a365a23f4b70bed9f46f05"
+    },
+    {
+      "path": "src/MoorkszVisoryMediaDownloader.App/Views/DownloadsView.xaml",
+      "sha256": "d24b9f928514598cd278499d2bbdaafc9ac0d2d10e2873972a5ed70f62e5e71a"
+    },
+    {
+      "path": "src/MoorkszVisoryMediaDownloader.App/Views/RecordingsView.xaml",
+      "sha256": "45b5d018ff1a811aee17fbf93fb8d3c3c2c46c92774b66d6e41c7aded895ea9a"
+    },
+    {
+      "path": "src/MoorkszVisoryMediaDownloader.App/Views/ReportsView.xaml",
+      "sha256": "8556f09620e531c1497d3e807fe0be5822e13247985ec188a8672e031c45ff51"
+    },
+    {
+      "path": "src/MoorkszVisoryMediaDownloader.App/Views/SettingsView.xaml",
+      "sha256": "aa556f30c65536a16ce27b64b57142a39703d1cc031628d38e124f9a4bbdaba7"
+    },
+    {
+      "path": "src/MoorkszVisoryMediaDownloader.App/Views/Views.xaml.cs",
+      "sha256": "809b5c85b24732b2368e7de5acc9fc558cd24c8acad29af639784e19f1e36ede"
+    },
+    {
+      "path": "src/MoorkszVisoryMediaDownloader.App/Visory/ScanWindow.xaml",
+      "sha256": "d31802efca4d8e3b1b5f811ab8ec2f2ec9d523e1850a7efbb20cce71922e9496"
+    },
+    {
+      "path": "src/MoorkszVisoryMediaDownloader.App/Visory/ScanWindow.xaml.cs",
+      "sha256": "44261b1c1e198bfdd0c1732d57f1f7868bd5958898c55956e813ce6fd2bd38a2"
+    },
+    {
+      "path": "src/MoorkszVisoryMediaDownloader.App/Visory/VisoryRecordingProvider.cs",
+      "sha256": "5e8af81a6afe9838fc9df113fa6150c15109f207cbb01c80ade5f987efac3576"
+    },
+    {
+      "path": "src/MoorkszVisoryMediaDownloader.App/MoorkszVisoryMediaDownloader.App.csproj",
+      "sha256": "00fad4febbde5a06d4767f4319ed02e5024ea8a54535750de966bd7112d18221"
+    },
+    {
+      "path": "src/MoorkszVisoryMediaDownloader.Core/Archive/ArchiveService.cs",
+      "sha256": "0a379b3adaed506e1e298c9a63cc0a94873a4deeffc6a022efd23183ced9d1c8"
+    },
+    {
+      "path": "src/MoorkszVisoryMediaDownloader.Core/Backup/BackupCoordinator.cs",
+      "sha256": "e3c72639717241383ac32ef5162a9f6627d255361bc1c3c41fad1e886ac818dd"
+    },
+    {
+      "path": "src/MoorkszVisoryMediaDownloader.Core/Download/Bits.cs",
+      "sha256": "591e5e40152faf1b7043c28f3925319c813a21fc6e84f60447859ba5510efdab"
+    },
+    {
+      "path": "src/MoorkszVisoryMediaDownloader.Core/Download/DestinationPlanner.cs",
+      "sha256": "bc521e5e0582466e472fc60266af128597c2673b20801026ed1ecb773bb55cf6"
+    },
+    {
+      "path": "src/MoorkszVisoryMediaDownloader.Core/Download/DownloadEngine.cs",
+      "sha256": "18461fd191232d3c9547453a703de24ae85a990afa9f588325cb46e169c4b9fb"
+    },
+    {
+      "path": "src/MoorkszVisoryMediaDownloader.Core/Download/HttpTransfer.cs",
+      "sha256": "becdefab9314528a30b55d95de183459fefd2c3384ea6bedc450c8f69b46956c"
+    },
+    {
+      "path": "src/MoorkszVisoryMediaDownloader.Core/Infrastructure/Dpapi.cs",
+      "sha256": "a64e6e44a761bfc40517cd55733ebc3d6cdae4469117696309bdcd89ccfc3af2"
+    },
+    {
+      "path": "src/MoorkszVisoryMediaDownloader.Core/Infrastructure/Format.cs",
+      "sha256": "1d1ea5156ca54cf461108f8e56848cf973fd0e668a3ae5be1200d3cf656e6b1d"
+    },
+    {
+      "path": "src/MoorkszVisoryMediaDownloader.Core/Infrastructure/PathSafety.cs",
+      "sha256": "c17c65cb8fc6bc00a86c9994273dc2bb70803c16ba8ddff2b912b7808998f89e"
+    },
+    {
+      "path": "src/MoorkszVisoryMediaDownloader.Core/Infrastructure/Scheduling.cs",
+      "sha256": "ee6dd15d5f0a229b5986fbc71871a3fc9f50c018a1f3689c2b03a86ec10a2fe0"
+    },
+    {
+      "path": "src/MoorkszVisoryMediaDownloader.Core/Infrastructure/Settings.cs",
+      "sha256": "e4cdf3d5874a07ccfd5faaa95f6ca55e3d6ca06dfd92f1efa30e44410c6521f3"
+    },
+    {
+      "path": "src/MoorkszVisoryMediaDownloader.Core/Infrastructure/UrlPolicy.cs",
+      "sha256": "5d449d2e3e139ca8a9d2f73c0479184222d9a5681f6f5969bc0f8643a32c70e0"
+    },
+    {
+      "path": "src/MoorkszVisoryMediaDownloader.Core/Localization/Strings.cs",
+      "sha256": "3aa5fab2a76e204d3747bfa50c1788597e012ef472845815d2dec498be437dd3"
+    },
+    {
+      "path": "src/MoorkszVisoryMediaDownloader.Core/Models.cs",
+      "sha256": "526bb7fb2d61e46177a736d0e91b29491d3d95adc42cd98ad525007855adae71"
+    },
+    {
+      "path": "src/MoorkszVisoryMediaDownloader.Core/Providers/Contracts.cs",
+      "sha256": "0fb9b18cc3d5ae2acb11f3d7916ae140d7f133609c604a7b0d8eeeefbeeae6ed"
+    },
+    {
+      "path": "src/MoorkszVisoryMediaDownloader.Core/Providers/DemoRecordingProvider.cs",
+      "sha256": "6658751fe4967e3179d2e4a99cca62cb5372be209b3335a1111ef8932ad5a574"
+    },
+    {
+      "path": "src/MoorkszVisoryMediaDownloader.Core/Providers/DiscoverySession.cs",
+      "sha256": "98d9a939c2e284625823f217ca109636b04656f4bf655856c38303509c79cf2c"
+    },
+    {
+      "path": "src/MoorkszVisoryMediaDownloader.Core/Reporting/RunLogger.cs",
+      "sha256": "f029c38594e056644b02fc679fad58a2f4fde3586b5f875ddcd0836b9a504ac9"
+    },
+    {
+      "path": "src/MoorkszVisoryMediaDownloader.Core/Storage/Sqlite.cs",
+      "sha256": "6a3560979563c4788f7af78c5c92064d7114b6e7d40d5d2d5ee0e853e3c71fb6"
+    },
+    {
+      "path": "src/MoorkszVisoryMediaDownloader.Core/Storage/StateStore.cs",
+      "sha256": "9a7086c2a11086bccdfa480e7c7b2d12cba132e356844930cce340619d4ccf71"
+    },
+    {
+      "path": "src/MoorkszVisoryMediaDownloader.Core/MoorkszVisoryMediaDownloader.Core.csproj",
+      "sha256": "2ec163bd0dae2b126063e62ece11fd2dba5529dbaf5f2576861898cb359e8269"
+    },
+    {
+      "path": "tests/MoorkszVisoryMediaDownloader.Tests/Harness.cs",
+      "sha256": "8682705b68eb98181bff8896a942a0011f26692c4dd2f6879a1ebf32a4474974"
+    },
+    {
+      "path": "tests/MoorkszVisoryMediaDownloader.Tests/Scenarios.cs",
+      "sha256": "b444a849fa15bbafb62cc8f804c919e943a0b1c9a43fd2ba218eae525130c6c4"
+    },
+    {
+      "path": "tests/MoorkszVisoryMediaDownloader.Tests/TestServer.cs",
+      "sha256": "25bc98499c5c470dd6a5c6510f2a134d4429163cf3b8998fc0865d09250c99c0"
+    },
+    {
+      "path": "tests/MoorkszVisoryMediaDownloader.Tests/MoorkszVisoryMediaDownloader.Tests.csproj",
+      "sha256": "d621704b1fcff6a2a1414321950f03d2830afe11682db50d0004fc9bdc7c1737"
+    },
+    {
+      "path": "third-party/wpf-10.0.11-NOTICES.txt",
+      "sha256": "d9d14b48bbeaf60d2b528d8c086af1baaab70f2ebbaaf1ccb11c1c16a08bdaeb"
+    }
+  ],
+  "note": "Canonical UTF-8 source maintained in tools/visory-media-downloader in this repository, not a release. After local edits, refresh this manifest using node scripts/sync-visory-source.mjs."
+}

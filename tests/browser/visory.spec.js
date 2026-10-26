@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { readFile } from "node:fs/promises";
 
-test("Visory Bulk Downloader explains the unofficial desktop workflow, honest limits and unreleased downloads without network requests", async ({
+test("Moorksz Visory Media Downloader explains the unofficial desktop workflow, honest limits and unreleased downloads without network requests", async ({
   page,
 }) => {
   const requests = [];
@@ -11,17 +11,22 @@ test("Visory Bulk Downloader explains the unofficial desktop workflow, honest li
   const portalName = await page.locator(".brand strong").innerText();
   const card = page.locator(".tool-card").filter({
     has: page.getByRole("heading", {
-      name: "Moorkyz Visory Bulk Downloader",
+      name: "Moorksz Visory Media Downloader",
       exact: true,
     }),
   });
-  await expect(card).toContainText("moorkyz-tools-visory-bulk-downloader");
+  await expect(card).toContainText("moorksz-tools-visory-media-downloader");
+  await expect(card.getByText("10/10", { exact: true })).toBeVisible();
   await card
-    .getByRole("link", { name: "Moorkyz Visory Bulk Downloader", exact: true })
+    .getByRole("link", { name: "Moorksz Visory Media Downloader", exact: true })
     .click();
-  await expect(page).toHaveURL(/\/tools\/visory-bulk-downloader$/);
+  await expect(page).toHaveURL(/\/tools\/visory-media-downloader$/);
   await expect(page).toHaveTitle(
-    `Moorkyz Visory Bulk Downloader — ${portalName}`,
+    `Moorksz Visory Media Downloader — ${portalName}`,
+  );
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+    "href",
+    "https://tools.moorkyz.com/tools/visory-media-downloader",
   );
   expect(await page.locator("main > section > h2").allTextContents()).toEqual([
     "Description",
@@ -53,14 +58,14 @@ test("Visory Bulk Downloader explains the unofficial desktop workflow, honest li
     page.locator("#workspace, iframe, input[type=file]"),
   ).toHaveCount(0);
   await expect(page.locator("#tool")).toContainText(
-    "Canonical source maintained in tools/visory-bulk-downloader in Moorky/moorkyz-tools",
+    "Canonical source maintained in tools/visory-media-downloader in Moorky/moorkyz-tools",
   );
   expect(
     requests.filter(
       (url) =>
         url.includes("visory.cam") ||
         url.includes("/api/local-tools/") ||
-        url.includes("/tool-sources/visory-bulk-downloader."),
+        url.includes("/tool-sources/visory-media-downloader."),
     ),
   ).toEqual([]);
   expect(
@@ -73,7 +78,7 @@ test("Visory Bulk Downloader explains the unofficial desktop workflow, honest li
 test("Visory desktop source is readable, downloadable and never executed", async ({
   page,
 }) => {
-  await page.goto("/tools/visory-bulk-downloader");
+  await page.goto("/tools/visory-media-downloader");
   const provenance = page
     .getByRole("navigation", { name: "Tool files" })
     .getByRole("button", { name: "SOURCE-PROVENANCE.json", exact: true });
@@ -81,7 +86,10 @@ test("Visory desktop source is readable, downloadable and never executed", async
   await page.keyboard.press("Enter");
   await expect(page.locator(".source-console h3")).toBeFocused();
   await expect(page.locator(".source-console pre")).toContainText(
-    '"sourceDirectory": "tools/visory-bulk-downloader"',
+    '"sourceDirectory": "tools/visory-media-downloader"',
+  );
+  await expect(page.locator(".source-console pre")).toContainText(
+    '"identity": "Moorksz Visory Media Downloader"',
   );
   const downloaded = page.waitForEvent("download");
   await page.getByRole("button", { name: "Download file" }).click();
@@ -90,7 +98,7 @@ test("Visory desktop source is readable, downloadable and never executed", async
   expect(await readFile(await download.path(), "utf8")).toBe(
     await readFile(
       new URL(
-        "../../tools/visory-bulk-downloader/SOURCE-PROVENANCE.json",
+        "../../tools/visory-media-downloader/SOURCE-PROVENANCE.json",
         import.meta.url,
       ),
       "utf8",
@@ -99,12 +107,24 @@ test("Visory desktop source is readable, downloadable and never executed", async
   const archiveEvent = page.waitForEvent("download");
   await page.getByRole("link", { name: "Download all (.zip)" }).click();
   expect((await archiveEvent).suggestedFilename()).toBe(
-    "visory-bulk-downloader.zip",
+    "visory-media-downloader.zip",
   );
   await expect(page.locator("iframe")).toHaveCount(0);
 });
 
-test("Visory Bulk Downloader is searchable and accessible in both themes at narrow widths", async ({
+test("the former tool slug and source downloads are no longer exposed", async ({
+  request,
+}) => {
+  for (const resource of [
+    "/tools/visory-bulk-downloader",
+    "/tool-sources/visory-bulk-downloader.json",
+    "/tool-sources/visory-bulk-downloader.zip",
+  ]) {
+    expect((await request.get(resource)).status()).toBe(404);
+  }
+});
+
+test("Moorksz Visory Media Downloader is searchable and accessible in both themes at narrow widths", async ({
   page,
 }, testInfo) => {
   await page.goto("/");
@@ -114,9 +134,9 @@ test("Visory Bulk Downloader is searchable and accessible in both themes at narr
   const dialog = page.getByRole("dialog", { name: "Find your next step." });
   await dialog.getByRole("searchbox").fill("visory");
   await dialog
-    .getByRole("link", { name: /Moorkyz Visory Bulk Downloader/ })
+    .getByRole("link", { name: /Moorksz Visory Media Downloader/ })
     .click();
-  await expect(page).toHaveURL(/\/tools\/visory-bulk-downloader$/);
+  await expect(page).toHaveURL(/\/tools\/visory-media-downloader$/);
   await page.emulateMedia({ reducedMotion: "reduce" });
   for (const width of [320, 390, 1440]) {
     await page.setViewportSize({ width, height: 900 });

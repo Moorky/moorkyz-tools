@@ -6,7 +6,7 @@ import { fileURLToPath } from "node:url";
 const root = fileURLToPath(new URL("..", import.meta.url));
 export const provenanceName = "SOURCE-PROVENANCE.json";
 const repository = "Moorky/moorkyz-tools";
-const sourceDirectory = "tools/visory-bulk-downloader";
+const sourceDirectory = "tools/visory-media-downloader";
 const digest = (bytes) => createHash("sha256").update(bytes).digest("hex");
 
 function validateNames(names) {
@@ -15,7 +15,9 @@ function validateNames(names) {
     !names.includes(provenanceName) ||
     new Set(names).size !== names.length
   )
-    throw new Error("Invalid Visory Bulk Downloader source allowlist.");
+    throw new Error(
+      "Invalid Moorksz Visory Media Downloader source allowlist.",
+    );
   for (const name of names) {
     if (
       typeof name !== "string" ||
@@ -30,7 +32,9 @@ function validateNames(names) {
       ) &&
         !/(?:^|\/)(?:LICENSE|\.gitignore)$/.test(name))
     )
-      throw new Error(`Unsafe Visory Bulk Downloader source path: ${name}`);
+      throw new Error(
+        `Unsafe Moorksz Visory Media Downloader source path: ${name}`,
+      );
   }
 }
 
@@ -84,10 +88,10 @@ export async function createVisorySnapshot(sourceRoot, names) {
     format: 1,
     repository,
     sourceDirectory,
-    identity: "Visory Bulk Downloader",
+    identity: "Moorksz Visory Media Downloader",
     treeSha256: digest(JSON.stringify(hashes)),
     files: hashes,
-    note: "Canonical UTF-8 source maintained in tools/visory-bulk-downloader in this repository, not a release. After local edits, refresh this manifest using node scripts/sync-visory-source.mjs.",
+    note: "Canonical UTF-8 source maintained in tools/visory-media-downloader in this repository, not a release. After local edits, refresh this manifest using node scripts/sync-visory-source.mjs.",
   };
   return { files, provenance };
 }
@@ -99,7 +103,7 @@ export async function verifyVisorySnapshot(sourceRoot, names) {
   );
   if (JSON.stringify(recorded) !== JSON.stringify(provenance))
     throw new Error(
-      "Visory Bulk Downloader source provenance mismatch. After reviewing local edits in tools/visory-bulk-downloader, run node scripts\\sync-visory-source.mjs.",
+      "Moorksz Visory Media Downloader source provenance mismatch. After reviewing local edits in tools/visory-media-downloader, run node scripts\\sync-visory-source.mjs.",
     );
   return provenance;
 }
@@ -115,16 +119,16 @@ export async function updateVisoryProvenance(sourceRoot, names) {
 async function sync() {
   if (process.argv.length > 2)
     throw new Error(
-      "Arguments are not supported. Edit tools\\visory-bulk-downloader in this repository, then run node scripts\\sync-visory-source.mjs.",
+      "Arguments are not supported. Edit tools\\visory-media-downloader in this repository, then run node scripts\\sync-visory-source.mjs.",
     );
   const names = JSON.parse(
     await readFile(
-      path.join(root, "tools", "visory-bulk-downloader.files.json"),
+      path.join(root, "tools", "visory-media-downloader.files.json"),
       "utf8",
     ),
   );
   const provenance = await updateVisoryProvenance(
-    path.join(root, "tools", "visory-bulk-downloader"),
+    path.join(root, "tools", "visory-media-downloader"),
     names,
   );
   console.log(

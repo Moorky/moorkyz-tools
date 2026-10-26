@@ -61,6 +61,11 @@ export default function HomePage() {
                 </h3>
                 <small className="tool-id">{tool.id}</small>
                 <p>{tool.summary}</p>
+                {tool.usefulness !== undefined && (
+                  <p>
+                    Usefulness (editorial): <span>{tool.usefulness}/10</span>
+                  </p>
+                )}
                 <div className="tool-card-bottom">
                   <span>{tool.version}</span>
                   <span>

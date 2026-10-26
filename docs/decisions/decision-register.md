@@ -136,6 +136,20 @@ new tool for the site:
   is performed. Application Control blocks on the development machine are reported, not
   bypassed.
 
+## 2026-10-26: Visory Media Downloader identity
+
+The user renamed this tool to exactly **Moorksz Visory Media Downloader**,
+including the spelling **Moorksz**. Its portal slug and canonical directory are
+`visory-media-downloader` and `tools/visory-media-downloader`; its registry ID is
+`moorksz-tools-visory-media-downloader`. The maintainer/editorial usefulness
+score is **10/10**, not a measured benchmark or a claim of real-account validation.
+Native solution, project namespaces and executable use
+`MoorkszVisoryMediaDownloader`. This supersedes the earlier tool identity.
+Internal storage, scheduling and single-instance keys retain their original
+values to preserve existing settings, sessions and jobs. No user data is moved,
+no scheduled task is changed and no runtime or release status is upgraded.
+Historical audits/test evidence retain the names actually verified.
+
 ## Change authority
 
 Reversible implementation details/tests/docs can proceed autonomously. New

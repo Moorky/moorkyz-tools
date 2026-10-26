@@ -114,3 +114,15 @@ test("Media Recover is an independent unreleased desktop tool with explanation-f
   assert.match(tool.source.notice, /Canonical source maintained/);
   assert.doesNotMatch(tool.source.notice, /independent.*project|not a second/);
 });
+
+test("Visory Media Downloader uses the exact requested identity, slug and editorial score", () => {
+  const tool = findTool("visory-media-downloader");
+  assert.ok(tool);
+  assert.equal(tool.title, "Moorksz Visory Media Downloader");
+  assert.equal(tool.id, "moorksz-tools-visory-media-downloader");
+  assert.equal(tool.source.bundle, "visory-media-downloader");
+  assert.equal(tool.usefulness, 10);
+  assert.equal(tool.releaseDate, null);
+  assert.equal(findTool("visory-bulk-downloader"), undefined);
+  assert.match(tool.downloadNotice, /Not yet released/);
+});

@@ -11,7 +11,7 @@ until a reference is supplied.
 
 The homepage is the catalog. `/tools/toolbar`, `/tools/videocrunch`,
 `/tools/directory-cleaner`, `/tools/mediarecover` and
-`/tools/visory-bulk-downloader` provide
+`/tools/visory-media-downloader` provide
 Title, Release Date, Updated On, Description, Use Cases and Setup. Local script
 tools additionally show **Tool immediately after Description**: a file hierarchy,
 selectable console-style source, copy/download per file and a complete ZIP.
@@ -147,14 +147,16 @@ nor the desktop process. Download all is a source ZIP, never a
 portable application package. Windows requirements, state/report paths and USB
 authorization steps are documented on the tool page and in the tool's README.
 
-## Moorkyz Visory Bulk Downloader
+## Moorksz Visory Media Downloader
 
-`/tools/visory-bulk-downloader` explains the unofficial **Visory Bulk Downloader**
-Windows desktop hub (portal title **Moorkyz Visory Bulk Downloader**). Its canonical
+`/tools/visory-media-downloader` explains the unofficial **Moorksz Visory Media Downloader**
+Windows desktop hub (portal title **Moorksz Visory Media Downloader**). Its canonical
+registry ID is `moorksz-tools-visory-media-downloader` and its editorial usefulness
+score is **10/10**, not a measured benchmark or a real-account validation claim. Its
 source, tests, build scripts and documentation live in
-[`tools/visory-bulk-downloader`](../../tools/visory-bulk-downloader); start with its
-[README](../../tools/visory-bulk-downloader/README.md) and
-[Visory integration contract](../../tools/visory-bulk-downloader/VISORY_INTEGRATION.md).
+[`tools/visory-media-downloader`](../../tools/visory-media-downloader); start with its
+[README](../../tools/visory-media-downloader/README.md) and
+[Visory integration contract](../../tools/visory-media-downloader/VISORY_INTEGRATION.md).
 The page follows the shared sequence (Description with workflow, features and
 limitations, Tool, Use Cases, Setup, Downloads). It states **Not yet released**, offers
 no binary download, and never contacts Visory, a native service or any other origin.
@@ -166,8 +168,8 @@ loopback server, a mock provider and a labeled demo mode; their results and the
 Application Control blocks on the development machine are recorded in the tool's
 `TEST_REPORT.md`. Do not disable machine policy to run the preview.
 
-Source downloads use the [allowlist](../../tools/visory-bulk-downloader.files.json)
-and [`SOURCE-PROVENANCE.json`](../../tools/visory-bulk-downloader/SOURCE-PROVENANCE.json)
+Source downloads use the [allowlist](../../tools/visory-media-downloader.files.json)
+and [`SOURCE-PROVENANCE.json`](../../tools/visory-media-downloader/SOURCE-PROVENANCE.json)
 with the same text-only, link-refusing, SHA-256 rules and EOL-preserving Git attributes
 as Media Recover. After reviewing local edits:
 
