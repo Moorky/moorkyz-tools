@@ -5,11 +5,12 @@
     "id": "moorkyz-tools-mediarecover",
     "title": "Moorkyz Media Recover",
     "category": "LOCAL MEDIA RECOVERY",
-    "monogram": "mr",
-    "version": "0.1.0 development preview",
+    "version": "1.0.0",
     "releaseDate": null,
     "updatedOn": "2026-10-26",
     "summary": "Safely recover and preserve accessible video and audio from connected devices and local folders. Know exactly where every file was saved.",
+    "catalogDescription": "Give accessible recordings a safer route from your phone or scattered folders to a backup you can trace. This independent Windows desktop preview scans local folders and authorized Android storage, lets you review dates and duplicates, then copies without changing the originals. Retry interrupted files, check saved bytes with SHA-256 and follow per-file reports to their exact destination. It preserves readable media; it does not undelete protected phone data.",
+    "usefulness": 9,
     "description": "An independent, offline-first Windows desktop application for recursively discovering accessible audio and video in local folders and authorized Android USB/MTP storage, including Samsung phones. Scan before copying, review date filters and duplicate candidates, then back up without changing originals. Interrupted files can be retried from the beginning, saved bytes checked with SHA-256, and results traced through detailed reports. This page explains the desktop tool; it cannot scan your computer or phone.",
     "howItWorks": [
       {

@@ -3,7 +3,7 @@
   "repository": "Moorky/moorkyz-tools",
   "sourceDirectory": "tools/mediarecover",
   "identity": "Moorkyz Media Recover",
-  "treeSha256": "700b63f880f0cbe6b134e68ced3f44035dc89b38086375b3449339929e34c545",
+  "treeSha256": "e6ae49b6a7905e4fb592392f59d0a8c9e2f06f1c0e1f27f1e74441c939cd84b7",
   "files": [
     {
       "path": ".gitignore",
@@ -199,7 +199,7 @@
     },
     {
       "path": "portal.json",
-      "sha256": "feb0d70d9596e7a684016cdc8b1c1b8cfbe95a697af20e4840ca7f89bfab94dc"
+      "sha256": "3d10acb09194f61953103803c76164d46b57f09c495cb59dc59e940f7029c603"
     }
   ],
   "note": "Canonical UTF-8 source maintained in tools/mediarecover in this repository, not a release. After local edits, refresh this manifest using node scripts/sync-mediarecover-source.mjs. No external project is required."

@@ -10,12 +10,14 @@ export function SiteHeader() {
         <img
           className="header-logo"
           src="/moorkyz-tools.svg"
-          width={64}
-          height={64}
+          width={40}
+          height={40}
           alt=""
         />
         <span>
-          <strong>Moorkyz Tools</strong>
+          <strong>
+            Moorkyz <span className="brand-accent">Tools</span>
+          </strong>
         </span>
       </a>
       <nav className="header-links" aria-label="Main navigation">

@@ -17,6 +17,10 @@ test("tool registry has unique routable slugs and complete, honest detail metada
     assert.equal(findTool(tool.slug), tool);
     for (const key of ["title", "summary", "description", "version"])
       assert.ok(tool[key].length > 0);
+    const catalogWords = tool.catalogDescription.split(/\s+/).length;
+    assert.ok(catalogWords >= 50 && catalogWords <= 100, tool.slug);
+    assert.ok(Number.isInteger(tool.usefulness));
+    assert.ok(tool.usefulness >= 1 && tool.usefulness <= 10);
     assert.match(tool.updatedOn, /^\d{4}-\d{2}-\d{2}$/);
     assert.ok(tool.useCases.length > 0);
     assert.ok(tool.setup.length > 0);

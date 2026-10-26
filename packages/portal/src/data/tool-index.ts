@@ -5,12 +5,14 @@ export const TOOL_INDEX = [
     id: "moorkyz-tools-toolbar-builder",
     title: "Moorkyz Toolbar Builder",
     category: "SMALL WEB TOOL",
-    monogram: "tb",
-    version: "1.0.0 local preview",
+    version: "1.0.0",
     releaseDate: null,
     updatedOn: "2026-10-23",
     summary:
       "Design, preview and export a tiny toolbar. A few links, a little style, one HTML file.",
+    catalogDescription:
+      "Design, preview and export a tiny toolbar that feels at home on your next page. Arrange up to eight links, try light or dark styling, choose an accent and pin the result to the top or bottom. Watch the preview change as you edit, then take away one self-contained HTML file. No framework, package installation or account stands between your idea and a useful little navigation bar.",
+    usefulness: 6,
     description:
       "A compact browser-only builder for up to eight navigation links. Pick light or dark appearance, an accent border and top or bottom placement, then copy or download one self-contained HTML file. No package, framework, account or service required.",
     useCases: [
@@ -35,12 +37,14 @@ export const TOOL_INDEX = [
     id: "moorkyz-tools-video-crunch",
     title: "Moorkyz Video Crunch",
     category: "VIDEO WORKSPACE",
-    monogram: "vc",
-    version: "1.0.0 local preview",
+    version: "1.0.0",
     releaseDate: null,
     updatedOn: "2026-10-23",
     summary:
       "Save authorized videos, keep the original and create a smaller MP4 for offline playback.",
+    catalogDescription:
+      "Turn videos you own or have permission to save into a practical offline collection. Keep the original bytes, create a smaller MP4 with Balanced, Crunch or Extreme compression, and revisit your exports in a local player. Live logs and an integrity manifest help you understand what happened along the way. The Windows service runs on your own machine, only when you choose to start it.",
+    usefulness: 8,
     description:
       "A Windows-first local web service for downloading and compressing videos you own or have permission to save. The complete original app, PowerShell exporter, launchers, tests and guides live in this repository. Original bytes are preserved alongside optional MP4 derivatives, an offline player and an integrity manifest. Public hosting, accounts and multi-user processing are off.",
     useCases: [
@@ -132,12 +136,14 @@ export const TOOL_INDEX = [
     id: "moorkyz-tools-mediarecover",
     title: "Moorkyz Media Recover",
     category: "LOCAL MEDIA RECOVERY",
-    monogram: "mr",
-    version: "0.1.0 development preview",
+    version: "1.0.0",
     releaseDate: null,
     updatedOn: "2026-10-26",
     summary:
       "Safely recover and preserve accessible video and audio from connected devices and local folders. Know exactly where every file was saved.",
+    catalogDescription:
+      "Give accessible recordings a safer route from your phone or scattered folders to a backup you can trace. This independent Windows desktop preview scans local folders and authorized Android storage, lets you review dates and duplicates, then copies without changing the originals. Retry interrupted files, check saved bytes with SHA-256 and follow per-file reports to their exact destination. It preserves readable media; it does not undelete protected phone data.",
+    usefulness: 9,
     description:
       "An independent, offline-first Windows desktop application for recursively discovering accessible audio and video in local folders and authorized Android USB/MTP storage, including Samsung phones. Scan before copying, review date filters and duplicate candidates, then back up without changing originals. Interrupted files can be retried from the beginning, saved bytes checked with SHA-256, and results traced through detailed reports. This page explains the desktop tool; it cannot scan your computer or phone.",
     howItWorks: [
@@ -290,12 +296,14 @@ export const TOOL_INDEX = [
     id: "moorkyz-tools-directory-cleaner",
     title: "Moorkyz Directory Cleaner",
     category: "LOCAL FILE UTILITY",
-    monogram: "dc",
-    version: "1.0.0 local preview",
+    version: "1.0.0",
     releaseDate: null,
     updatedOn: "2026-10-23",
     summary:
       "Keep, move or archive files using patterns, creation dates and size limits. Preview every change first.",
+    catalogDescription:
+      "Bring order to a crowded downloads folder without turning cleanup into a leap of faith. Combine filename patterns, creation dates and size limits to keep what matters, move matching files or archive the rest. Review a non-mutating preview before explicitly confirming changes, and keep a recoverable receipt afterward. Use the downloadable script or an opt-in local workspace; nothing is permanently deleted or silently overwritten.",
+    usefulness: 7,
     description:
       "A local file organizer available as both a web-service workspace and a downloadable script. Match filename or relative-path patterns, combine creation-before/after and size-smaller/larger conditions, then Keep, Move or Delete to archive. Keep rules win; otherwise the first match applies, and unmatched files remain untouched. Nothing is permanently deleted or overwritten.",
     useCases: [
@@ -350,13 +358,14 @@ export const TOOL_INDEX = [
     id: "moorksz-tools-visory-media-downloader",
     title: "Moorksz Visory Media Downloader",
     category: "CLOUD RECORDING BACKUP",
-    usefulness: 10,
-    monogram: "vm",
-    version: "0.1.0 development preview",
+    version: "1.0.0",
     releaseDate: null,
     updatedOn: "2026-10-26",
     summary:
       "Back up the cloud recordings your own Visory account can access to a local folder, with resumable background transfers, exact reports and a verified ZIP.",
+    catalogDescription:
+      "Keep your Visory cloud recordings on your own disk without babysitting a browser. Sign in once inside this Windows desktop hub, let it collect the recordings the official web app shows you, and review the count before anything downloads. Backups continue quietly in the background with resumable transfers, verified files, exact reports and an optional verified ZIP. An unofficial development preview: real-account discovery is still unverified.",
+    usefulness: 10,
     description:
       "An unofficial Windows desktop hub for backing up cloud recordings accessible from your own Visory account. You sign in through the official Visory web app inside an embedded Microsoft Edge WebView2 window; the hub reads only the recording metadata that app loads, shows the discovered count and scan completeness before downloading, then transfers with Windows BITS or resumable streaming downloads, verifies every file and writes exact logs, CSV reports and an optional ZIP. This page explains the desktop tool; it cannot sign in to Visory or download recordings.",
     howItWorks: [

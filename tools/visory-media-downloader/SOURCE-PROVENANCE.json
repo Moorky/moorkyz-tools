@@ -3,7 +3,7 @@
   "repository": "Moorky/moorkyz-tools",
   "sourceDirectory": "tools/visory-media-downloader",
   "identity": "Moorksz Visory Media Downloader",
-  "treeSha256": "34443fb3ee4ecd18f4fb3182c7b5df283c061ffd29dd4fc865ec5b54423abfec",
+  "treeSha256": "1771e2b21c4494c67ada500bf30d61397a962280d4bc60bbc03fc08eafa21603",
   "files": [
     {
       "path": ".gitignore",
@@ -283,7 +283,7 @@
     },
     {
       "path": "portal.json",
-      "sha256": "6d46ba7b68d0023efe04d0c326d6f928ef56066214db7555c6e4f4826f7025aa"
+      "sha256": "bfff4535f96aa5a91e57f7cb0d1af215e6339b22fde669b4b4e45535f9ed6491"
     },
     {
       "path": "source-files.json",

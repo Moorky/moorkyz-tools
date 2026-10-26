@@ -25,11 +25,36 @@ Display titles use `Moorkyz <Project Name>` with spaces between words. Each
 catalog card and detail heading also shows its stable registry `id`, such as
 `moorkyz-tools-video-crunch`, in small muted DM Mono text beneath the title.
 These visible identifiers do not change routes, script names or API identifiers.
+Do not display tool-initial badges or monograms anywhere in the portal, including
+catalog cards, tool details and search. Use full tool names and stable identifiers
+instead; the shared crossed-tools brand artwork is unchanged.
+Catalog cards are icon-free, with the category at the upper left and the
+requested `v1.0.0` label at the upper right in matching muted DM Mono text.
+Titles and identifiers sit directly below that compact row. All tool detail
+pages display exactly `1.0.0` from the registry, with `v1.0.0` on catalog cards.
+These display versions do not imply a public release or alter source package
+versions; unpublished status and preview limitations remain explicit.
+Each card uses a dedicated 50-100-word `catalogDescription`, leaving concise
+summaries for search and detail metadata. Below the divider, a facts-only grid
+shows release date (or honest unpublished status), a contact link, file size and
+a maintainer/editorial usefulness score out of ten, not a measured benchmark or
+user review. Source ZIP sizes are read from the generated local assets when the
+homepage renders; Toolbar Builder states its 8 KiB HTML output limit, and tools
+without a public download say so. These labels do not initiate downloads or
+local-service connections. Contact opens the existing Moorkyz contact page only
+when selected.
 
 ## Portal branding
 
 The shared header uses the owner's black crossed-tools SVG and the display name
 **Moorkyz Tools**. A white backing keeps the black mark visible in both themes.
+The mark is a compact 40 px square; the 1 rem wordmark uses the theme's purple
+accent for **Tools**. The homepage has a smaller, responsive main title and
+introduces the collection as tools built only when they became essential.
+The hero omits the domain identifier, WORKBENCH label and extra
+"Explore the tools" link. The catalog heading
+reads "Small tools. Real lifesavers." Editorial scores are Media Recover 9/10,
+Directory Cleaner 7/10, Video Crunch 8/10 and Toolbar Builder 6/10.
 The same artwork supplies SVG/ICO/PNG favicons, touch/Android icons and social
 preview imagery. Browser titles and the web manifest use the display name;
 the domain, repository identity and theme-storage key remain unchanged.

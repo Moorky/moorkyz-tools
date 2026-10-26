@@ -5,12 +5,12 @@ export interface ToolDefinition {
   readonly id: string;
   readonly title: string;
   readonly category: string;
-  readonly monogram?: string;
   readonly version: string;
   readonly releaseDate: string | null;
   readonly updatedOn: string;
   readonly summary: string;
-  readonly usefulness?: number;
+  readonly catalogDescription: string;
+  readonly usefulness: number;
   readonly description: string;
   readonly howItWorks?: readonly {
     readonly title: string;

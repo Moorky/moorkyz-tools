@@ -5,12 +5,12 @@
     "id": "moorksz-tools-visory-media-downloader",
     "title": "Moorksz Visory Media Downloader",
     "category": "CLOUD RECORDING BACKUP",
-    "usefulness": 10,
-    "monogram": "vm",
-    "version": "0.1.0 development preview",
+    "version": "1.0.0",
     "releaseDate": null,
     "updatedOn": "2026-10-26",
     "summary": "Back up the cloud recordings your own Visory account can access to a local folder, with resumable background transfers, exact reports and a verified ZIP.",
+    "catalogDescription": "Keep your Visory cloud recordings on your own disk without babysitting a browser. Sign in once inside this Windows desktop hub, let it collect the recordings the official web app shows you, and review the count before anything downloads. Backups continue quietly in the background with resumable transfers, verified files, exact reports and an optional verified ZIP. An unofficial development preview: real-account discovery is still unverified.",
+    "usefulness": 10,
     "description": "An unofficial Windows desktop hub for backing up cloud recordings accessible from your own Visory account. You sign in through the official Visory web app inside an embedded Microsoft Edge WebView2 window; the hub reads only the recording metadata that app loads, shows the discovered count and scan completeness before downloading, then transfers with Windows BITS or resumable streaming downloads, verifies every file and writes exact logs, CSV reports and an optional ZIP. This page explains the desktop tool; it cannot sign in to Visory or download recordings.",
     "howItWorks": [
       {

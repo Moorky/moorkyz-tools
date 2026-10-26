@@ -1,20 +1,21 @@
 .catalog-hero {
-  padding-block: clamp(4rem, 10vw, 8rem) 4rem;
+  padding-block: clamp(2.5rem, 6vw, 4rem) 2.5rem;
 }
 .catalog-hero h1 {
   max-width: 50rem;
-  font-size: clamp(2.75rem, 7vw, 5.75rem);
+  font-size: clamp(2rem, 4.5vw, 4rem);
   font-weight: 500;
   letter-spacing: -0.065em;
   line-height: 1.06;
-  margin-block: 1.5rem;
+  margin-block: 0 1rem;
 }
 .catalog-hero .hero-lede {
   max-width: 38rem;
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
 }
 .catalog-heading,
 .tool-card-top,
-.tool-card-bottom,
 .source-browser-heading,
 .source-console-bar,
 .source-console-actions {
@@ -29,7 +30,7 @@
 }
 .catalog-heading h2,
 .catalog-note h2 {
-  font-size: clamp(1.5rem, 3vw, 2.25rem);
+  font-size: clamp(1.25rem, 2.5vw, 1.75rem);
   font-weight: 500;
   letter-spacing: -0.04em;
 }
@@ -44,7 +45,9 @@
 }
 .tool-card {
   position: relative;
-  padding: clamp(1.25rem, 3vw, 2.25rem);
+  display: flex;
+  flex-direction: column;
+  padding: 1.25rem;
   border: 1px solid var(--line);
   border-radius: 1rem;
   background: var(--surface);
@@ -57,11 +60,19 @@
   border-color: var(--accent);
   transform: translateY(-3px);
 }
+.tool-card-top {
+  align-items: start;
+  flex-wrap: nowrap;
+  gap: 0.75rem;
+}
+.tool-version {
+  flex-shrink: 0;
+}
 .tool-card h3 {
-  font-size: 1.65rem;
+  font-size: 1.4rem;
   font-weight: 500;
   letter-spacing: -0.04em;
-  margin-block: 1.5rem 0.75rem;
+  margin-block: 0.75rem 0.5rem;
 }
 .tool-card h3 a {
   text-decoration: none;
@@ -79,13 +90,10 @@
   outline: 2px solid var(--accent);
   outline-offset: 4px;
 }
-.tool-card-arrow {
-  float: right;
-  color: var(--accent);
-}
 .tool-card > p {
+  flex: 1;
+  margin-block: 0.75rem 1.5rem;
   color: var(--muted);
-  min-height: 5rem;
 }
 .tool-id {
   display: block;
@@ -99,33 +107,33 @@
 html[data-theme="dark"] .tool-id {
   color: #b8b8b8;
 }
-.tool-monogram {
-  display: inline-grid;
-  place-items: center;
-  width: 3.25rem;
-  height: 3.25rem;
-  flex: 0 0 auto;
-  border: 1px solid var(--line);
-  border-radius: 0.8rem;
-  background: var(--accent-soft);
-  color: var(--accent-strong);
-  font:
-    500 1.25rem "DM Mono",
-    monospace;
-}
 .tool-category,
+.tool-version,
 .tool-card-bottom {
   font-family: "DM Mono", monospace;
   font-size: 0.7rem;
   color: var(--muted);
 }
 .tool-card-bottom {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
   border-top: 1px solid var(--line);
-  margin-top: 2rem;
+  margin: auto 0 0;
   padding-top: 1rem;
 }
+.tool-card-bottom dd {
+  margin: 0.35rem 0 0;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+.tool-card-bottom a {
+  position: relative;
+  z-index: 1;
+  text-underline-offset: 0.2em;
+}
 .catalog-note {
-  padding-block: 5rem 6rem;
+  padding-block: 3rem 4rem;
   max-width: 52rem;
   margin-inline: auto;
   text-align: center;
@@ -432,9 +440,6 @@ html[data-theme="dark"] .tool-id {
   }
   .source-file-list {
     max-height: 17rem;
-  }
-  .tool-card-top {
-    align-items: start;
   }
   .tool-category {
     max-width: 10rem;

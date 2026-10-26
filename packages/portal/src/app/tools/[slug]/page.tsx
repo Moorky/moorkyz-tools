@@ -40,9 +40,6 @@ export default async function ToolPage({ params }: Props) {
           ← All tools
         </a>
         <header className="tool-detail-heading">
-          <span className="tool-monogram" aria-hidden="true">
-            {tool.monogram}
-          </span>
           <p className="eyebrow">{tool.category}</p>
           <h1>{tool.title}</h1>
           <small className="tool-id">{tool.id}</small>
