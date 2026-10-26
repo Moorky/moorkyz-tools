@@ -41,8 +41,10 @@ a 0.9-second fade-in after 0.4 seconds and a single 2.4-second separator glint
 after 1.5 seconds. Reduced-motion preferences disable both animations.
 The footer stays in document flow rather than covering tool workspaces.
 At the default font size it is approximately 56 px tall, a further 20% reduction
-from the previous 69.6 px footer. The centered credit sits lower, with both side
-links aligned even nearer the bottom at matching font sizes and heights.
+from the previous 69.6 px footer. All three content groups are raised by 18% of
+their own height (about 4.3 px) without changing the band height. The center
+credit remains slightly above the side links, which retain matching font sizes
+and heights.
 On narrow screens the credit sits above the links.
 The lower-left `Stay in Touch?` link navigates to `https://moorkyz.com/contact`;
 the lower-right `More projects?` link navigates to `https://moorkyz.com/projects`.

@@ -42,7 +42,7 @@ test("shared footer preserves credits and has text-only contact and projects lin
   }
 });
 
-test("footer is another 20 percent shorter with lower credit and matching bottom-aligned links", async ({
+test("footer keeps its compact height with all three content groups raised 18 percent", async ({
   page,
 }, testInfo) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
@@ -69,6 +69,11 @@ test("footer is another 20 percent shorter with lower credit and matching bottom
           contact: rect(contact),
           projectsFont: getComputedStyle(projects).fontSize,
           contactFont: getComputedStyle(contact).fontSize,
+          upwardRatios: [...element.children].map(
+            (child) =>
+              -new DOMMatrixReadOnly(getComputedStyle(child).transform).m42 /
+              child.getBoundingClientRect().height,
+          ),
           position: getComputedStyle(element).position,
           background: getComputedStyle(element).backgroundImage,
           fits: document.documentElement.scrollWidth <= innerWidth,
@@ -83,7 +88,17 @@ test("footer is another 20 percent shorter with lower credit and matching bottom
         0,
       );
       expect(metrics.footer.right - metrics.projects.right).toBeCloseTo(16, 0);
-      expect(metrics.footer.bottom - metrics.projects.bottom).toBeCloseTo(2, 0);
+      expect(metrics.footer.bottom - metrics.projects.bottom).toBeCloseTo(
+        6.32,
+        1,
+      );
+      expect(metrics.upwardRatios).toHaveLength(3);
+      for (const shift of metrics.upwardRatios) {
+        expect(shift).toBeGreaterThanOrEqual(0.15);
+        expect(shift).toBeLessThanOrEqual(0.2);
+        expect(shift).toBeCloseTo(0.18, 2);
+      }
+      expect(metrics.credit.top).toBeGreaterThan(metrics.footer.top);
       expect(metrics.projects.height).toBeGreaterThanOrEqual(24);
       expect(metrics.projects.y).toBeGreaterThanOrEqual(
         width <= 700 ? metrics.credit.bottom : metrics.credit.y,
@@ -99,7 +114,10 @@ test("footer is another 20 percent shorter with lower credit and matching bottom
       if (width > 700) {
         expect(metrics.contact.right).toBeLessThan(metrics.credit.x);
         expect(metrics.credit.right).toBeLessThan(metrics.projects.x);
-        expect(metrics.footer.bottom - metrics.credit.bottom).toBeCloseTo(8, 0);
+        expect(metrics.footer.bottom - metrics.credit.bottom).toBeCloseTo(
+          12.32,
+          1,
+        );
       }
       for (const link of await footer.locator(".footer-link").all()) {
         await expect(link).toHaveCSS("color", "rgb(255, 255, 255)");

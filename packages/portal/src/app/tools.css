@@ -338,6 +338,9 @@ html[data-theme="dark"] .tool-id {
   border: 0;
   animation: footer-fade-in 0.9s ease-out 0.4s both;
 }
+.website-footer > * {
+  transform: translateY(-18%);
+}
 .website-footer::before {
   content: "";
   position: absolute;
