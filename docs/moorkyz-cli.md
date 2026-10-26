@@ -65,6 +65,10 @@ To persist the function, put it in your appropriate shell initialization file an
 Lifecycle commands use installed dependencies. `moorkyz install` explicitly runs a reproducible
 install; it requires a reviewed lockfile and never generates a replacement lockfile. Database
 migrations, production deployment and Git operations remain separate project workflows.
+This repository sets `verifyDepsBeforeRun: error` in `pnpm-workspace.yaml` so pnpm 11 reports
+stale dependencies without starting an automatic install from a background service. This pnpm
+setting belongs in the workspace YAML, not `.npmrc`. Run `moorkyz install` deliberately when
+dependencies need synchronization; do not bypass the noninteractive module-purge prompt.
 
 ## Package managers
 

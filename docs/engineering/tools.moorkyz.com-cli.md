@@ -28,8 +28,12 @@ its own tracked instance. The portal's dev and production scripts bind to
 `127.0.0.1` by default.
 
 pnpm dependency verification fails explicitly when the installation is out of
-sync. Run `pnpm install --frozen-lockfile` deliberately; starting a service must
-not automatically reinstall dependencies. An already-running manual Next.js
+sync. `pnpm-workspace.yaml` sets `verifyDepsBeforeRun: error` for both root and
+workspace commands; pnpm 11 does not read this setting from `.npmrc`.
+Run `pnpm install --frozen-lockfile` deliberately; starting a service must not
+automatically reinstall dependencies. Do not set `CI=true` or disable module-purge
+confirmation just to let a background startup reinstall packages.
+An already-running manual Next.js
 dev server in the same workspace must be stopped by its owner before using a
 managed dev instance. The launcher does not kill an unrelated server or remove
 its development lock.

@@ -8,6 +8,29 @@ const path = require("node:path");
 const { test } = require("node:test");
 
 const root = path.resolve(__dirname, "../..");
+function pnpm(folder, ...args) {
+  const command =
+    process.platform === "win32" ? process.env.ComSpec || "cmd.exe" : "pnpm";
+  return spawnSync(
+    command,
+    process.platform === "win32" ? ["/d", "/s", "/c", "pnpm", ...args] : args,
+    {
+      cwd: folder,
+      encoding: "utf8",
+      timeout: 20000,
+      env: { ...process.env, CI: "1" },
+    },
+  );
+}
+
+test("pnpm dependency verification rejects automatic installs at the root and portal workspace", () => {
+  for (const folder of [root, path.join(root, "packages", "portal")]) {
+    const result = pnpm(folder, "config", "get", "verifyDepsBeforeRun");
+    assert.equal(result.status, 0, result.stdout + result.stderr);
+    assert.equal(result.stdout.trim(), "error");
+  }
+});
+
 const server = `
 const http = require("node:http");
 const mode = process.argv[2];
@@ -50,13 +73,26 @@ for (const launcher of ["moorkyz", "tools.moorkyz.com"]) {
         scripts: {
           dev: `node server.cjs ${mode}`,
           start: "node server.cjs production",
+          probe: "node --version",
         },
       }),
     );
-    fs.writeFileSync(
-      path.join(folder, ".npmrc"),
-      "verify-deps-before-run=error\n",
+    fs.copyFileSync(
+      path.join(root, "pnpm-workspace.yaml"),
+      path.join(folder, "pnpm-workspace.yaml"),
     );
+    fs.writeFileSync(
+      path.join(folder, "pnpm-lock.yaml"),
+      "lockfileVersion: '9.0'\nsettings:\n  autoInstallPeers: true\n  excludeLinksFromLockfile: false\nimporters:\n  .: {}\n",
+    );
+    const installed = pnpm(
+      folder,
+      "install",
+      "--offline",
+      "--frozen-lockfile",
+      "--ignore-scripts",
+    );
+    assert.equal(installed.status, 0, installed.stdout + installed.stderr);
     fs.writeFileSync(path.join(folder, "server.cjs"), server);
     fs.writeFileSync(
       path.join(folder, `${launcher}.config.json`),
@@ -70,11 +106,11 @@ for (const launcher of ["moorkyz", "tools.moorkyz.com"]) {
         },
       }),
     );
-    return run;
+    return { run, folder };
   }
 
   test(`${launcher} start waits for HTTP readiness and supports restart, production, status, logs and stop`, async (t) => {
-    const run = fixture(t, "delayed");
+    const { run } = fixture(t, "delayed");
     for (const args of [["start"], ["restart", "--prod"]]) {
       const started = run(...args);
       assert.equal(started.status, 0, started.stdout + started.stderr);
@@ -96,7 +132,7 @@ for (const launcher of ["moorkyz", "tools.moorkyz.com"]) {
   });
 
   test(`${launcher} rejects a transient listener instead of reporting false startup success`, (t) => {
-    const run = fixture(t, "transient");
+    const { run } = fixture(t, "transient");
     const result = run("start");
     assert.equal(result.status, 1, result.stdout + result.stderr);
     assert.doesNotMatch(result.stdout, /Started 'portal'/);
@@ -105,10 +141,58 @@ for (const launcher of ["moorkyz", "tools.moorkyz.com"]) {
   });
 
   test(`${launcher} stops an unhealthy server on readiness timeout`, (t) => {
-    const run = fixture(t, "unhealthy", 1500);
+    const { run } = fixture(t, "unhealthy", 1500);
     const result = run("start");
     assert.equal(result.status, 1, result.stdout + result.stderr);
     assert.match(result.stderr, /responding successfully over HTTP/);
     assert.match(run("status").stdout, /STOPPED/);
+  });
+
+  test(`${launcher} rejects stale dependencies without installing during startup or script execution`, (t) => {
+    const { run, folder } = fixture(t, "delayed");
+    const manifestPath = path.join(folder, "package.json");
+    const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
+    manifest.dependencies = {
+      "missing-fixture-dependency": "file:./missing-fixture-dependency",
+    };
+    fs.writeFileSync(manifestPath, JSON.stringify(manifest));
+    fs.writeFileSync(
+      path.join(folder, "node_modules", "installation-marker.txt"),
+      "Preserve the existing installation.",
+    );
+    const filenames = [
+      "package.json",
+      "pnpm-lock.yaml",
+      path.join("node_modules", "installation-marker.txt"),
+      path.join("node_modules", ".pnpm-workspace-state-v1.json"),
+    ];
+    const before = filenames.map((filename) =>
+      fs.readFileSync(path.join(folder, filename)),
+    );
+
+    for (const args of [["start"], ["run", "probe"]]) {
+      const result = run(...args);
+      const output = result.stdout + result.stderr;
+      assert.equal(result.status, 1, output);
+      assert.match(output, /ERR_PNPM_VERIFY_DEPS_BEFORE_RUN/);
+      assert.doesNotMatch(
+        output,
+        /ERR_PNPM_ABORTED_REMOVE_MODULES_DIR_NO_TTY|Scope: all/,
+      );
+      assert.doesNotMatch(result.stdout, /Started 'portal'/);
+      assert.match(run("status").stdout, /STOPPED/);
+      assert.deepEqual(
+        filenames.map((filename) =>
+          fs.readFileSync(path.join(folder, filename)),
+        ),
+        before,
+      );
+      assert.equal(
+        fs.existsSync(
+          path.join(folder, "node_modules", "missing-fixture-dependency"),
+        ),
+        false,
+      );
+    }
   });
 }
