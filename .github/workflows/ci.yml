@@ -29,7 +29,7 @@ jobs:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - run: node --test scripts/deploy-coolify.test.cjs tests/tooling/moorkyz-runtime.node.cjs
+      - run: pnpm check:repository
       - run: pnpm exec playwright install --with-deps chromium firefox webkit
       - run: pnpm check
       - run: pnpm test:directory-cleaner:browser
@@ -111,4 +111,4 @@ jobs:
           COOLIFY_TOKEN: ${{ secrets.COOLIFY_TOKEN }}
           APP_HEALTH_URL: ${{ vars.APP_HEALTH_URL || 'https://tools.moorkyz.com/' }}
           DEPLOY_COMMIT_SHA: ${{ github.sha }}
-        run: node scripts/deploy-coolify.cjs
+        run: node scripts/deployment/deploy-coolify.cjs

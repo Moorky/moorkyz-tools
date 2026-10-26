@@ -11,7 +11,7 @@ Use this workflow after implementation and applicable checks, before the task co
 2. Compare the change with approved decisions, contracts, acceptance criteria, and affected tests.
 3. Run appropriate existing checks. Record exact commands and actual outcomes; use `NOT RUN` with a reason or `N/A` when a check does not apply.
 4. Review security, privacy, dependencies, permissions, accessibility, failure handling, cleanup, and disabled-feature behavior as relevant.
-5. Create `docs/audits/YYYY-MM-DDTHH-MM-SSZ-short-task-slug.md` from `docs/audits/TEMPLATE.md`, preferably with `tools.moorkyz.com audit "task title"`.
+5. Create `.audits/YYYY-MM-DDTHH-MM-SSZ-short-task-slug.md` from `docs/AUDIT_TEMPLATE.md`, preferably with `moorkyz audit "task title"`. Historical reports in `docs/audits/` and `audits/` remain at their original paths.
 6. Fill the audit with observed evidence, identified findings, residual risks, incomplete work, and rollback notes. Do not include secrets or claim independent review.
 7. If a task-caused required check fails, fix it or report the task blocked; do not record a successful completion commit.
 8. When checks pass and Git state allows, stage only task-owned paths and the audit, inspect the staged change, and make one focused local commit. Report the hash. Never push, merge, publish, deploy, or rewrite history without authorization.

@@ -7,7 +7,11 @@
 Prerequisites: the project's approved Node.js runtime (at least Node.js 22.18; use its runtime pin),
 the package-manager version in `package.json`, and a `package.json` containing the scripts you
 intend to run. Maintenance and archival commands also work in repositories without a package
-manifest. Keep `moorkyz.cjs` and `moorkyz-storage.cjs` together when copying the CLI.
+manifest. The root launchers now delegate to one implementation in
+[.template/cli](../.template/cli/README.md). When copying the CLI, include that
+entire folder and the chosen root launchers; the root compatibility files are
+not a standalone distribution. Both launcher identities keep their existing
+configuration and runtime namespaces.
 
 **Windows / PowerShell** (from the repository containing these starter files):
 

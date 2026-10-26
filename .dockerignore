@@ -1,5 +1,7 @@
 .git
 .github
+.template
+.audits
 .tools.moorkyz.com
 **/node_modules
 **/.next

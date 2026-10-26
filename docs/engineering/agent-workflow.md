@@ -39,7 +39,7 @@ Clarify only when missing information changes behavior, risk, or reversibility m
 4. Implement narrowly; add or update tests for observable behavior, failures, cleanup, keyboard/accessibility, permissions, and disabled-feature paths where applicable.
 5. Run the smallest targeted checks first, then the relevant complete configured gate. Use only commands that exist; missing scaffolding is not a passing check.
 6. Inspect the final task diff for scope, unintended API or default changes, secrets, generated files, and regressions.
-7. Create a filled task audit under `docs/audits/` and, when checks pass and Git state allows, one focused local commit with the audit.
+7. Create a filled task audit under `.audits/` using `docs/AUDIT_TEMPLATE.md` and, when checks pass and Git state allows, one focused local commit with the audit. Leave historical reports at their original paths.
 8. Report the exact checks, audit path, findings, commit hash or blocker, and any work left unverified.
 
 ## Git discipline

@@ -25,7 +25,7 @@ describe older revisions and are not current product requirements.
 - No new mandatory dependencies, permission/data handling changes, public hosting,
   publishing, deployment, signing, spending or external integration without approval.
 - Preserve unrelated work. Stage only task-owned paths. After applicable checks
-  pass, create a filled task-specific audit from `docs/audits/TEMPLATE.md` and one
+  pass, create a filled task-specific audit in `.audits/` from `docs/AUDIT_TEMPLATE.md` and one
   focused local commit including it. Never push or rewrite history without approval.
 - Report exact commands and observed `PASS`, `FAIL`, `NOT RUN` or `N/A`; a
   self-audit is not independent security or accessibility certification.
@@ -35,6 +35,12 @@ describe older revisions and are not current product requirements.
 - `packages/portal`: Next.js/React catalog, shared detail/source views and small
   per-tool workspaces. `tools/`: standalone scripts/services and explicit source
   bundle allowlists. `tests/`: retained generic tooling and current tool tests.
+- `.template/`: shared CLI/checkups, with a README and entrypoint per system and
+  supporting `helpers/`. `scripts/`: product automation; deployment lives in
+  `scripts/deployment/`. Root launchers delegate to one shared implementation.
+- Run `pnpm check:repository` for read-only syntax/structure checks and
+  `pnpm test:unit` for tests without rebuilding. See
+  [repository structure](docs/engineering/repository-structure.md).
 - Register tools in `packages/portal/src/data/tools.ts`. Generated source JSON/ZIP
   assets are built from allowlists; never include history, media, secrets or caches.
 - `pnpm build`, `pnpm lint`, `pnpm format:check`, `pnpm typecheck`,

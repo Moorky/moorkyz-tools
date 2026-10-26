@@ -61,8 +61,8 @@ test("workspace, portal package and command filters use the project identity", (
     assert.ok(existsSync(`${launcherIdentity}${suffix}`));
   }
   assert.match(
-    readFileSync(`${launcherIdentity}.cjs`, "utf8"),
-    new RegExp(escape(`path.join(ROOT, ".${launcherIdentity}")`)),
+    readFileSync(".template/cli/moorkyz.cjs", "utf8"),
+    /const STATE_DIRECTORY = `\.\$\{COMMAND\}`/,
   );
 });
 

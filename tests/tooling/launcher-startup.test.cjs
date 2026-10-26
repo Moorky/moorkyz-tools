@@ -8,6 +8,17 @@ const path = require("node:path");
 const { test } = require("node:test");
 
 const root = path.resolve(__dirname, "../..");
+function fixtureEnvironment() {
+  const env = { ...process.env, CI: "1" };
+  // pnpm disables recursive verification inside its lifecycle environment.
+  // These fixtures model a standalone launcher, using their own workspace policy.
+  for (const key of Object.keys(env)) {
+    if (key.toLowerCase() === "pnpm_config_verify_deps_before_run")
+      delete env[key];
+  }
+  return env;
+}
+
 function pnpm(folder, ...args) {
   const command =
     process.platform === "win32" ? process.env.ComSpec || "cmd.exe" : "pnpm";
@@ -18,7 +29,7 @@ function pnpm(folder, ...args) {
       cwd: folder,
       encoding: "utf8",
       timeout: 20000,
-      env: { ...process.env, CI: "1" },
+      env: fixtureEnvironment(),
     },
   );
 }
@@ -57,7 +68,7 @@ for (const launcher of ["moorkyz", "tools.moorkyz.com"]) {
         cwd: folder,
         encoding: "utf8",
         timeout: 20000,
-        env: { ...process.env, CI: "1" },
+        env: fixtureEnvironment(),
       });
     }
     t.after(() => {
@@ -110,7 +121,20 @@ for (const launcher of ["moorkyz", "tools.moorkyz.com"]) {
   }
 
   test(`${launcher} start waits for HTTP readiness and supports restart, production, status, logs and stop`, async (t) => {
-    const { run } = fixture(t, "delayed");
+    const { run, folder } = fixture(t, "delayed");
+    const legacy = launcher === "tools.moorkyz.com";
+    if (legacy) {
+      fs.mkdirSync(path.join(folder, ".tools.moorkyz.com"));
+      fs.writeFileSync(
+        path.join(folder, ".tools.moorkyz.com", "portal.log"),
+        "Preserved legacy log.\n",
+      );
+      fs.mkdirSync(path.join(folder, "logs"));
+      fs.writeFileSync(
+        path.join(folder, "logs", "unmanaged.log"),
+        "Do not rotate.",
+      );
+    }
     for (const args of [["start"], ["restart", "--prod"]]) {
       const started = run(...args);
       assert.equal(started.status, 0, started.stdout + started.stderr);
@@ -126,6 +150,27 @@ for (const launcher of ["moorkyz", "tools.moorkyz.com"]) {
       );
       assert.match(run("status").stdout, /RUNNING/);
       assert.equal(run("logs").status, 0);
+      if (legacy) {
+        assert.match(
+          started.stdout,
+          /Logs: \.tools\.moorkyz\.com[\\/]portal\.log/,
+        );
+        assert.ok(
+          fs
+            .readFileSync(
+              path.join(folder, ".tools.moorkyz.com", "portal.log"),
+              "utf8",
+            )
+            .startsWith("Preserved legacy log.\n"),
+        );
+        assert.equal(
+          fs.readFileSync(path.join(folder, "logs", "unmanaged.log"), "utf8"),
+          "Do not rotate.",
+        );
+        assert.equal(fs.existsSync(path.join(folder, ".moorkyz")), false);
+        assert.equal(fs.existsSync(path.join(folder, "archive")), false);
+        assert.equal(fs.existsSync(path.join(folder, "trash")), false);
+      }
     }
     assert.equal(run("stop").status, 0);
     assert.match(run("status").stdout, /STOPPED/);

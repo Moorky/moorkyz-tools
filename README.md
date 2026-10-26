@@ -66,6 +66,20 @@ Both connections are **off by default**. Nothing is installed or started by
 opening a tool page. Do not expose either native service publicly or reverse-proxy
 its operations. No accounts, tenant isolation, hosted storage or telemetry.
 
+## Repository structure
+
+The [structure guide](docs/engineering/repository-structure.md) records the
+adaptation of [moorkyz-template](https://github.com/Moorky/moorkyz-template):
+shared systems in [.template](.template/README.md), application code in
+[packages/portal](packages/portal/README.md), independent [tools](tools/),
+product [automation](scripts/README.md), and new [task audits](.audits/README.md).
+Both root launchers now share one implementation; existing commands, ports,
+configuration and runtime data remain compatible.
+
+Use `pnpm check:repository` for read-only syntax/structure checks,
+`pnpm test:unit` for tests without a rebuild, and `pnpm check` for the full gate.
+Historical audits remain at their original paths.
+
 ## Governance
 
 [AGENTS.md](AGENTS.md), [decisions](docs/decisions/decision-register.md) and
