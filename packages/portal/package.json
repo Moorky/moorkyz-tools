@@ -8,7 +8,7 @@
     "build": "node ../../scripts/prepare-tool-sources.mjs && node scripts/run-next.mjs build && node scripts/prepare-standalone.mjs",
     "start": "node scripts/run-next.mjs start --hostname 127.0.0.1",
     "lint": "eslint src",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "node ../../scripts/index-tools.mjs --check && tsc --noEmit"
   },
   "dependencies": {
     "next": "16.4.1",

@@ -1,0 +1,31 @@
+{
+  "order": 10,
+  "tool": {
+    "slug": "toolbar",
+    "id": "moorkyz-tools-toolbar-builder",
+    "title": "Moorkyz Toolbar Builder",
+    "category": "SMALL WEB TOOL",
+    "monogram": "tb",
+    "version": "1.0.0 local preview",
+    "releaseDate": null,
+    "updatedOn": "2026-10-23",
+    "summary": "Design, preview and export a tiny toolbar. A few links, a little style, one HTML file.",
+    "description": "A compact browser-only builder for up to eight navigation links. Pick light or dark appearance, an accent border and top or bottom placement, then copy or download one self-contained HTML file. No package, framework, account or service required.",
+    "useCases": [
+      "Make a small navigation bar for a landing page or local utility.",
+      "Try link labels and appearance without setting up a development project.",
+      "Take portable, readable HTML/CSS with no JavaScript or runtime dependencies."
+    ],
+    "setup": [
+      {
+        "title": "Edit the links",
+        "text": "Use the small builder above. Set labels and #section, /local-path or HTTP(S) destinations."
+      },
+      {
+        "title": "Copy or download",
+        "text": "Open the HTML directly, or copy its nav and CSS into your own page. Generated output is at most 8 KiB; no installation is needed."
+      }
+    ],
+    "workspace": "toolbar"
+  }
+}

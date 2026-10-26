@@ -3,7 +3,7 @@
   "repository": "Moorky/moorkyz-tools",
   "sourceDirectory": "tools/visory-media-downloader",
   "identity": "Moorksz Visory Media Downloader",
-  "treeSha256": "ebce2f0448d4205b928718593890fad04072b3b252160fe4ce9c6da1672c755a",
+  "treeSha256": "34443fb3ee4ecd18f4fb3182c7b5df283c061ffd29dd4fc865ec5b54423abfec",
   "files": [
     {
       "path": ".gitignore",
@@ -11,7 +11,7 @@
     },
     {
       "path": "AGENTS.md",
-      "sha256": "71a3895203328deb50e52abe866f49c57d600e48dcd2d2217a19c6b382dc2396"
+      "sha256": "d4d860f879c729ff39048d51f5f40c56139684d021be6ba845ef8344020a2c5a"
     },
     {
       "path": "ARCHITECTURE.md",
@@ -280,6 +280,14 @@
     {
       "path": "third-party/wpf-10.0.11-NOTICES.txt",
       "sha256": "d9d14b48bbeaf60d2b528d8c086af1baaab70f2ebbaaf1ccb11c1c16a08bdaeb"
+    },
+    {
+      "path": "portal.json",
+      "sha256": "6d46ba7b68d0023efe04d0c326d6f928ef56066214db7555c6e4f4826f7025aa"
+    },
+    {
+      "path": "source-files.json",
+      "sha256": "b35761afb9ccebee4e2e0a3bc8cf9ebede441ee4e077c878c746b216c2d5f20e"
     }
   ],
   "note": "Canonical UTF-8 source maintained in tools/visory-media-downloader in this repository, not a release. After local edits, refresh this manifest using node scripts/sync-visory-source.mjs."

@@ -68,5 +68,7 @@
   "tests/MoorkszVisoryMediaDownloader.Tests/TestServer.cs",
   "tests/MoorkszVisoryMediaDownloader.Tests/MoorkszVisoryMediaDownloader.Tests.csproj",
   "third-party/wpf-10.0.11-NOTICES.txt",
-  "SOURCE-PROVENANCE.json"
+  "SOURCE-PROVENANCE.json",
+  "portal.json",
+  "source-files.json"
 ]

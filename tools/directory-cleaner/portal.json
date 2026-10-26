@@ -1,0 +1,44 @@
+{
+  "order": 40,
+  "tool": {
+    "slug": "directory-cleaner",
+    "id": "moorkyz-tools-directory-cleaner",
+    "title": "Moorkyz Directory Cleaner",
+    "category": "LOCAL FILE UTILITY",
+    "monogram": "dc",
+    "version": "1.0.0 local preview",
+    "releaseDate": null,
+    "updatedOn": "2026-10-23",
+    "summary": "Keep, move or archive files using patterns, creation dates and size limits. Preview every change first.",
+    "description": "A local file organizer available as both a web-service workspace and a downloadable script. Match filename or relative-path patterns, combine creation-before/after and size-smaller/larger conditions, then Keep, Move or Delete to archive. Keep rules win; otherwise the first match applies, and unmatched files remain untouched. Nothing is permanently deleted or overwritten.",
+    "useCases": [
+      "Keep important documents while archiving old or tiny temporary files.",
+      "Move matching photos or downloads into another folder without overwriting existing files.",
+      "Find large files created before a chosen date, review the exact plan and archive only after confirmation."
+    ],
+    "setup": [
+      {
+        "title": "Use the downloadable script",
+        "text": "Requires Node.js 22+. Download the complete script ZIP from Tool or Workspace, extract it and download your settings from the rule editor. Preview does not change files.",
+        "command": "node .\\clean.mjs --settings .\\directory-cleaner-settings.json --plan .\\preview.json"
+      },
+      {
+        "title": "Apply a reviewed script preview",
+        "text": "Read preview.json and use its actual ID. Delete always puts files into an archive. The exact source snapshot is revalidated before any changes.",
+        "command": "node .\\clean.mjs --apply .\\preview.json --confirm \"APPLY <preview-id>\""
+      },
+      {
+        "title": "Or start the local web service",
+        "text": "From this repository, run the service in its own terminal. It binds only to 127.0.0.1:8766; no account or installation runs automatically.",
+        "command": "pnpm tool:directory-cleaner"
+      },
+      {
+        "title": "Enable the portal connection",
+        "text": "In another terminal, opt in and bind the portal to loopback. Connect in Workspace, preview the files and type the exact confirmation. Both local-service connections are independent and off by default.",
+        "command": "$env:TOOLS_MOORKYZ_COM_DIRECTORY_CLEANER_ENABLED = \"1\"\npnpm --filter @moorkyz-tools/portal dev --hostname 127.0.0.1"
+      }
+    ],
+    "workspace": "directory-cleaner",
+    "source": {}
+  }
+}

@@ -6,5 +6,7 @@
   "server.mjs",
   "clean.mjs",
   "Start-DirectoryCleaner.cmd",
-  "settings.example.json"
+  "settings.example.json",
+  "portal.json",
+  "source-files.json"
 ]

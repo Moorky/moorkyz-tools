@@ -34,6 +34,18 @@ local editable sources have allowlisted, SHA-256-checked download manifests. See
 [source provenance](tools/mediarecover/SOURCE-PROVENANCE.json) and the
 [portal integration guide](docs/portal/modular-tools.md).
 
+## Adding a project
+
+Drag the whole project folder into [tools](tools/), inside this checkout, not into
+a sibling checkout under your machine's `repos` directory. Keep its
+[`portal.json`](tools/visory-media-downloader/portal.json) metadata and optional
+[`source-files.json`](tools/visory-media-downloader/source-files.json) download
+allowlist inside that project folder. Run `pnpm tools:index`, or the normal
+portal dev/build command, to discover it automatically. Catalog cards, search,
+detail pages and source bundles use the same index; no central project list needs
+editing. Raw folders without metadata are reported as unregistered, not executed.
+See the [drop-in project contract](tools/README.md) for a copyable example.
+
 ## Development
 
 ```powershell

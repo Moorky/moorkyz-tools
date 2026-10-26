@@ -23,7 +23,7 @@ const root = fileURLToPath(new URL("../..", import.meta.url));
 const allowlist = async () =>
   JSON.parse(
     await readFile(
-      path.join(root, "tools", "visory-media-downloader.files.json"),
+      path.join(root, "tools", "visory-media-downloader", "source-files.json"),
       "utf8",
     ),
   );

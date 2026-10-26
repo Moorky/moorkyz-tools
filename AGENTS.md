@@ -45,8 +45,12 @@ describe older revisions and are not current product requirements.
 - Run `pnpm check:repository` for read-only syntax/structure checks and
   `pnpm test:unit` for tests without rebuilding. See
   [repository structure](docs/engineering/repository-structure.md).
-- Register tools in `packages/portal/src/data/tools.ts`. Generated source JSON/ZIP
-  assets are built from allowlists; never include history, media, secrets or caches.
+- Drag/add tool projects into `tools/<project>/`, never sibling repositories.
+  Each indexed project owns `portal.json` and, for downloads, `source-files.json`.
+  Run `pnpm tools:index`; portal dev/build also discover and index these manifests.
+  Do not hand-edit the generated `packages/portal/src/data/tool-index.ts`.
+  Source JSON/ZIP assets use explicit allowlists; never include history, media,
+  secrets or caches. Indexing never executes project code or starts services.
 - `pnpm build`, `pnpm lint`, `pnpm format:check`, `pnpm typecheck`,
   `pnpm test`, `pnpm test:browser`, `pnpm check:source`, `pnpm check`.
 - `pnpm tool:videocrunch`, `pnpm tool:directory-cleaner` start explicit local

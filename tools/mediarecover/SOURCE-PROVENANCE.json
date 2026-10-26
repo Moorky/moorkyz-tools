@@ -3,7 +3,7 @@
   "repository": "Moorky/moorkyz-tools",
   "sourceDirectory": "tools/mediarecover",
   "identity": "Moorkyz Media Recover",
-  "treeSha256": "2daabd79c1f468af14731bf9f8c8f0794e2a79b90747541f4ef27a885dfddbf5",
+  "treeSha256": "700b63f880f0cbe6b134e68ced3f44035dc89b38086375b3449339929e34c545",
   "files": [
     {
       "path": ".gitignore",
@@ -79,7 +79,7 @@
     },
     {
       "path": "source-files.json",
-      "sha256": "fc1d793fd4772d941e56caff7814425b363b9fbc1cfe2e8397d548ce6c8a28c9"
+      "sha256": "9b58463d1ab78c66c3f7d1c103a127c4c2f9c4f71d95df1035b639489ca2bff1"
     },
     {
       "path": "src/Moorkyz.MediaRecover.App/app.manifest",
@@ -196,6 +196,10 @@
     {
       "path": "third-party/wpf-10.0.11-NOTICES.txt",
       "sha256": "d9d14b48bbeaf60d2b528d8c086af1baaab70f2ebbaaf1ccb11c1c16a08bdaeb"
+    },
+    {
+      "path": "portal.json",
+      "sha256": "feb0d70d9596e7a684016cdc8b1c1b8cfbe95a697af20e4840ca7f89bfab94dc"
     }
   ],
   "note": "Canonical UTF-8 source maintained in tools/mediarecover in this repository, not a release. After local edits, refresh this manifest using node scripts/sync-mediarecover-source.mjs. No external project is required."

@@ -116,9 +116,13 @@ async function sync() {
     throw new Error(
       "External source directories are not supported. Edit tools\\mediarecover in this repository, then run node scripts\\sync-mediarecover-source.mjs without arguments.",
     );
-  const names = JSON.parse(
-    await readFile(path.join(root, "tools", "mediarecover.files.json"), "utf8"),
+  const definition = JSON.parse(
+    await readFile(
+      path.join(root, "tools", "mediarecover", "source-files.json"),
+      "utf8",
+    ),
   );
+  const names = Array.isArray(definition) ? definition : definition.files;
   const output = path.join(root, "tools", "mediarecover");
   const provenance = await updateMediaRecoverProvenance(output, names);
   console.log(

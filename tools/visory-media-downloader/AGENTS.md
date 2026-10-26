@@ -19,7 +19,7 @@ independently usable Windows desktop app, not a portal runtime. Root `AGENTS.md`
 - Tests use isolated synthetic fixtures under `.fixtures` and the loopback server only.
 - Commands: `scripts\build.ps1`, `scripts\test.ps1`, `scripts\publish.ps1`.
   Do not claim GUI, BITS hand-off or Visory account results that were not observed.
-- Keep the repository allowlist `tools/visory-media-downloader.files.json` complete and
+- Keep this project's `source-files.json` allowlist complete and
   text-only, then refresh provenance with `node scripts\sync-visory-source.mjs` from the
   repository root. Never include artifacts, bin/obj, `.fixtures`, state databases,
   sessions or recordings.

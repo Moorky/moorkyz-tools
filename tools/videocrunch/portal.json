@@ -1,0 +1,43 @@
+{
+  "order": 20,
+  "tool": {
+    "slug": "videocrunch",
+    "id": "moorkyz-tools-video-crunch",
+    "title": "Moorkyz Video Crunch",
+    "category": "VIDEO WORKSPACE",
+    "monogram": "vc",
+    "version": "1.0.0 local preview",
+    "releaseDate": null,
+    "updatedOn": "2026-10-23",
+    "summary": "Save authorized videos, keep the original and create a smaller MP4 for offline playback.",
+    "description": "A Windows-first local web service for downloading and compressing videos you own or have permission to save. The complete original app, PowerShell exporter, launchers, tests and guides live in this repository. Original bytes are preserved alongside optional MP4 derivatives, an offline player and an integrity manifest. Public hosting, accounts and multi-user processing are off.",
+    "useCases": [
+      "Keep authorized source videos and watch them offline.",
+      "Create smaller playback copies with Balanced, Crunch or Extreme compression.",
+      "Download just the original, inspect live logs and revisit the last 50 local exports."
+    ],
+    "setup": [
+      {
+        "title": "Prepare Windows prerequisites",
+        "text": "Requires Node.js 22+, Windows PowerShell 5.1, yt-dlp and FFmpeg. The original launcher checks prerequisites and uses winget to install missing tools when you explicitly run it; installation may require approval and internet access.",
+        "command": ".\\tools\\videocrunch\\Start-WebVideoCrunch.cmd"
+      },
+      {
+        "title": "Start the local service",
+        "text": "If prerequisites are already available, use this instead of the launcher. Keep its terminal open. The service binds only to 127.0.0.1:8765.",
+        "command": "pnpm tool:videocrunch"
+      },
+      {
+        "title": "Enable the portal connection",
+        "text": "In a second PowerShell terminal, opt in and start the portal on loopback. The connection is disabled by default and never starts or installs the service itself.",
+        "command": "$env:TOOLS_MOORKYZ_COM_VIDEOCRUNCH_ENABLED = \"1\"\npnpm --filter @moorkyz-tools/portal dev --hostname 127.0.0.1"
+      },
+      {
+        "title": "Open your workspace",
+        "text": "Use the button below after both services are ready. Exports and history stay on this PC. Do not expose either service through a public address or reverse proxy. No DRM, login or paywall bypass is provided."
+      }
+    ],
+    "workspace": "videocrunch",
+    "source": {}
+  }
+}

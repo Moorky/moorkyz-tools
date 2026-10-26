@@ -123,7 +123,7 @@ async function sync() {
     );
   const names = JSON.parse(
     await readFile(
-      path.join(root, "tools", "visory-media-downloader.files.json"),
+      path.join(root, "tools", "visory-media-downloader", "source-files.json"),
       "utf8",
     ),
   );

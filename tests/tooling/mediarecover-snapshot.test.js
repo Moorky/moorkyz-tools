@@ -22,9 +22,13 @@ import {
 
 test("Git checkout rules preserve every pinned desktop source byte", async () => {
   const root = fileURLToPath(new URL("../..", import.meta.url));
-  const names = JSON.parse(
-    await readFile(path.join(root, "tools", "mediarecover.files.json"), "utf8"),
+  const definition = JSON.parse(
+    await readFile(
+      path.join(root, "tools", "mediarecover", "source-files.json"),
+      "utf8",
+    ),
   );
+  const names = Array.isArray(definition) ? definition : definition.files;
   const input = `${names.map((name) => `tools/mediarecover/${name}`).join("\n")}\n`;
   const options = { cwd: root, input, encoding: "utf8" };
   const stored = execFileSync("git", ["hash-object", "--stdin-paths"], options);

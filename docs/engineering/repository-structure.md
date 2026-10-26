@@ -28,6 +28,9 @@ moorkyz-tools/
 - Add tools to the existing catalog, using shared detail/source views. Portal
   navigation must remain independent of any one tool. Do not create another SDK.
 - Keep all canonical tool directories in `tools/`, tracked by this repository.
+  Each drop-in project keeps its `portal.json` metadata and `source-files.json`
+  allowlist inside its own folder. `pnpm tools:index` and portal dev/build discover
+  them automatically; see the [project contract](../../tools/README.md).
   Independent use does not imply separate Git ownership. Split a repository only
   for a concrete, explicitly approved need; do not add nested Git roots, submodules
   or sibling-source sync requirements. Media Recover is edited in

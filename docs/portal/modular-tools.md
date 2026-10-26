@@ -67,19 +67,23 @@ navigation, not this generated toolbar.
 
 ## Adding tools
 
-1. Register an entry in
-   [`tools.ts`](../../packages/portal/src/data/tools.ts). The catalog, detail
-   metadata, use cases, setup and local search derive from this registry.
-2. For source-based tools, place only distributable source under `tools/<slug>`
-   and add an explicit `tools/<slug>.files.json` allowlist. Register the bundle in
-   [`prepare-tool-sources.mjs`](../../scripts/prepare-tool-sources.mjs) and
-   reference its name/files in the tool definition. Never include local state,
+1. Put the entire project in `tools/<project>/` and add `portal.json` there.
+   The catalog, detail metadata, use cases, setup and search derive automatically
+   from these manifests via [`index-tools.mjs`](../../scripts/index-tools.mjs).
+   Supply a longer `catalogDescription` and an integer `usefulness` score from
+   1 to 10 for the catalog card.
+2. For source downloads, add `"source": {}` to the tool metadata and an explicit
+   `source-files.json` allowlist inside the same folder. Bundle names and file
+   lists are discovered, not registered in a central script. Never include local state,
    downloaded files, credentials, Git internals, caches or dependencies.
 3. Add a workspace integration only when needed. Metadata-only tools can use the
    shared detail layout; executable workspaces need their own explicit rendering
    branch and authority boundary, rather than executing manifest-supplied code.
 4. Add route, accessibility, disabled-path and actual-workspace tests. Update
    `updatedOn` deliberately when the tool changes.
+5. Run `pnpm tools:index` (or portal dev/build). `pnpm tools:index:check`
+   verifies the checked-in generated index without writing. Follow the
+   [drop-in contract](../../tools/README.md); do not hand-edit generated data.
 
 Development and production builds prepare source JSON and deterministic,
 uncompressed ZIP files from original bytes. Generated assets are ignored by Git
@@ -119,7 +123,7 @@ local search derive from the registry; search also matches route slugs.
 The editable source under [`tools/mediarecover`](../../tools/mediarecover)
 belongs to this repository. All tools use this monorepo by default; a separate
 repository requires a concrete need and explicit approval. Its explicit
-[`allowlist`](../../tools/mediarecover.files.json) excludes outputs, state,
+[`allowlist`](../../tools/mediarecover/source-files.json) excludes outputs, state,
 media, packages and Git internals.
 [`SOURCE-PROVENANCE.json`](../../tools/mediarecover/SOURCE-PROVENANCE.json)
 records repository/directory ownership, SHA-256 of every included source file
@@ -168,7 +172,7 @@ loopback server, a mock provider and a labeled demo mode; their results and the
 Application Control blocks on the development machine are recorded in the tool's
 `TEST_REPORT.md`. Do not disable machine policy to run the preview.
 
-Source downloads use the [allowlist](../../tools/visory-media-downloader.files.json)
+Source downloads use the [allowlist](../../tools/visory-media-downloader/source-files.json)
 and [`SOURCE-PROVENANCE.json`](../../tools/visory-media-downloader/SOURCE-PROVENANCE.json)
 with the same text-only, link-refusing, SHA-256 rules and EOL-preserving Git attributes
 as Media Recover. After reviewing local edits:

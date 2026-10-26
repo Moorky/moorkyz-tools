@@ -1,16 +1,11 @@
-import { readFile, writeFile, mkdir, realpath } from "node:fs/promises";
+import { writeFile, mkdir, lstat, readdir, unlink } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { verifyMediaRecoverSnapshot } from "./sync-mediarecover-source.mjs";
 import { verifyVisorySnapshot } from "./sync-visory-source.mjs";
+import { assertNoLinks, indexTools, readSourceFiles } from "./index-tools.mjs";
 
 const root = fileURLToPath(new URL("..", import.meta.url));
-const bundles = [
-  "videocrunch",
-  "directory-cleaner",
-  "mediarecover",
-  "visory-media-downloader",
-];
 
 function crc32(bytes) {
   let crc = 0xffffffff;
@@ -69,44 +64,48 @@ export function createSourceZip(files) {
   return Buffer.concat([...local, directory, end]);
 }
 
-export async function prepareToolSources() {
-  const output = path.join(
-    root,
-    "packages",
-    "portal",
-    "public",
-    "tool-sources",
-  );
-  await mkdir(output, { recursive: true });
-  for (const bundle of bundles) {
-    const names = JSON.parse(
-      await readFile(path.join(root, "tools", `${bundle}.files.json`), "utf8"),
+export async function prepareToolSources({
+  toolsRoot,
+  indexOutput,
+  output = path.join(root, "packages", "portal", "public", "tool-sources"),
+} = {}) {
+  const { projects, unregistered } = await indexTools({
+    toolsRoot,
+    output: indexOutput,
+  });
+  for (const folder of unregistered)
+    console.warn(
+      `Not indexed: tools/${folder}. Add portal.json to register it.`,
     );
-    if (
-      !Array.isArray(names) ||
-      !names.every((name) => typeof name === "string") ||
-      new Set(names).size !== names.length
-    )
-      throw new Error(`Invalid source manifest: ${bundle}`);
-    const sourceRoot = await realpath(path.join(root, "tools", bundle));
+  await assertNoLinks(output);
+  await mkdir(output, { recursive: true });
+  if ((await lstat(output)).isSymbolicLink())
+    throw new Error(`Linked source output is not allowed: ${output}`);
+  const prepared = [];
+  for (const { folder: bundle, sourceRoot, tool } of projects) {
+    if (!tool.source) continue;
+    const names = tool.source.files;
     if (bundle === "mediarecover")
       await verifyMediaRecoverSnapshot(sourceRoot, names);
     if (bundle === "visory-media-downloader")
       await verifyVisorySnapshot(sourceRoot, names);
-    const files = await Promise.all(
-      names.map(async (name) => {
-        const file = await realpath(path.join(sourceRoot, name));
-        const relative = path.relative(sourceRoot, file);
-        if (
-          relative.startsWith(`..${path.sep}`) ||
-          relative === ".." ||
-          path.isAbsolute(relative)
-        )
-          throw new Error(`Source escapes tool folder: ${name}`);
-        return { name, bytes: await readFile(file) };
-      }),
-    );
+    const files = await readSourceFiles(sourceRoot);
     const zip = createSourceZip(files);
+    prepared.push({ bundle, files, zip });
+  }
+  // Validate every project before replacing any generated download.
+  for (const { bundle } of prepared) {
+    for (const extension of ["json", "zip"]) {
+      const target = path.join(output, `${bundle}.${extension}`);
+      try {
+        if ((await lstat(target)).isSymbolicLink())
+          throw new Error(`Linked source output is not allowed: ${target}`);
+      } catch (error) {
+        if (error.code !== "ENOENT") throw error;
+      }
+    }
+  }
+  for (const { bundle, files, zip } of prepared) {
     await writeFile(
       path.join(output, `${bundle}.json`),
       JSON.stringify(
@@ -119,6 +118,16 @@ export async function prepareToolSources() {
     console.log(
       `Prepared ${bundle}: ${files.length} source files, ${zip.length} ZIP bytes.`,
     );
+  }
+  const bundles = new Set(prepared.map((entry) => entry.bundle));
+  for (const entry of await readdir(output, { withFileTypes: true })) {
+    const match = /^([a-z][a-z0-9-]*)\.(json|zip)$/.exec(entry.name);
+    if (match && !bundles.has(match[1])) {
+      if (!entry.isFile())
+        throw new Error(`Unexpected generated source entry: ${entry.name}`);
+      await unlink(path.join(output, entry.name));
+      console.log(`Removed retired generated source: ${entry.name}`);
+    }
   }
 }
 

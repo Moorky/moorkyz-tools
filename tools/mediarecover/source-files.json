@@ -51,6 +51,8 @@
     "src/Moorkyz.MediaRecover.Storage/SqliteManifestStore.cs",
     "tests/Moorkyz.MediaRecover.Tests/Moorkyz.MediaRecover.Tests.csproj",
     "tests/Moorkyz.MediaRecover.Tests/Program.cs",
-    "third-party/wpf-10.0.11-NOTICES.txt"
+    "third-party/wpf-10.0.11-NOTICES.txt",
+    "SOURCE-PROVENANCE.json",
+    "portal.json"
   ]
 }
