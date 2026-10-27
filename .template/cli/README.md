@@ -36,3 +36,9 @@ lifecycle/package commands additionally require the selected package manager.
 Both launchers write new reports to `.audits/` when
 `docs/AUDIT_TEMPLATE.md` exists. Old template locations remain supported for
 existing consumers, retaining their old `docs/audits/` output location.
+
+`gui` optionally opens the [Windows Moorkyz control GUI](../../src/.moorkyz/gui/README.md).
+It is a separate native front end, not the portal, and does nothing until an
+action is selected. Copy `src/.moorkyz/gui` and `src/.moorkyz/public` as well if
+the receiving checkout should support this optional command. No GUI package is
+required for ordinary CLI commands.

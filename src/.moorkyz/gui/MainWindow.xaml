@@ -1,0 +1,112 @@
+<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Moorkyz | Local control" Width="1240" Height="870" MinWidth="940" MinHeight="680"
+        WindowStartupLocation="CenterScreen">
+  <Grid Margin="28">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="*"/>
+      <RowDefinition Height="Auto"/>
+    </Grid.RowDefinitions>
+    <Grid Margin="0,0,0,28">
+      <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+      <StackPanel Orientation="Horizontal">
+        <Button x:Name="BrandHome" Style="{DynamicResource QuietButton}" Padding="0" Width="48" Height="48"
+                Margin="0,0,14,0" ToolTip="Return to Overview. No command runs."
+                AutomationProperties.Name="Moorkyz - go to Overview">
+          <Image x:Name="BrandIcon" Width="44" Height="44"/>
+        </Button>
+        <StackPanel>
+          <TextBlock Text="MOORKYZ" FontWeight="Bold" FontSize="23"/>
+          <TextBlock Text="LOCAL CONTROL / FIRST PASS" Style="{DynamicResource Eyebrow}" Margin="0,5,0,0"/>
+        </StackPanel>
+      </StackPanel>
+      <StackPanel Grid.Column="1" VerticalAlignment="Center">
+        <CheckBox x:Name="MotionToggle" Content="Interface motion" IsChecked="True"/>
+        <TextBlock x:Name="MotionStatus" Style="{DynamicResource MutedText}" FontSize="11"/>
+      </StackPanel>
+    </Grid>
+    <Grid Grid.Row="1">
+      <Grid.ColumnDefinitions><ColumnDefinition Width="182"/><ColumnDefinition Width="24"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+      <Border Style="{DynamicResource Panel}" Padding="14">
+        <DockPanel>
+          <StackPanel DockPanel.Dock="Bottom" Margin="6,24,0,4">
+            <TextBlock Text="YOUR MACHINE." FontWeight="SemiBold" FontSize="12"/>
+            <TextBlock Text="Your commands.&#10;Nothing starts on open." Style="{DynamicResource MutedText}" FontSize="12" Margin="0,8,0,0"/>
+          </StackPanel>
+          <StackPanel>
+            <TextBlock Text="WORKSPACE" Style="{DynamicResource Eyebrow}" Margin="6,6,0,14"/>
+            <Button x:Name="OverviewNav" Content="_Overview" Style="{DynamicResource PrimaryButton}" HorizontalContentAlignment="Left" Margin="0,0,0,10"/>
+            <Button x:Name="EffectsNav" Content="_Interaction lab" Style="{DynamicResource QuietButton}" HorizontalContentAlignment="Left"/>
+            <Border Height="1" Background="{DynamicResource Border}" Margin="6,24,6,18"/>
+            <TextBlock Text="DEEP BLUE&#10;+ VIOLET" Foreground="{DynamicResource Focus}" FontSize="12" LineHeight="20" Margin="6,0"/>
+          </StackPanel>
+        </DockPanel>
+      </Border>
+      <Grid Grid.Column="2">
+        <ScrollViewer x:Name="Overview" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+          <StackPanel Margin="4,0,12,4">
+            <TextBlock Text="A little more in control." FontSize="30" FontWeight="SemiBold"/>
+            <TextBlock Text="An explicit, local front end for your existing Moorkyz CLI." Style="{DynamicResource MutedText}" Margin="0,9,0,22"/>
+            <Border Style="{DynamicResource Panel}" Margin="0,0,0,22">
+              <Grid>
+                <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                <StackPanel>
+                  <TextBlock Text="PROJECT" Style="{DynamicResource Eyebrow}"/>
+                  <ComboBox x:Name="ProjectSelector" HorizontalAlignment="Left" MinWidth="240" AutomationProperties.Name="Project"/>
+                  <TextBlock x:Name="ProjectHint" Style="{DynamicResource MutedText}" FontSize="12" Margin="0,9,16,0"/>
+                </StackPanel>
+                <StackPanel Grid.Column="1" VerticalAlignment="Center" MaxWidth="230" Margin="20,0,0,0">
+                  <TextBlock Text="LOCAL BY DESIGN" Foreground="{DynamicResource Focus}" FontWeight="SemiBold" FontSize="12"/>
+                  <TextBlock Text="No accounts or telemetry. Services and checks run only when you choose an action." Style="{DynamicResource MutedText}" FontSize="12" Margin="0,6,0,0"/>
+                </StackPanel>
+              </Grid>
+            </Border>
+            <TextBlock Text="Quick actions" FontSize="20" FontWeight="SemiBold"/>
+            <TextBlock Text="Click to run. Drag to reorder, or focus a card and press Alt + an arrow key. Order lasts for this window." Style="{DynamicResource MutedText}" FontSize="12" Margin="0,7,0,16"/>
+            <WrapPanel x:Name="ActionCards" Margin="3,3,0,6"/>
+            <Border Style="{DynamicResource Panel}">
+              <StackPanel>
+                <TextBlock Text="Command output" FontSize="18" FontWeight="SemiBold"/>
+                <TextBlock x:Name="RunStatus" Text="Idle - no commands have run." Style="{DynamicResource MutedText}" Margin="0,8,0,12" AutomationProperties.LiveSetting="Polite"/>
+                <TextBox x:Name="Output" IsReadOnly="True" AcceptsReturn="True" TextWrapping="NoWrap"
+                         VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"
+                         Height="210" FontFamily="Consolas" FontSize="12" AutomationProperties.Name="Command output"/>
+                <TextBlock Text="Closing this window does not stop services managed by the CLI. Use Stop explicitly." Style="{DynamicResource MutedText}" FontSize="11" Margin="0,12,0,0"/>
+              </StackPanel>
+            </Border>
+          </StackPanel>
+        </ScrollViewer>
+        <ScrollViewer x:Name="Effects" Visibility="Collapsed" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+          <StackPanel Margin="4,0,12,4">
+            <TextBlock Text="Feel the difference." FontSize="30" FontWeight="SemiBold"/>
+            <TextBlock Text="Three reusable presets per interaction. Choose one from each family; the shared controls use your selection." Style="{DynamicResource MutedText}" Margin="0,9,0,22"/>
+            <WrapPanel x:Name="PresetSelectors"/>
+            <Border x:Name="MotionPreview" Style="{DynamicResource Panel}" Margin="0,4,0,20">
+              <StackPanel>
+                <TextBlock Text="Small details. Clear feedback." FontSize="22" FontWeight="SemiBold"/>
+                <TextBlock Text="Hover or press the samples. They never run a command. Return to Overview to try real card reordering." Style="{DynamicResource MutedText}" Margin="0,10,0,20"/>
+                <WrapPanel x:Name="SampleButtons"/>
+                <TextBlock x:Name="PreviewStatus" Text="Ready to explore." Style="{DynamicResource MutedText}" Margin="0,12,0,0"/>
+              </StackPanel>
+            </Border>
+            <TextBlock Text="Light, depth, and a little character." FontSize="20" FontWeight="SemiBold"/>
+            <TextBlock Text="Pointer-driven 3D tilt, a moving warm light, fine texture and an embossed imprint. Selective surfaces, not every control." Style="{DynamicResource MutedText}" Margin="0,8,0,16"/>
+            <WrapPanel x:Name="MaterialCards"/>
+            <Border Style="{DynamicResource Panel}">
+              <StackPanel>
+                <TextBlock Text="Motion with a purpose." FontSize="18" FontWeight="SemiBold"/>
+                <TextBlock Text="Focus stays visible. Space and Enter activate buttons. Keyboard reordering has the same result as dragging. Windows animation settings and the Interface motion switch disable nonessential movement; static hover, press and focus feedback remains." Style="{DynamicResource MutedText}" Margin="0,10,0,0"/>
+              </StackPanel>
+            </Border>
+          </StackPanel>
+        </ScrollViewer>
+      </Grid>
+    </Grid>
+    <Grid Grid.Row="2" Margin="0,18,0,0">
+      <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+      <TextBlock x:Name="RootLabel" Style="{DynamicResource MutedText}" FontFamily="Consolas" FontSize="10" TextTrimming="CharacterEllipsis" TextWrapping="NoWrap"/>
+      <TextBlock Grid.Column="1" Text="MOORKYZ / LOCAL-FIRST" Foreground="{DynamicResource Focus}" FontSize="10" Margin="18,0,0,0"/>
+    </Grid>
+  </Grid>
+</Window>

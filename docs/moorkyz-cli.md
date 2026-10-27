@@ -17,6 +17,8 @@ configuration and runtime namespaces.
 
 ```powershell
 .\moorkyz.cmd help
+# Optional Windows control GUI (nothing runs until you choose an action):
+.\moorkyz.cmd gui
 # Optional Explorer shortcut with the supplied Moorkyz icon:
 .\create-moorkyz-shortcut.ps1
 # Optional one-time installation of a shell function so `moorkyz` works in every project folder:
@@ -54,6 +56,7 @@ To persist the function, put it in your appropriate shell initialization file an
 | Command | Action |
 |---|---|
 | `moorkyz help [command]` | Detailed command list |
+| `moorkyz gui` | Open the opt-in native Windows control GUI using this launcher's configuration |
 | `moorkyz start [name\|all]` | Start in background and open the project URL in the default browser |
 | `moorkyz start [name\|all] --prod` | Start project's declared production script |
 | `moorkyz stop [name\|all]` | Stop only tracked processes the CLI started |
@@ -81,6 +84,23 @@ This repository sets `verifyDepsBeforeRun: error` in `pnpm-workspace.yaml` so pn
 stale dependencies without starting an automatic install from a background service. This pnpm
 setting belongs in the workspace YAML, not `.npmrc`. Run `moorkyz install` deliberately when
 dependencies need synchronization; do not bypass the noninteractive module-purge prompt.
+
+## Optional Windows control GUI
+
+`moorkyz gui` opens the native dark-first control window, with the supplied Moorkyz
+icon, shared deep-blue/violet components and an Interaction lab. It requires the
+built-in Windows PowerShell/WPF runtime; it adds no mandatory package dependency,
+local server, profile edit or execution-policy bypass.
+
+The GUI delegates explicit project actions to the existing CLI and shows their
+real output/exit status. Opening it does not start a service or run a check.
+Only one command runs at a time; close is blocked while it finishes. Closing an
+idle window does not stop existing services. Reduced motion follows Windows'
+preference and can also be enabled in the window. Card order is session-only.
+
+The same command on `tools.moorkyz.com` keeps that launcher's configuration/state.
+See the [GUI guide](../src/.moorkyz/gui/README.md) for supported actions, three
+presets per interaction, inertia/3D effects, verification and current limits.
 
 ## Package managers
 

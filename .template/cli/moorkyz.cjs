@@ -1075,6 +1075,7 @@ function help(command) {
     install:
       "moorkyz install [project]            Install dependencies reproducibly using the authoritative package manager and lockfile.",
     run: "moorkyz run <script> [project]       Run an existing package.json script.",
+    gui: "moorkyz gui                         Open the opt-in Windows local control GUI.",
     audit:
       'moorkyz audit "task description"       Create a documented audit from docs/AUDIT_TEMPLATE.md.',
     archive:
@@ -1120,6 +1121,18 @@ async function main() {
     return;
   }
   const config = cfg();
+  if (command === "gui") {
+    if (args.length) die(`Usage: ${COMMAND} gui`);
+    const { openGui } = require("./helpers/gui.cjs");
+    process.exitCode = openGui({
+      platform: process.platform,
+      root: ROOT,
+      entrypoint: ENTRYPOINT,
+      node: process.execPath,
+      config,
+    });
+    return;
+  }
   if (command === "maintain") {
     if (args.length) die(`Usage: ${COMMAND} maintain`);
     const result = await maintain(config, true);
