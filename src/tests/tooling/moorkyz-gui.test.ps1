@@ -240,7 +240,7 @@ setTimeout(() => {
     $gui.Window.Close()
     $start = [Diagnostics.ProcessStartInfo]::new(
         (Get-Command node.exe).Source,
-        [Moorkyz.ControlGui]::QuoteArgument((Join-Path $root 'moorkyz.cjs')) + ' gui'
+        [Moorkyz.ControlGui]::QuoteArgument((Join-Path $root 'moorkyz')) + ' gui'
     )
     $start.WorkingDirectory = $fixture
     $start.UseShellExecute = $false

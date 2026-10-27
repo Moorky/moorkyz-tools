@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readFileSync, statSync } from "node:fs";
 import { test } from "node:test";
 
 const identity = "moorkyz-tools";
@@ -57,13 +57,13 @@ test("workspace, portal package and command filters use the project identity", (
   assert.equal(portal.name, `@${identity}/portal`);
   assert.ok(root.scripts.build.includes(`--filter @${identity}/portal`));
   assert.ok(root.scripts.typecheck.includes(`--filter @${identity}/portal`));
-  for (const suffix of ["", ".cmd"]) {
-    assert.ok(existsSync(`${launcherIdentity}${suffix}`));
-  }
-  assert.ok(existsSync(`src/.moorkyz/launchers/${launcherIdentity}.cjs`));
+  assert.ok(existsSync("moorkyz"));
+  assert.equal(existsSync("moorkyz.cjs"), false);
+  assert.equal(existsSync("moorkyz.cmd"), false);
+  assert.ok(existsSync(`src/.moorkyz/scripts/${launcherIdentity}.cjs`));
   assert.ok(existsSync(`src/.moorkyz/config/${launcherIdentity}.config.json`));
   assert.match(
-    readFileSync("src/.template/cli/moorkyz.cjs", "utf8"),
+    readFileSync("src/.moorkyz/scripts/moorkyz.cjs", "utf8"),
     /const STATE_DIRECTORY = `\.\$\{COMMAND\}`/,
   );
 });
@@ -76,7 +76,7 @@ test("all repository text and paths, including historical docs, omit retired pro
       { encoding: "utf8" },
     )
       .split("\0")
-      .filter((file) => file && existsSync(file)),
+      .filter((file) => file && existsSync(file) && statSync(file).isFile()),
   );
   const findings = [];
   for (const file of files) {

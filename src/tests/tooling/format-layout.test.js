@@ -15,8 +15,8 @@ test("the relocated formatter ignores generated output without hiding maintained
   }
   for (const file of [
     "src/packages/portal/src/app/layout.tsx",
-    "src/.template/cli/moorkyz.cjs",
-    "src/.moorkyz/launchers/tools.moorkyz.com.cjs",
+    "src/.moorkyz/scripts/moorkyz.cjs",
+    "src/.moorkyz/scripts/tools.moorkyz.com.cjs",
   ]) {
     assert.equal((await getFileInfo(file, options)).ignored, false, file);
   }

@@ -7,18 +7,18 @@ The repository includes a dependency-free Node.js helper for local project lifec
 From the repository root in PowerShell:
 
 ```powershell
-.\tools.moorkyz.com.cmd help
-.\tools.moorkyz.com.cmd doctor
-.\tools.moorkyz.com.cmd start
-.\tools.moorkyz.com.cmd status
-.\tools.moorkyz.com.cmd logs
-.\tools.moorkyz.com.cmd stop
-.\tools.moorkyz.com.cmd audit "task title"
+node .\src\.moorkyz\scripts\tools.moorkyz.com.cjs help
+node .\src\.moorkyz\scripts\tools.moorkyz.com.cjs doctor
+node .\src\.moorkyz\scripts\tools.moorkyz.com.cjs start
+node .\src\.moorkyz\scripts\tools.moorkyz.com.cjs status
+node .\src\.moorkyz\scripts\tools.moorkyz.com.cjs logs
+node .\src\.moorkyz\scripts\tools.moorkyz.com.cjs stop
+node .\src\.moorkyz\scripts\tools.moorkyz.com.cjs audit "task title"
 ```
 
-On macOS/Linux, use `sh ./tools.moorkyz.com`. The `audit` command creates an unfilled report in `.audits/` from [the audit template](../AUDIT_TEMPLATE.md); fill in observed evidence before considering the task complete. Historical audit records remain at their original paths.
+On macOS/Linux, use `node ./src/.moorkyz/scripts/tools.moorkyz.com.cjs`. The `audit` command creates an unfilled report in `.audits/` from [the audit template](../AUDIT_TEMPLATE.md); fill in observed evidence before considering the task complete. Historical audit records remain at their original paths.
 
-This launcher and `moorkyz` now use [one shared implementation](../../src/.template/cli/README.md), not separate copies. The command names, configuration files, state namespaces and preferred ports remain distinct.
+This launcher and `moorkyz` now use [one shared implementation](../../.moorkyz/scripts/README.md), not separate copies. The command names, configuration files, state namespaces and preferred ports remain distinct.
 
 `src/.moorkyz/config/tools.moorkyz.com.config.json` selects `src/packages/portal`
 as the default project, using its `dev` script for `start` and its `start` script

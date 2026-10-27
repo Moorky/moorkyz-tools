@@ -32,7 +32,7 @@ if ($starts.Count -eq 1) {
     return
 }
 if (-not $Uninstall) {
-    $cli = Join-Path $PSScriptRoot '..\..\..\moorkyz.cjs'
+    $cli = Join-Path $PSScriptRoot '..\..\..\moorkyz'
     if (-not (Test-Path -LiteralPath $cli)) { throw "Missing CLI: $cli" }
     $safePath = ([IO.Path]::GetFullPath($cli)).Replace("'", "''")
     $block = @'

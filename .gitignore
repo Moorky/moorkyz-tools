@@ -14,10 +14,11 @@ directory-cleaner-settings.json
 
 # Project-local runtime data and recoverable disposable files. Never commit.
 /.moorkyz/
-/moorkyz.lnk
+/src/.moorkyz/scripts/*.lnk
 /trash/
 /logs/
 /archive/
+/.archive/
 .env
 .env.*
 !.env.example

@@ -6,7 +6,7 @@ const fs = require("node:fs");
 const os = require("node:os");
 const path = require("node:path");
 const { test } = require("node:test");
-const { guiInvocation } = require("../../.template/cli/helpers/gui.cjs");
+const { guiInvocation } = require("../../.moorkyz/scripts/helpers/gui.cjs");
 
 const root = path.resolve(__dirname, "..", "..", "..");
 const options = {
@@ -60,8 +60,8 @@ test("both launchers expose GUI help and reject GUI arguments without opening it
           path.join(
             root,
             entrypoint === "moorkyz"
-              ? "moorkyz.cjs"
-              : "src/.moorkyz/launchers/tools.moorkyz.com.cjs",
+              ? "moorkyz"
+              : "src/.moorkyz/scripts/tools.moorkyz.com.cjs",
           ),
           ...args,
         ],

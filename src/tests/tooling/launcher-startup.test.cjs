@@ -68,8 +68,8 @@ for (const launcher of ["moorkyz", "tools.moorkyz.com"]) {
     const cli = path.join(
       root,
       launcher === "moorkyz"
-        ? "moorkyz.cjs"
-        : "src/.moorkyz/launchers/tools.moorkyz.com.cjs",
+        ? "moorkyz"
+        : "src/.moorkyz/scripts/tools.moorkyz.com.cjs",
     );
     function run(...args) {
       return spawnSync(process.execPath, [cli, ...args], {

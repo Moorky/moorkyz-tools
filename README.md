@@ -25,14 +25,14 @@ the **Moorkyz Toolbar Builder** is now a small standalone HTML generator, not a 
   the portal page never contacts Visory.
 
 Every local script tool has a source hierarchy, console-style viewer, per-file
-Copy/Download and a complete ZIP. See the [portal guide](docs/portal/modular-tools.md)
+Copy/Download and a complete ZIP. See the [portal guide](src/docs/portal/modular-tools.md)
 and [Directory Cleaner guide](tools/directory-cleaner/README.md).
 All tool directories and canonical sources live under [tools](tools) in this
 repository. Tools are independently usable; separate repositories are only
 created when a concrete need is approved. Media Recover's and Moorksz Visory Media Downloader's
 local editable sources have allowlisted, SHA-256-checked download manifests. See
 [source provenance](tools/mediarecover/SOURCE-PROVENANCE.json) and the
-[portal integration guide](docs/portal/modular-tools.md).
+[portal integration guide](src/docs/portal/modular-tools.md).
 
 ## Adding a project
 
@@ -56,8 +56,8 @@ pnpm --dir src check
 pnpm --dir src check:source
 ```
 
-For a managed background portal, use `.\moorkyz.cmd start` (or the
-repository-specific `.\tools.moorkyz.com.cmd start`), then `status`, `logs`,
+For a managed background portal, use `node .\moorkyz start` (or the
+repository-specific `node .\src\.moorkyz\scripts\tools.moorkyz.com.cjs start`), then `status`, `logs`,
 `restart` or `stop` with the same launcher. The shared launcher prefers
 `http://127.0.0.1:4320`; the repository-specific launcher prefers
 `http://127.0.0.1:3001`. Both print the actual selected URL and wait for a
@@ -69,14 +69,14 @@ than an automatic reinstall; run the frozen install above when needed.
 Use Node.js 22+ and the pinned pnpm version. Browser tests use installed
 Chromium/Firefox/WebKit; `pnpm --dir src exec playwright install` prepares them for development.
 
-Repository management uses `.\tools.moorkyz.com.cmd help` on Windows or
-`sh ./tools.moorkyz.com help` on macOS/Linux. See the
-[CLI guide](docs/engineering/tools.moorkyz.com-cli.md). The workspace package is
+Repository management uses `node .\src\.moorkyz\scripts\tools.moorkyz.com.cjs help` on Windows or
+`node ./src/.moorkyz/scripts/tools.moorkyz.com.cjs help` on macOS/Linux. See the
+[CLI guide](src/docs/engineering/tools.moorkyz.com-cli.md). The workspace package is
 `moorkyz-tools`; the portal package is `@moorkyz-tools/portal`.
 
 Project links target [Moorky/moorkyz-tools](https://github.com/Moorky/moorkyz-tools).
 Use the same repository and hostname in GitHub, Cloudflare and Coolify. See the
-[deployment guide](docs/deployment/coolify.md).
+[deployment guide](src/docs/deployment/coolify.md).
 
 ## Explicit local services
 
@@ -96,7 +96,7 @@ its operations. No accounts, tenant isolation, hosted storage or telemetry.
 
 ## Repository structure
 
-The [structure guide](docs/engineering/repository-structure.md) records the
+The [structure guide](src/docs/engineering/repository-structure.md) records the
 adaptation of [moorkyz-template](https://github.com/Moorky/moorkyz-template):
 shared systems in [.template](src/.template/README.md), application code in
 [packages/portal](src/packages/portal/README.md), independent [tools](tools),
@@ -110,9 +110,9 @@ Historical audits remain at their original paths.
 
 ## Governance
 
-[AGENTS.md](AGENTS.md), [decisions](docs/decisions/decision-register.md) and
-[testing](docs/engineering/testing.md) describe current behavior. Old specifications
-remain in Git history; [audits](docs/audits) remain historical evidence.
+[AGENTS.md](AGENTS.md), [decisions](src/docs/decisions/decision-register.md) and
+[testing](src/docs/engineering/testing.md) describe current behavior. Old specifications
+remain in Git history; [audits](src/docs/audits) remain historical evidence.
 Production deployments follow the authenticated CI pipeline and the approved hosting configuration.
 
 The root [Apache-2.0 license](LICENSE) covers first-party project code. The
@@ -122,6 +122,6 @@ retain their SIL OFL notices.
 
 ## Repository operations
 
-[Deployment and CI](docs/deployment/coolify.md), [security reporting](.github/SECURITY.md) and [audit evidence](audits) describe repository operations. [README.html](README.html) and [READM.html](docs/legacy/READM.html) are offline HTML entry points.
+[Deployment and CI](src/docs/deployment/coolify.md), [security reporting](.github/SECURITY.md) and [audit evidence](audits) describe repository operations. [README.html](README.html) and [READM.html](src/docs/legacy/READM.html) are offline HTML entry points.
 
 The root `trash/`, `logs/`, `archive/` and `.moorkyz/` directories are local runtime data and ignored by Git and Docker. The shared `moorkyz` command manages project-scoped retention and saved ports; see its help and runtime documentation.

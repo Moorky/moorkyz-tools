@@ -8,7 +8,7 @@ Prerequisites: the project's approved Node.js runtime (at least Node.js 22.18; u
 the package-manager version in `package.json`, and a `package.json` containing the scripts you
 intend to run. Maintenance and archival commands also work in repositories without a package
 manifest. The root launchers now delegate to one implementation in
-[.template/cli](../src/.template/cli/README.md). When copying the CLI, include that
+[.template/cli](../.moorkyz/scripts/README.md). When copying the CLI, include that
 entire folder and the chosen root launchers; the root compatibility files are
 not a standalone distribution. Both launcher identities keep their existing
 configuration and runtime namespaces.
@@ -22,9 +22,9 @@ projects and take precedence over a source-folder configuration.
 **Windows / PowerShell** (from the repository containing these starter files):
 
 ```powershell
-.\moorkyz.cmd help
+node .\moorkyz help
 # Optional Windows control GUI (nothing runs until you choose an action):
-.\moorkyz.cmd gui
+node .\moorkyz gui
 # Optional Explorer shortcut with the supplied Moorkyz icon:
 .\src\.moorkyz\scripts\create-moorkyz-shortcut.ps1
 # Optional one-time installation of a shell function so `moorkyz` works in every project folder:
@@ -33,7 +33,7 @@ projects and take precedence over a source-folder configuration.
 moorkyz help
 ```
 
-The optional installer edits **only the current user's PowerShell profile**, creating a function pointing at this CLI file; it does not change the system PATH. Keep this CLI file in place after installing. To remove the function, run `& .\src\.moorkyz\scripts\install-moorkyz.ps1 -Uninstall`, then restart PowerShell. If PowerShell blocks scripts by policy, use `.\moorkyz.cmd` directly; don't weaken the system execution policy just to install the shortcut.
+The optional installer edits **only the current user's PowerShell profile**, creating a function pointing at this CLI file; it does not change the system PATH. Keep this CLI file in place after installing. To remove the function, run `& .\src\.moorkyz\scripts\install-moorkyz.ps1 -Uninstall`, then restart PowerShell. If PowerShell blocks scripts by policy, use `node .\moorkyz` directly; don't weaken the system execution policy just to install the shortcut.
 
 Windows batch files cannot carry an individual file icon. The optional shortcut
 script creates `moorkyz.lnk` beside the launcher, starts an interactive command
@@ -105,7 +105,7 @@ idle window does not stop existing services. Reduced motion follows Windows'
 preference and can also be enabled in the window. Card order is session-only.
 
 The same command on `tools.moorkyz.com` keeps that launcher's configuration/state.
-See the [GUI guide](../src/.moorkyz/gui/README.md) for supported actions, three
+See the [GUI guide](../.moorkyz/gui/README.md) for supported actions, three
 presets per interaction, inertia/3D effects, verification and current limits.
 
 ## Package managers

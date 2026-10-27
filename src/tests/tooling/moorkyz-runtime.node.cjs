@@ -7,7 +7,7 @@ const os = require("node:os");
 const path = require("node:path");
 const zlib = require("node:zlib");
 const { spawnSync } = require("node:child_process");
-const storage = require("../../.moorkyz/launchers/moorkyz-storage.cjs");
+const storage = require("../../.moorkyz/scripts/moorkyz-storage.cjs");
 const fixtures = [];
 const policy = {
   ...storage.DEFAULTS,
@@ -497,7 +497,7 @@ test("CLI exposes archive and maintenance commands without requiring pnpm", () =
   const root = fixture();
   fs.writeFileSync(path.join(root, "one.txt"), "one");
   fs.writeFileSync(path.join(root, "two.txt"), "two");
-  const cli = path.resolve(__dirname, "../../../moorkyz.cjs");
+  const cli = path.resolve(__dirname, "../../../moorkyz");
   const archived = spawnSync(
     process.execPath,
     [cli, "archive", "one.txt", "two.txt"],

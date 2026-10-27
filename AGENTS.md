@@ -6,7 +6,7 @@ This repository is a modular tools portal with independently usable local tools.
 The user explicitly replaced the former SDK product on 2026-10-23: retain only
 a small standalone Toolbar Builder, remove the legacy SDK/Studio/examples and
 active specifications, and preserve Git history and existing audit records.
-See [current decisions](docs/decisions/decision-register.md). Historical audits
+See [current decisions](src/docs/decisions/decision-register.md). Historical audits
 describe older revisions and are not current product requirements.
 
 ## Required practice
@@ -49,7 +49,7 @@ describe older revisions and are not current product requirements.
   Root launchers delegate to one shared implementation.
 - Run `pnpm --dir src check:repository` for read-only syntax/structure checks and
   `pnpm --dir src test:unit` for tests without rebuilding. See
-  [repository structure](docs/engineering/repository-structure.md).
+  [repository structure](src/docs/engineering/repository-structure.md).
 - Drag/add tool projects into `tools/<project>/`, never sibling repositories.
   Each indexed project owns `portal.json` and, for downloads, `source-files.json`.
   Run `pnpm --dir src tools:index`; portal dev/build also discover and index these manifests.
@@ -60,9 +60,9 @@ describe older revisions and are not current product requirements.
   `pnpm --dir src test`, `pnpm --dir src test:browser`, `pnpm --dir src check:source`, `pnpm --dir src check`.
 - `pnpm --dir src tool:videocrunch`, `pnpm --dir src tool:directory-cleaner` start explicit local
   services. Read their setup pages before enabling portal connections.
-- `.\tools.moorkyz.com.cmd help`, `.\tools.moorkyz.com.cmd doctor`, `.\tools.moorkyz.com.cmd audit "task title"`
+- `node .\src\.moorkyz\scripts\tools.moorkyz.com.cjs help`, `node .\src\.moorkyz\scripts\tools.moorkyz.com.cjs doctor`, `node .\src\.moorkyz\scripts\tools.moorkyz.com.cjs audit "task title"`
   remain generic repository management commands.
 
-See [testing](docs/engineering/testing.md), [coding standards](docs/engineering/coding-standards.md),
-[workflow](docs/engineering/agent-workflow.md) and
-[security/dependencies](docs/engineering/security-and-dependencies.md).
+See [testing](src/docs/engineering/testing.md), [coding standards](src/docs/engineering/coding-standards.md),
+[workflow](src/docs/engineering/agent-workflow.md) and
+[security/dependencies](src/docs/engineering/security-and-dependencies.md).

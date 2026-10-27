@@ -1,9 +1,9 @@
 $ErrorActionPreference = 'Stop'
 
 $root = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..\..\..'))
-$launcher = Join-Path $root 'moorkyz.cmd'
+$launcher = Join-Path $PSScriptRoot 'moorkyz.cmd'
 $icon = Join-Path $root 'src\.moorkyz\public\favicon.ico'
-$shortcutPath = Join-Path $root 'moorkyz.lnk'
+$shortcutPath = Join-Path $PSScriptRoot 'moorkyz.lnk'
 $commandPrompt = Join-Path $env:SystemRoot 'System32\cmd.exe'
 
 foreach ($requiredPath in @($launcher, $icon, $commandPrompt)) {

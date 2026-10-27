@@ -5,14 +5,12 @@ New task-specific verification reports live here, adapted from
 `.audits/` hierarchy. Generate a report with either root launcher:
 
 ```powershell
-.\moorkyz.cmd audit "task title"
+node .\moorkyz audit "task title"
 ```
 
-Fill the [audit template](../docs/AUDIT_TEMPLATE.md) with actual commands and
+Fill the [audit template](../src/docs/AUDIT_TEMPLATE.md) with actual commands and
 observed results before committing. An agent self-audit is not independent
 security review, accessibility certification, deployment or release approval.
 
-Older [operations records](../audits/README.md) and
-[historical implementation audits](../docs/audits/) remain in their original
-locations. Do not rewrite old evidence or treat retired product requirements as
-current. Existing uncommitted reports are not moved automatically.
+Historical implementation audits are preserved in this directory. Do not treat
+retired product requirements as current or rewrite historical evidence.

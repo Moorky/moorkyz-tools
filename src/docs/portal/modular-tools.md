@@ -96,7 +96,7 @@ navigation, not this generated toolbar.
    `Data/Portal/portal.json` is also supported for capitalized user-facing metadata.
    Keep only one portal manifest; duplicates fail explicitly.
    The catalog, detail metadata, use cases, setup and search derive automatically
-   from these manifests via [`index-tools.mjs`](../../src/scripts/index-tools.mjs).
+   from these manifests via [`index-tools.mjs`](../../scripts/index-tools.mjs).
    Supply a longer `catalogDescription` and an integer `usefulness` score from
    1 to 10 for the catalog card.
 2. For source downloads, add `"source": {}` to the tool metadata and an explicit
@@ -112,7 +112,7 @@ navigation, not this generated toolbar.
    `updatedOn` deliberately when the tool changes.
 5. Run `pnpm --dir src tools:index` (or portal dev/build). `pnpm --dir src tools:index:check`
    verifies the checked-in generated index without writing. Follow the
-   [drop-in contract](../../tools/README.md); do not hand-edit generated data.
+   [drop-in contract](../../../tools/README.md); do not hand-edit generated data.
 
 Development and production builds prepare source JSON and deterministic,
 uncompressed ZIP files from original bytes. Generated assets are ignored by Git
@@ -149,12 +149,12 @@ local search derive from the registry; search also matches route slugs.
 
 ### Canonical source and checked downloads
 
-The editable source under [`tools/mediarecover`](../../tools/mediarecover)
+The editable source under [`tools/mediarecover`](../../../tools/mediarecover)
 belongs to this repository. All tools use this monorepo by default; a separate
 repository requires a concrete need and explicit approval. Its explicit
-[`allowlist`](../../tools/mediarecover/source-files.json) excludes outputs, state,
+[`allowlist`](../../../tools/mediarecover/source-files.json) excludes outputs, state,
 media, packages and Git internals.
-[`SOURCE-PROVENANCE.json`](../../tools/mediarecover/SOURCE-PROVENANCE.json)
+[`SOURCE-PROVENANCE.json`](../../../tools/mediarecover/SOURCE-PROVENANCE.json)
 records repository/directory ownership, SHA-256 of every included source file
 and a deterministic tree hash. This pins local content, not an invented remote
 commit or release.
@@ -187,9 +187,9 @@ Windows desktop hub (portal title **Moorksz Visory Media Downloader**). Its cano
 registry ID is `moorksz-tools-visory-media-downloader` and its editorial usefulness
 score is **10/10**, not a measured benchmark or a real-account validation claim. Its
 source, tests, build scripts and documentation live in
-[`tools/visory-media-downloader`](../../tools/visory-media-downloader); start with its
-[README](../../tools/visory-media-downloader/README.md) and
-[Visory integration contract](../../tools/visory-media-downloader/VISORY_INTEGRATION.md).
+[`tools/visory-media-downloader`](../../../tools/visory-media-downloader); start with its
+[README](../../../tools/visory-media-downloader/README.md) and
+[Visory integration contract](../../../tools/visory-media-downloader/VISORY_INTEGRATION.md).
 The page follows the shared sequence (Description with workflow, features and
 limitations, Tool, Use Cases, Setup, Downloads). It states **Not yet released**, offers
 no binary download, and never contacts Visory, a native service or any other origin.
@@ -201,8 +201,8 @@ loopback server, a mock provider and a labeled demo mode; their results and the
 Application Control blocks on the development machine are recorded in the tool's
 `TEST_REPORT.md`. Do not disable machine policy to run the preview.
 
-Source downloads use the [allowlist](../../tools/visory-media-downloader/Data/Source/source-files.json)
-and [`SOURCE-PROVENANCE.json`](../../tools/visory-media-downloader/Data/Source/SOURCE-PROVENANCE.json)
+Source downloads use the [allowlist](../../../tools/visory-media-downloader/Data/Source/source-files.json)
+and [`SOURCE-PROVENANCE.json`](../../../tools/visory-media-downloader/Data/Source/SOURCE-PROVENANCE.json)
 with the same text-only, link-refusing, SHA-256 rules and EOL-preserving Git attributes
 as Media Recover. After reviewing local edits:
 
@@ -217,7 +217,7 @@ outside the allowlist and are ignored by the tool's `.gitignore`.
 
 ## Moorkyz Directory Cleaner
 
-The [standalone guide](../../tools/directory-cleaner/README.md) describes its
+The [standalone guide](../../../tools/directory-cleaner/README.md) describes its
 shared engine, CLI, service, receipts and supported bounds. The portal's rule
 editor also works with the connection off: download settings and the complete
 script ZIP, preview locally, then confirm explicitly.
@@ -250,7 +250,7 @@ work. Failures are explicit, processing stops and synced recovery receipts remai
 ## Moorkyz Video Crunch localhost service
 
 The complete tracked source from the provided VideoExports project is imported
-under [`tools/videocrunch`](../../tools/videocrunch), without modifying that
+under [`tools/videocrunch`](../../../tools/videocrunch), without modifying that
 external repository. Its exporter, request token, single-job concurrency,
 history, original-byte preservation, path allowlists, range responses and fixed
 PowerShell invocation are retained. Relative frontend URLs support both the

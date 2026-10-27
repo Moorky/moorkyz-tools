@@ -21,8 +21,9 @@ function fixture(t) {
 }
 
 function run(entrypoint, folder, ...args) {
+  if (entrypoint === "moorkyz.cjs") entrypoint = "moorkyz";
   if (entrypoint === "tools.moorkyz.com.cjs")
-    entrypoint = "src/.moorkyz/launchers/tools.moorkyz.com.cjs";
+    entrypoint = "src/.moorkyz/scripts/tools.moorkyz.com.cjs";
   return spawnSync(process.execPath, [path.join(root, entrypoint), ...args], {
     cwd: folder,
     encoding: "utf8",
@@ -72,10 +73,6 @@ test("the root contains only user entrypoints and required platform discovery fi
     "README.md",
     "README.html",
     "moorkyz",
-    "moorkyz.cjs",
-    "moorkyz.cmd",
-    "tools.moorkyz.com",
-    "tools.moorkyz.com.cmd",
   ]);
   const tracked = spawnSync("git", ["ls-files", "-z"], {
     cwd: root,
@@ -99,21 +96,20 @@ test("the root contains only user entrypoints and required platform discovery fi
     assert.ok(fs.existsSync(path.join(root, "src", file)), file);
 });
 
-test("root launchers delegate to one core and the storage API is a compatibility re-export", () => {
+test("the single root launcher and internal namespace alias delegate to one core", () => {
   for (const entrypoint of [
-    "moorkyz.cjs",
-    "src/.moorkyz/launchers/tools.moorkyz.com.cjs",
+    "moorkyz",
+    "src/.moorkyz/scripts/tools.moorkyz.com.cjs",
   ]) {
     assert.match(
       read(entrypoint),
-      /require\("[^"]*\.template\/cli\/moorkyz\.cjs"\)/,
+      /require\("[^"]*moorkyz\.cjs"\)/,
     );
     assert.doesNotMatch(read(entrypoint), /function |spawn\(|createServer\(/);
   }
-  assert.equal(
-    require("../../.moorkyz/launchers/moorkyz-storage.cjs"),
-    require("../../.template/cli/helpers/storage.cjs"),
-  );
+  assert.equal(typeof require("../../.moorkyz/scripts/helpers/storage.cjs").createLog, "function");
+  assert.equal(fs.existsSync(path.join(root, "docs/legacy/READM.html")), false);
+  assert.equal(fs.existsSync(path.join(root, "src/docs/legacy/READM.html")), false);
 });
 
 test("both launcher configs resolve existing workspace scripts and preserve their preferred ports", () => {
@@ -204,13 +200,13 @@ test("runtime data stays ignored by Git and excluded from container contexts", (
 test("maintained hierarchy documentation has no broken local Markdown links", () => {
   for (const filename of [
     "src/.template/README.md",
-    "src/.template/cli/README.md",
+    "src/.moorkyz/scripts/README.md",
     "src/.template/maintenance/README.md",
     ".audits/README.md",
     "src/scripts/README.md",
     "src/scripts/deployment/README.md",
-    "docs/README.md",
-    "docs/engineering/repository-structure.md",
+    "src/docs/README.md",
+    "src/docs/engineering/repository-structure.md",
   ]) {
     for (const [, target] of read(filename).matchAll(
       /\[[^\]]+\]\(([^)]+)\)/g,

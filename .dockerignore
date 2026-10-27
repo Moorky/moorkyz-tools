@@ -3,8 +3,7 @@
 .template
 src/.template
 src/.moorkyz
-src/test-results
-src/playwright-report
+src/playwright
 .audits
 .tools.moorkyz.com
 **/node_modules
@@ -25,6 +24,7 @@ test-results
 trash
 logs
 archive
+.archive
 **/logs
 .env
 .env.*

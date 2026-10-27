@@ -6,9 +6,9 @@ portal page, a Visory redesign, or a separately published tool.
 From the intended project root:
 
 ```powershell
-.\moorkyz.cmd gui
+node .\moorkyz gui
 # Uses the other launcher's configuration/state instead:
-.\tools.moorkyz.com.cmd gui
+node .\src\.moorkyz\scripts\tools.moorkyz.com.cjs gui
 ```
 
 Requires the existing Node runtime, Windows PowerShell 5.1 and Windows' built-in

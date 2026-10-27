@@ -7,8 +7,8 @@ branding, metadata, packages, CLI/configuration filenames, runtime state,
 environment variables, deployment references and historical documentation.
 
 - The workspace is `moorkyz-tools`; the portal is `@moorkyz-tools/portal`.
-- The local launcher is `.\tools.moorkyz.com.cmd` (POSIX:
-  `sh ./tools.moorkyz.com`), configured by `tools.moorkyz.com.config.json`.
+- The local launcher is `node .\src\.moorkyz\scripts\tools.moorkyz.com.cjs` (POSIX:
+  `node ./src/.moorkyz/scripts/tools.moorkyz.com.cjs`), configured by `tools.moorkyz.com.config.json`.
   Runtime logs/state live in `.tools.moorkyz.com/`.
 - Project environment variables use `TOOLS_MOORKYZ_COM_`. Local-service
   connections remain opt-in and loopback-only; the rename does not enable them.

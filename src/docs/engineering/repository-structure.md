@@ -35,24 +35,24 @@ moorkyz-tools/
 - Keep all canonical tool directories in `tools/`, tracked by this repository.
   Each drop-in project keeps its `portal.json` metadata and `source-files.json`
   allowlist inside its own folder. `pnpm --dir src tools:index` and portal dev/build discover
-  them automatically; see the [project contract](../../tools/README.md).
+  them automatically; see the [project contract](../../../tools/README.md).
   Metadata can stay at the project root or use capitalized user-facing folders:
   `Data/Portal/portal.json` and `Data/Source/source-files.json`. Never duplicate
   either manifest in both locations; allowlist paths stay project-root-relative.
   Independent use does not imply separate Git ownership. Split a repository only
   for a concrete, explicitly approved need; do not add nested Git roots, submodules
   or sibling-source sync requirements. Media Recover is edited in
-  [tools/mediarecover](../../tools/mediarecover), not in an external project.
+  [tools/mediarecover](../../../tools/mediarecover), not in an external project.
 - Keep app-specific scripts with their workspace, project automation in
-  [scripts](../../src/scripts/README.md), and reusable repository systems in
-  [.template](../../src/.template/README.md). Each tooling folder has a README and
+  [scripts](../../scripts/README.md), and reusable repository systems in
+  [.template](../../.template/README.md). Each tooling folder has a README and
   entrypoint; supporting code belongs under `helpers/`.
 - Root CLI files are compatibility entrypoints, not separate implementations.
   Both command identities retain their config names under `src/.moorkyz/config`,
   root state directories and
   preferred ports. The Windows profile installer remains explicit and optional.
 - Keep active docs in their subject folders and new evidence in
-  [.audits](../../.audits/README.md). Historical audits stay at stable paths.
+  [.audits](../../../.audits/README.md). Historical audits stay at stable paths.
 - Source manifests, generated text/ZIP assets and independent native services
   retain content-hash verification, explicit allowlists and opt-in boundaries.
 
