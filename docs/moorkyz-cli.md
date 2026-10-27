@@ -8,10 +8,16 @@ Prerequisites: the project's approved Node.js runtime (at least Node.js 22.18; u
 the package-manager version in `package.json`, and a `package.json` containing the scripts you
 intend to run. Maintenance and archival commands also work in repositories without a package
 manifest. The root launchers now delegate to one implementation in
-[.template/cli](../.template/cli/README.md). When copying the CLI, include that
+[.template/cli](../src/.template/cli/README.md). When copying the CLI, include that
 entire folder and the chosen root launchers; the root compatibility files are
 not a standalone distribution. Both launcher identities keep their existing
 configuration and runtime namespaces.
+
+This checkout keeps its developer workspace under `src/`. Launcher configuration
+lives under `src/.moorkyz/config/`; run package commands with `pnpm --dir src`.
+The thin user launchers remain at the repository root. Existing root
+`<command>.config.json` files are still accepted when using the CLI in other
+projects and take precedence over a source-folder configuration.
 
 **Windows / PowerShell** (from the repository containing these starter files):
 
@@ -20,14 +26,14 @@ configuration and runtime namespaces.
 # Optional Windows control GUI (nothing runs until you choose an action):
 .\moorkyz.cmd gui
 # Optional Explorer shortcut with the supplied Moorkyz icon:
-.\create-moorkyz-shortcut.ps1
+.\src\.moorkyz\scripts\create-moorkyz-shortcut.ps1
 # Optional one-time installation of a shell function so `moorkyz` works in every project folder:
-& .\install-moorkyz.ps1
+& .\src\.moorkyz\scripts\install-moorkyz.ps1
 . $PROFILE
 moorkyz help
 ```
 
-The optional installer edits **only the current user's PowerShell profile**, creating a function pointing at this CLI file; it does not change the system PATH. Keep this CLI file in place after installing. To remove the function, run `& .\install-moorkyz.ps1 -Uninstall`, then restart PowerShell. If PowerShell blocks scripts by policy, use `.\moorkyz.cmd` directly; don't weaken the system execution policy just to install the shortcut.
+The optional installer edits **only the current user's PowerShell profile**, creating a function pointing at this CLI file; it does not change the system PATH. Keep this CLI file in place after installing. To remove the function, run `& .\src\.moorkyz\scripts\install-moorkyz.ps1 -Uninstall`, then restart PowerShell. If PowerShell blocks scripts by policy, use `.\moorkyz.cmd` directly; don't weaken the system execution policy just to install the shortcut.
 
 Windows batch files cannot carry an individual file icon. The optional shortcut
 script creates `moorkyz.lnk` beside the launcher, starts an interactive command
@@ -37,8 +43,8 @@ icon. It refuses to overwrite an existing shortcut; remove the generated
 
 Two Windows details worth knowing:
 
-- Downloaded starter files carry an internet zone marker, so `RemoteSigned` policy rejects the unsigned installer. Trust that one file instead of changing the policy: `Unblock-File .\install-moorkyz.ps1`, then run the installer again.
-- Each PowerShell host keeps its own profile. Install once per host you use, for example `powershell.exe -File .\install-moorkyz.ps1` for Windows PowerShell 5.1 and `pwsh -File .\install-moorkyz.ps1` for PowerShell 7+.
+- Downloaded starter files carry an internet zone marker, so `RemoteSigned` policy rejects the unsigned installer. Trust that one file instead of changing the policy: `Unblock-File .\src\.moorkyz\scripts\install-moorkyz.ps1`, then run the installer again.
+- Each PowerShell host keeps its own profile. Install once per host you use, for example `powershell.exe -File .\src\.moorkyz\scripts\install-moorkyz.ps1` for Windows PowerShell 5.1 and `pwsh -File .\src\.moorkyz\scripts\install-moorkyz.ps1` for PowerShell 7+.
 
 **macOS/Linux:**
 
@@ -111,7 +117,7 @@ Projects with no declaration or lockfile retain the pnpm default. The selected t
 installed; `doctor` reports detected and declared versions. Tool/version and script lookups are
 cached within a command invocation.
 
-Reproducible installs use `pnpm install --frozen-lockfile`, `npm ci`, Yarn Classic's
+Reproducible installs use `pnpm --dir src install --frozen-lockfile`, `npm ci`, Yarn Classic's
 `yarn install --frozen-lockfile`, or modern Yarn's `yarn install --immutable`. The install runs at
 the selected manager's root; scripts run in the configured project's directory. npm script options
 are passed after `--`. Security checks use the manager's native audit; modern Yarn includes all
@@ -222,7 +228,7 @@ staged trash. Files deleted by an editor, OS command or unrelated tool cannot be
 CLI. Route deletions that need recovery through `moorkyz archive` or its code API:
 
 ```js
-const { archivePaths, maintainStorage } = require("./moorkyz-storage.cjs");
+const { archivePaths, maintainStorage } = require("./src/.moorkyz/launchers/moorkyz-storage.cjs");
 await archivePaths(process.cwd(), ["generated/report.json", "old-assets"]);
 await maintainStorage(process.cwd(), { includeTrash: true });
 ```
@@ -253,7 +259,7 @@ reach the threshold, maintenance reports low space; project source files and oth
 never pruned. Archived recovery data may be permanently removed by this policy, so keep durable
 backups outside the project archive. Archives are compressed, not encrypted.
 
-The Node-core regression suite is portable: `node --test tests/tooling/moorkyz-runtime.node.cjs`.
+The Node-core regression suite is portable: `node --test src/tests/tooling/moorkyz-runtime.node.cjs`.
 The repository's existing tooling tests also exercise the supervised process lifecycle and installer.
 
 Implementation references: [Node 24 net](https://nodejs.org/download/release/v24.20.0/docs/api/net.html),

@@ -96,7 +96,7 @@ navigation, not this generated toolbar.
    `Data/Portal/portal.json` is also supported for capitalized user-facing metadata.
    Keep only one portal manifest; duplicates fail explicitly.
    The catalog, detail metadata, use cases, setup and search derive automatically
-   from these manifests via [`index-tools.mjs`](../../scripts/index-tools.mjs).
+   from these manifests via [`index-tools.mjs`](../../src/scripts/index-tools.mjs).
    Supply a longer `catalogDescription` and an integer `usefulness` score from
    1 to 10 for the catalog card.
 2. For source downloads, add `"source": {}` to the tool metadata and an explicit
@@ -110,7 +110,7 @@ navigation, not this generated toolbar.
    branch and authority boundary, rather than executing manifest-supplied code.
 4. Add route, accessibility, disabled-path and actual-workspace tests. Update
    `updatedOn` deliberately when the tool changes.
-5. Run `pnpm tools:index` (or portal dev/build). `pnpm tools:index:check`
+5. Run `pnpm --dir src tools:index` (or portal dev/build). `pnpm --dir src tools:index:check`
    verifies the checked-in generated index without writing. Follow the
    [drop-in contract](../../tools/README.md); do not hand-edit generated data.
 
@@ -165,10 +165,10 @@ notice whitespace is retained verbatim.
 After reviewing local source edits, refresh provenance from the repository root:
 
 ```powershell
-node scripts\sync-mediarecover-source.mjs
-pnpm build
+node src/scripts\sync-mediarecover-source.mjs
+pnpm --dir src build
 node --test tests\tooling\mediarecover-snapshot.test.js tests\tooling\tools-catalog.test.js
-pnpm check:source
+pnpm --dir src check:source
 ```
 
 The compatibility-named sync command validates the complete allowlist and rejects
@@ -207,9 +207,9 @@ with the same text-only, link-refusing, SHA-256 rules and EOL-preserving Git att
 as Media Recover. After reviewing local edits:
 
 ```powershell
-node scripts\sync-visory-source.mjs
+node src/scripts\sync-visory-source.mjs
 node --test tests\tooling\visory-source.test.js tests\tooling\tools-catalog.test.js
-pnpm build
+pnpm --dir src build
 ```
 
 Build outputs, `.fixtures`, release artifacts, state databases and sessions stay
@@ -229,10 +229,10 @@ Delete always archives; permanent deletion is not a supported action.
 
 ```powershell
 # Separate service terminal:
-pnpm tool:directory-cleaner
+pnpm --dir src tool:directory-cleaner
 # Portal terminal:
 $env:TOOLS_MOORKYZ_COM_DIRECTORY_CLEANER_ENABLED = "1"
-pnpm --filter @moorkyz-tools/portal dev --hostname 127.0.0.1
+pnpm --dir src --filter @moorkyz-tools/portal dev --hostname 127.0.0.1
 ```
 
 The default service port is 8766. An explicit native `--port` must match
@@ -250,7 +250,7 @@ work. Failures are explicit, processing stops and synced recovery receipts remai
 ## Moorkyz Video Crunch localhost service
 
 The complete tracked source from the provided VideoExports project is imported
-under [`tools/videocrunch`](../../tools/videocrunch/), without modifying that
+under [`tools/videocrunch`](../../tools/videocrunch), without modifying that
 external repository. Its exporter, request token, single-job concurrency,
 history, original-byte preservation, path allowlists, range responses and fixed
 PowerShell invocation are retained. Relative frontend URLs support both the
@@ -260,10 +260,10 @@ On Windows with Node.js 22+, Windows PowerShell 5.1, yt-dlp and FFmpeg installed
 
 ```powershell
 # Terminal 1, repository root:
-pnpm tool:videocrunch
+pnpm --dir src tool:videocrunch
 # Terminal 2, repository root:
 $env:TOOLS_MOORKYZ_COM_VIDEOCRUNCH_ENABLED = "1"
-pnpm --filter @moorkyz-tools/portal dev --hostname 127.0.0.1
+pnpm --dir src --filter @moorkyz-tools/portal dev --hostname 127.0.0.1
 ```
 
 For explicit prerequisite bootstrapping, run
@@ -295,12 +295,12 @@ The source viewer and setup page remain available when the gateway is off.
 ## Verification
 
 ```powershell
-pnpm build
+pnpm --dir src build
 node --test tests\tooling\tools-catalog.test.js tests\tooling\videocrunch-proxy.test.js tests\tooling\download-json.test.js
-pnpm exec playwright test --workers=2
-pnpm test:directory-cleaner:browser
-pnpm test:videocrunch
-pnpm test:videocrunch:browser
+pnpm --dir src exec playwright test --workers=2
+pnpm --dir src test:directory-cleaner:browser
+pnpm --dir src test:videocrunch
+pnpm --dir src test:videocrunch:browser
 ```
 
 The separate real-service browser configuration uses isolated synthetic media,

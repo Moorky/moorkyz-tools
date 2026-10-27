@@ -18,9 +18,13 @@ From the repository root in PowerShell:
 
 On macOS/Linux, use `sh ./tools.moorkyz.com`. The `audit` command creates an unfilled report in `.audits/` from [the audit template](../AUDIT_TEMPLATE.md); fill in observed evidence before considering the task complete. Historical audit records remain at their original paths.
 
-This launcher and `moorkyz` now use [one shared implementation](../../.template/cli/README.md), not separate copies. The command names, configuration files, state namespaces and preferred ports remain distinct.
+This launcher and `moorkyz` now use [one shared implementation](../../src/.template/cli/README.md), not separate copies. The command names, configuration files, state namespaces and preferred ports remain distinct.
 
-`tools.moorkyz.com.config.json` selects `packages/portal` as the default project, using its `dev` script for `start` and its `start` script for `start --prod`. The portal prefers `http://127.0.0.1:3001`; if that port is occupied, the CLI selects an available port and records the runtime URL. The production command requires a prior portal build and sets `NODE_ENV=production`.
+`src/.moorkyz/config/tools.moorkyz.com.config.json` selects `src/packages/portal`
+as the default project, using its `dev` script for `start` and its `start` script
+for `start --prod`. The portal prefers `http://127.0.0.1:3001`; if that port is
+occupied, the CLI selects an available port and records the runtime URL. The
+production command requires a prior portal build and sets `NODE_ENV=production`.
 
 Startup waits for an HTTP 2xx/3xx response and a verified supervisor heartbeat,
 not just a spawned process or open TCP port. The portal allows 60 seconds;
@@ -32,7 +36,7 @@ its own tracked instance. The portal's dev and production scripts bind to
 pnpm dependency verification fails explicitly when the installation is out of
 sync. `pnpm-workspace.yaml` sets `verifyDepsBeforeRun: error` for both root and
 workspace commands; pnpm 11 does not read this setting from `.npmrc`.
-Run `pnpm install --frozen-lockfile` deliberately; starting a service must not
+Run `pnpm --dir src install --frozen-lockfile` deliberately; starting a service must not
 automatically reinstall dependencies. Do not set `CI=true` or disable module-purge
 confirmation just to let a background startup reinstall packages.
 An already-running manual Next.js

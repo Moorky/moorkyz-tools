@@ -1,0 +1,12 @@
+{
+  "defaultProject": "portal",
+  "projects": {
+    "portal": {
+      "cwd": "src/packages/portal",
+      "dev": "dev",
+      "prod": "start",
+      "url": "http://127.0.0.1:3001",
+      "startupTimeoutMs": 60000
+    }
+  }
+}

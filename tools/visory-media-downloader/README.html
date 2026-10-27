@@ -462,7 +462,7 @@ File Size (bytes) | Length (s) | Log | Error | Success Ratio | Message</code></p
 .\src\scripts\development\test.ps1
 powershell.exe -NoProfile -File .\src\tests\startup\test-startup.ps1
 node .\src\scripts\development\readme.mjs --check</code></pre>
-<p>Run the README command without <code>--check</code> after editing this Markdown or the shared stylesheet. HTML is generated locally using a quiet documentation layout inspired by the main moorkyz-template README, not a marketing website. Tests use isolated <code>src/.fixtures</code> and loopback data, never personal recordings. No EXE, installer or signed release is distributed by this phase. After source changes, run <code>node scripts\sync-visory-source.mjs</code> and <code>pnpm tools:index</code> from the repository root.</p>
+<p>Run the README command without <code>--check</code> after editing this Markdown or the shared stylesheet. HTML is generated locally using a quiet documentation layout inspired by the main moorkyz-template README, not a marketing website. Tests use isolated <code>src/.fixtures</code> and loopback data, never personal recordings. No EXE, installer or signed release is distributed by this phase. After source changes, run <code>node src/scripts\sync-visory-source.mjs</code> and <code>pnpm --dir src tools:index</code> from the repository root.</p>
 <h2 id="further-reading">Further reading</h2>
 <ul>
 <li><a href="src/docs/ARCHITECTURE.md">Architecture and module boundaries</a></li>

@@ -1,6 +1,10 @@
 .git
 .github
 .template
+src/.template
+src/.moorkyz
+src/test-results
+src/playwright-report
 .audits
 .tools.moorkyz.com
 **/node_modules

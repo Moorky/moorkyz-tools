@@ -16,6 +16,9 @@ concurrency:
 jobs:
   verify:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: src
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
@@ -28,6 +31,7 @@ jobs:
         with:
           node-version: 22
           cache: pnpm
+          cache-dependency-path: src/pnpm-lock.yaml
       - run: pnpm install --frozen-lockfile
       - run: pnpm check:repository
       - run: pnpm exec playwright install --with-deps chromium firefox webkit
@@ -111,4 +115,4 @@ jobs:
           COOLIFY_TOKEN: ${{ secrets.COOLIFY_TOKEN }}
           APP_HEALTH_URL: ${{ vars.APP_HEALTH_URL || 'https://tools.moorkyz.com/' }}
           DEPLOY_COMMIT_SHA: ${{ github.sha }}
-        run: node scripts/deployment/deploy-coolify.cjs
+        run: node src/scripts/deployment/deploy-coolify.cjs

@@ -34,7 +34,7 @@ independently usable Windows desktop app, not a portal runtime. Root `AGENTS.md`
   report data from a server; DM Mono and its SIL-OFL notice stay bundled locally.
   Do not claim GUI, BITS hand-off or Visory account results that were not observed.
 - Keep this project's `Data/Source/source-files.json` allowlist complete and
-  text-only, then refresh provenance with `node scripts\sync-visory-source.mjs` from the
+  text-only, then refresh provenance with `node src/scripts\sync-visory-source.mjs` from the
   repository root. Never include artifacts, bin/obj, `.fixtures`, state databases,
   sessions or recordings.
 - Record actual PASS/FAIL/NOT RUN/N/A in a task audit under the repository root `.audits`.

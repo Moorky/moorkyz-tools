@@ -8,7 +8,7 @@ test-results/
 playwright-report/
 playwright/.cache/
 *.tsbuildinfo
-packages/portal/public/tool-sources/
+src/packages/portal/public/tool-sources/
 **/.directory-cleaner-archive/
 directory-cleaner-settings.json
 

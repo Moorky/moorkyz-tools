@@ -36,24 +36,29 @@ describe older revisions and are not current product requirements.
 
 ## Structure and commands
 
-- `packages/portal`: Next.js/React catalog, shared detail/source views and small
+- Keep the root minimal: user launchers/readme/license, this discovery contract
+  and required Git/container discovery files only. Developer workspace files
+  belong under `src/`; do not recreate root manifests, loose helpers or configs.
+- `src/packages/portal`: Next.js/React catalog, shared detail/source views and small
   per-tool workspaces. `tools/`: standalone scripts/services and explicit source
-  bundle allowlists. `tests/`: retained generic tooling and current tool tests.
-- `.template/`: shared CLI/checkups, with a README and entrypoint per system and
-  supporting `helpers/`. `scripts/`: product automation; deployment lives in
-  `scripts/deployment/`. Root launchers delegate to one shared implementation.
-- Run `pnpm check:repository` for read-only syntax/structure checks and
-  `pnpm test:unit` for tests without rebuilding. See
+  bundle allowlists. `src/tests/`: generic tooling and current tool tests.
+- `src/.template/`: shared CLI/checkups, with a README and entrypoint per system
+  and supporting `helpers/`. `src/scripts/`: product automation; deployment lives
+  in `src/scripts/deployment/`. `src/tests/` owns repository/browser tests.
+  `src/.moorkyz/` owns GUI assets, optional installers and launcher configuration.
+  Root launchers delegate to one shared implementation.
+- Run `pnpm --dir src check:repository` for read-only syntax/structure checks and
+  `pnpm --dir src test:unit` for tests without rebuilding. See
   [repository structure](docs/engineering/repository-structure.md).
 - Drag/add tool projects into `tools/<project>/`, never sibling repositories.
   Each indexed project owns `portal.json` and, for downloads, `source-files.json`.
-  Run `pnpm tools:index`; portal dev/build also discover and index these manifests.
-  Do not hand-edit the generated `packages/portal/src/data/tool-index.ts`.
+  Run `pnpm --dir src tools:index`; portal dev/build also discover and index these manifests.
+  Do not hand-edit the generated `src/packages/portal/src/data/tool-index.ts`.
   Source JSON/ZIP assets use explicit allowlists; never include history, media,
   secrets or caches. Indexing never executes project code or starts services.
-- `pnpm build`, `pnpm lint`, `pnpm format:check`, `pnpm typecheck`,
-  `pnpm test`, `pnpm test:browser`, `pnpm check:source`, `pnpm check`.
-- `pnpm tool:videocrunch`, `pnpm tool:directory-cleaner` start explicit local
+- `pnpm --dir src build`, `pnpm --dir src lint`, `pnpm --dir src format:check`, `pnpm --dir src typecheck`,
+  `pnpm --dir src test`, `pnpm --dir src test:browser`, `pnpm --dir src check:source`, `pnpm --dir src check`.
+- `pnpm --dir src tool:videocrunch`, `pnpm --dir src tool:directory-cleaner` start explicit local
   services. Read their setup pages before enabling portal connections.
 - `.\tools.moorkyz.com.cmd help`, `.\tools.moorkyz.com.cmd doctor`, `.\tools.moorkyz.com.cmd audit "task title"`
   remain generic repository management commands.

@@ -1,0 +1,7 @@
+**/dist/
+**/node_modules/
+**/.next/
+**/test-results/
+**/playwright-report/
+**/pnpm-lock.yaml
+**/tool-sources/

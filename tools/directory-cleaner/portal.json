@@ -31,12 +31,12 @@
       {
         "title": "Or start the local web service",
         "text": "From this repository, run the service in its own terminal. It binds only to 127.0.0.1:8766; no account or installation runs automatically.",
-        "command": "pnpm tool:directory-cleaner"
+        "command": "pnpm --dir src tool:directory-cleaner"
       },
       {
         "title": "Enable the portal connection",
         "text": "In another terminal, opt in and bind the portal to loopback. Connect in Workspace, preview the files and type the exact confirmation. Both local-service connections are independent and off by default.",
-        "command": "$env:TOOLS_MOORKYZ_COM_DIRECTORY_CLEANER_ENABLED = \"1\"\npnpm --filter @moorkyz-tools/portal dev --hostname 127.0.0.1"
+        "command": "$env:TOOLS_MOORKYZ_COM_DIRECTORY_CLEANER_ENABLED = \"1\"\npnpm --dir src --filter @moorkyz-tools/portal dev --hostname 127.0.0.1"
       }
     ],
     "workspace": "directory-cleaner",

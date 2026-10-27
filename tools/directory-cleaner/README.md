@@ -41,7 +41,7 @@ preview intentionally makes that preview stale.
 ## Local web service
 
 Run `node .\server.mjs` or double-click `Start-DirectoryCleaner.cmd`. From the
-parent repository, `pnpm tool:directory-cleaner` does the same thing. The service
+parent repository, `pnpm --dir src tool:directory-cleaner` does the same thing. The service
 binds only to `127.0.0.1:8766`; `--port 8767` selects another local port.
 In the portal terminal, set `TOOLS_MOORKYZ_COM_DIRECTORY_CLEANER_ENABLED=1` and, if needed,
 `TOOLS_MOORKYZ_COM_DIRECTORY_CLEANER_PORT` to the same port. Bind the portal to loopback.

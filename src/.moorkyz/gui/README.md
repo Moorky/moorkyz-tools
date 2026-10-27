@@ -53,7 +53,7 @@ an error; the launcher never bypasses it.
 - [start.ps1](start.ps1): the STA native bootstrap. The CLI supplies validated
   projects and the selected entrypoint, preserving each launcher's namespace.
 
-The GUI loads the existing [public icon set](../public/). When copying optional
+The GUI loads the existing [public icon set](../public). When copying optional
 GUI support with the CLI, include both this directory and that public directory.
 The portable CLI itself continues to work without GUI support.
 

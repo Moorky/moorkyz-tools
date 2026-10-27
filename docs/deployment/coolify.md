@@ -28,7 +28,7 @@ Pull requests and manual CI runs validate without production access. Only a pass
 
 ## Verification and recovery
 
-Run the repository checks (including `node --test scripts/deployment/deploy-coolify.test.cjs` through `pnpm test:unit`), then the CI container gate. After deployment, check the health endpoint and the product flow in a browser. Use Coolify's last healthy deployment to roll back, or revert the source commit and let CI redeploy. Preserve runtime credentials across deployments.
+Run the repository checks (including `node --test src/scripts/deployment/deploy-coolify.test.cjs` through `pnpm --dir src test:unit`), then the CI container gate. After deployment, check the health endpoint and the product flow in a browser. Use Coolify's last healthy deployment to roll back, or revert the source commit and let CI redeploy. Preserve runtime credentials across deployments.
 
 ## Primary references
 

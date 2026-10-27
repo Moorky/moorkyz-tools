@@ -1,0 +1,38 @@
+{
+  "name": "moorkyz-tools",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@11.8.0",
+  "scripts": {
+    "build": "pnpm --filter @moorkyz-tools/portal build",
+    "check": "pnpm check:repository && pnpm lint && pnpm format:check && pnpm test && pnpm test:browser && pnpm typecheck && pnpm check:source",
+    "check:repository": "cd .. && node src/.template/maintenance/run-checkups.cjs && node --test src/tests/tooling/repository-structure.test.cjs",
+    "tools:index": "node scripts/index-tools.mjs",
+    "tools:index:check": "node scripts/index-tools.mjs --check",
+    "format": "cd .. && prettier --config src/.prettierrc.json --ignore-path src/.prettierignore --write src/package.json src/pnpm-workspace.yaml src/tsconfig.base.json src/.prettierrc.json src/eslint.config.mjs src/playwright*.mjs moorkyz.cjs src/.template src/.moorkyz/launchers tools/*/portal.json tools/*/source-files.json tools/*/Data/Portal/portal.json tools/*/Data/Source/source-files.json tools/directory-cleaner tools/toolbar-builder src/packages/portal src/tests/tooling src/tests/browser src/scripts",
+    "format:check": "cd .. && prettier --config src/.prettierrc.json --ignore-path src/.prettierignore --check src/package.json src/pnpm-workspace.yaml src/tsconfig.base.json src/.prettierrc.json src/eslint.config.mjs src/playwright*.mjs moorkyz.cjs src/.template src/.moorkyz/launchers tools/*/portal.json tools/*/source-files.json tools/*/Data/Portal/portal.json tools/*/Data/Source/source-files.json tools/directory-cleaner tools/toolbar-builder src/packages/portal src/tests/tooling src/tests/browser src/scripts",
+    "lint": "cd .. && eslint --config src/eslint.config.mjs src/packages/portal/src src/packages/portal/scripts tools/directory-cleaner/*.mjs tools/toolbar-builder/*.mjs src/.template src/scripts src/tests/tooling/*.test.js src/tests/tooling/repository-structure.test.cjs src/tests/browser src/playwright*.mjs",
+    "test": "pnpm build && pnpm test:unit",
+    "test:unit": "cd .. && node --test src/tests/tooling/*.test.js src/tests/tooling/*.test.cjs src/tests/tooling/*.node.cjs src/scripts/deployment/*.test.cjs tools/videocrunch/test/server.test.js",
+    "tool:videocrunch": "cd .. && node tools/videocrunch/server.js",
+    "tool:directory-cleaner": "cd .. && node tools/directory-cleaner/server.mjs",
+    "test:directory-cleaner:browser": "cd .. && playwright test --config src/playwright.directory-cleaner.config.mjs",
+    "test:videocrunch": "cd .. && powershell.exe -NoProfile -ExecutionPolicy Bypass -File tools/videocrunch/tools/Verify.ps1",
+    "test:videocrunch:browser": "cd .. && playwright test --config src/playwright.videocrunch.config.mjs",
+    "test:browser": "cd .. && playwright test --config src/playwright.config.mjs",
+    "check:source": "cd .. && node src/scripts/verify-source.mjs",
+    "typecheck": "pnpm --filter @moorkyz-tools/portal typecheck"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.14.0",
+    "@playwright/test": "^1.64.1",
+    "eslint": "^10.12.0",
+    "prettier": "^3.9.10",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.71.2"
+  },
+  "engines": {
+    "node": ">=22.18.0",
+    "pnpm": "11.8.0"
+  }
+}

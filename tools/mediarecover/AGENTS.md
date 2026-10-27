@@ -20,7 +20,7 @@ without a concrete need and explicit approval.
   `scripts\smoke.ps1` are local operations. Don't claim hardware/VM tests passed.
 - Keep the text-only `source-files.json` allowlist complete. Never include
   artifacts, private data, state, fixture output, Git, bin/obj or runtime caches.
-- After source edits, run `node scripts\sync-mediarecover-source.mjs` from the
+- After source edits, run `node src/scripts\sync-mediarecover-source.mjs` from the
   repository root to refresh local source provenance before the portal build.
 - Record actual PASS/FAIL/NOT RUN/N/A in a task audit. No Git initialization or
   forced commit when there is no authorized baseline. Never push automatically.

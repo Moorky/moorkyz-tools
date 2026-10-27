@@ -77,14 +77,14 @@ exceptions, not part of this workflow.
 From the repository root:
 
 ```powershell
-pnpm tools:index
-pnpm build
+pnpm --dir src tools:index
+pnpm --dir src build
 ```
 
 Portal dev/build index automatically. Cards, search, route metadata/detail pages
 and source downloads all use the same generated index. No edits to
-[`tools.ts`](../packages/portal/src/data/tools.ts) or a central bundle array are
-needed. `pnpm tools:index:check` verifies the generated index without changing it.
+[`tools.ts`](../src/packages/portal/src/data/tools.ts) or a central bundle array are
+needed. `pnpm --dir src tools:index:check` verifies the generated index without changing it.
 Additions/removals take effect on the next index/build; restart an already running
 server. This is not a filesystem watcher.
 

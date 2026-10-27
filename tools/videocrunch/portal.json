@@ -26,12 +26,12 @@
       {
         "title": "Start the local service",
         "text": "If prerequisites are already available, use this instead of the launcher. Keep its terminal open. The service binds only to 127.0.0.1:8765.",
-        "command": "pnpm tool:videocrunch"
+        "command": "pnpm --dir src tool:videocrunch"
       },
       {
         "title": "Enable the portal connection",
         "text": "In a second PowerShell terminal, opt in and start the portal on loopback. The connection is disabled by default and never starts or installs the service itself.",
-        "command": "$env:TOOLS_MOORKYZ_COM_VIDEOCRUNCH_ENABLED = \"1\"\npnpm --filter @moorkyz-tools/portal dev --hostname 127.0.0.1"
+        "command": "$env:TOOLS_MOORKYZ_COM_VIDEOCRUNCH_ENABLED = \"1\"\npnpm --dir src --filter @moorkyz-tools/portal dev --hostname 127.0.0.1"
       },
       {
         "title": "Open your workspace",

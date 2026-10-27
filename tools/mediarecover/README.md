@@ -120,7 +120,7 @@ Set-Location tools\mediarecover # From the repository root.
 ```
 
 After editing this tool, refresh its downloadable-source hashes from the
-repository root with `node scripts\sync-mediarecover-source.mjs`. This updates
+repository root with `node src/scripts\sync-mediarecover-source.mjs`. This updates
 only the local provenance manifest; it does not import a sibling project.
 
 Outputs: `artifacts\portable-win-x64\MoorkyzMediaRecover.exe`,

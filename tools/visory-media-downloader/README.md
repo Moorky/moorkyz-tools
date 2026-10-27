@@ -205,8 +205,8 @@ shared stylesheet. HTML is generated locally using a quiet documentation layout
 inspired by the main moorkyz-template README, not a marketing website.
 Tests use isolated `src/.fixtures` and loopback data, never personal recordings.
 No EXE, installer or signed release is distributed by this phase.
-After source changes, run `node scripts\sync-visory-source.mjs` and
-`pnpm tools:index` from the repository root.
+After source changes, run `node src/scripts\sync-visory-source.mjs` and
+`pnpm --dir src tools:index` from the repository root.
 
 ## Further reading
 

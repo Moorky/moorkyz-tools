@@ -5,7 +5,7 @@ A private, Windows-first video workspace: paste an authorized video link, downlo
 ## One-click start, including first use
 
 This copy is integrated into the tools.moorkyz.com tool catalog. From the parent repository
-root, `pnpm tool:videocrunch` starts this same localhost service; explicitly enable
+root, `pnpm --dir src tool:videocrunch` starts this same localhost service; explicitly enable
 the portal connection and open `/tools/videocrunch` to use it inside the portal.
 Source browsing and ZIP downloads do not require a running service. Native
 prerequisites and all local-only limitations below still apply.

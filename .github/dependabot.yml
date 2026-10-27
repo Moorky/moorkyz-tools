@@ -7,7 +7,7 @@ updates:
   # npm projects use the "npm" package ecosystem in Dependabot.
   # Update directory if your package.json / lockfile are not at repository root.
   - package-ecosystem: "npm"
-    directory: "/"
+    directory: "/src"
     schedule:
       interval: "weekly"
       day: "monday"

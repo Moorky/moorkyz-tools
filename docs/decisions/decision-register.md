@@ -228,6 +228,18 @@ bundled from the existing repository font for IDs/timestamps; its SIL-OFL notice
 is retained. Markdown viewers may override inline colors/fonts, with severity
 labels and text preserved. No new hosted fonts, network traffic or dependencies.
 
+## 2026-10-27: minimal root and internal source workspace
+
+The owner requested that the root contain close to no files, with most things
+not directly needed by users under `src/`. Developer manifests/lockfile, portal
+packages, build/test configuration, repository/browser tests, product scripts,
+shared CLI/checkups and optional installers now live there. Run package commands
+from the root using `pnpm --dir src ...`. User-facing independent tools,
+documentation and all audit history retain their existing canonical locations.
+Required Git/GitHub/runtime/container discovery files and thin user launchers
+stay where their consumers require them. The existing hosting contract, ports,
+runtime-state directories, permissions and dependency pins are unchanged.
+
 ## Change authority
 
 Reversible implementation details/tests/docs can proceed autonomously. New

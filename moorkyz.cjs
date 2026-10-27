@@ -1,4 +1,4 @@
 #!/usr/bin/env node
 "use strict";
 
-require("./.template/cli/moorkyz.cjs");
+require("./src/.template/cli/moorkyz.cjs");

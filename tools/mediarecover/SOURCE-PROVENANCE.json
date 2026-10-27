@@ -3,7 +3,7 @@
   "repository": "Moorky/moorkyz-tools",
   "sourceDirectory": "tools/mediarecover",
   "identity": "Moorkyz Media Recover",
-  "treeSha256": "e6ae49b6a7905e4fb592392f59d0a8c9e2f06f1c0e1f27f1e74441c939cd84b7",
+  "treeSha256": "b4c12648ea40b0dece1124ffbc6584e740548e85d9819fc25703beea45fc3ea0",
   "files": [
     {
       "path": ".gitignore",
@@ -19,7 +19,7 @@
     },
     {
       "path": "AGENTS.md",
-      "sha256": "17ef89eca250f4c3e9256aed23ffee2b19a5aec04fab06d8ec87797ea71f9315"
+      "sha256": "edbacd7cac3a9166152b0aa8544f2756f1fec8851a9f13a3802cebc02c176681"
     },
     {
       "path": "Directory.Build.props",
@@ -35,7 +35,7 @@
     },
     {
       "path": "README.md",
-      "sha256": "2e9640e7f2156d721e249cdcd9700a755a400f0f114f35b263342884fa3c6c9d"
+      "sha256": "a67eb49961a9f459df8bdff3e43e5a6770f4adf624ff0693f5ccca4f150838c5"
     },
     {
       "path": "THIRD-PARTY-NOTICES.md",
@@ -202,5 +202,5 @@
       "sha256": "3d10acb09194f61953103803c76164d46b57f09c495cb59dc59e940f7029c603"
     }
   ],
-  "note": "Canonical UTF-8 source maintained in tools/mediarecover in this repository, not a release. After local edits, refresh this manifest using node scripts/sync-mediarecover-source.mjs. No external project is required."
+  "note": "Canonical UTF-8 source maintained in tools/mediarecover in this repository, not a release. After local edits, refresh this manifest using node src/scripts/sync-mediarecover-source.mjs. No external project is required."
 }

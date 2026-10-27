@@ -3,7 +3,7 @@
   "repository": "Moorky/moorkyz-tools",
   "sourceDirectory": "tools/visory-media-downloader",
   "identity": "Moorksz Visory Media Downloader",
-  "treeSha256": "3201815c766fcf592c894e90dbc0dd119361bdee76592da22f4ba5bdc64d6e6f",
+  "treeSha256": "e6d9ba7072eab779049c382540a9babd4a4d5603d8b56f033ba422fe0822c5be",
   "files": [
     {
       "path": ".gitignore",
@@ -11,7 +11,7 @@
     },
     {
       "path": "AGENTS.md",
-      "sha256": "243da36f53d7ef6ce4986260d630d14c857f83423bb05e9d2680ff5339198bae"
+      "sha256": "0a1cc573f28f663432fa87854c68ef2ec50075d2d7a8c72040f2f5268277396a"
     },
     {
       "path": "src/docs/ARCHITECTURE.md",
@@ -27,11 +27,11 @@
     },
     {
       "path": "README.md",
-      "sha256": "dba309a7b2fbc355753d25595d49bf84e595aabd1a2fb7d89aef5690cf500098"
+      "sha256": "c8a8786b3d5aa2b5e6ec75adb28c5793309fc2a6ffe58fd273453b98a2402bd6"
     },
     {
       "path": "README.html",
-      "sha256": "f1b6536cc16adff0e860a7f2d9d648b95b8fcff8a4f3b9afc4dbad728db6e1c4"
+      "sha256": "f50508533750540aee5f940bb8c8e708be4cdc9c46fb5c202852379427ed9a07"
     },
     {
       "path": "RUN.cmd",
@@ -354,5 +354,5 @@
       "sha256": "c3dd135b9d889c42f815346f51177d1b4db0ae9afd6bf0aa09e68c181ee1f4e8"
     }
   ],
-  "note": "Canonical UTF-8 source maintained in tools/visory-media-downloader in this repository, not a release. After local edits, refresh this manifest using node scripts/sync-visory-source.mjs."
+  "note": "Canonical UTF-8 source maintained in tools/visory-media-downloader in this repository, not a release. After local edits, refresh this manifest using node src/scripts/sync-visory-source.mjs."
 }

@@ -27,7 +27,7 @@ the **Moorkyz Toolbar Builder** is now a small standalone HTML generator, not a 
 Every local script tool has a source hierarchy, console-style viewer, per-file
 Copy/Download and a complete ZIP. See the [portal guide](docs/portal/modular-tools.md)
 and [Directory Cleaner guide](tools/directory-cleaner/README.md).
-All tool directories and canonical sources live under [tools](tools/) in this
+All tool directories and canonical sources live under [tools](tools) in this
 repository. Tools are independently usable; separate repositories are only
 created when a concrete need is approved. Media Recover's and Moorksz Visory Media Downloader's
 local editable sources have allowlisted, SHA-256-checked download manifests. See
@@ -36,11 +36,11 @@ local editable sources have allowlisted, SHA-256-checked download manifests. See
 
 ## Adding a project
 
-Drag the whole project folder into [tools](tools/), inside this checkout, not into
+Drag the whole project folder into [tools](tools), inside this checkout, not into
 a sibling checkout under your machine's `repos` directory. Keep its
-[`portal.json`](tools/visory-media-downloader/portal.json) metadata and optional
-[`source-files.json`](tools/visory-media-downloader/source-files.json) download
-allowlist inside that project folder. Run `pnpm tools:index`, or the normal
+[`portal.json`](tools/visory-media-downloader/Data/Portal/portal.json) metadata and optional
+[`source-files.json`](tools/visory-media-downloader/Data/Source/source-files.json) download
+allowlist inside that project folder. Run `pnpm --dir src tools:index`, or the normal
 portal dev/build command, to discover it automatically. Catalog cards, search,
 detail pages and source bundles use the same index; no central project list needs
 editing. Raw folders without metadata are reported as unregistered, not executed.
@@ -49,11 +49,11 @@ See the [drop-in project contract](tools/README.md) for a copyable example.
 ## Development
 
 ```powershell
-pnpm install --frozen-lockfile
-pnpm --filter @moorkyz-tools/portal dev --hostname 127.0.0.1
-pnpm build
-pnpm check
-pnpm check:source
+pnpm --dir src install --frozen-lockfile
+pnpm --dir src --filter @moorkyz-tools/portal dev --hostname 127.0.0.1
+pnpm --dir src build
+pnpm --dir src check
+pnpm --dir src check:source
 ```
 
 For a managed background portal, use `.\moorkyz.cmd start` (or the
@@ -67,7 +67,7 @@ default. Dependencies that are out of sync produce an explicit error rather
 than an automatic reinstall; run the frozen install above when needed.
 
 Use Node.js 22+ and the pinned pnpm version. Browser tests use installed
-Chromium/Firefox/WebKit; `pnpm exec playwright install` prepares them for development.
+Chromium/Firefox/WebKit; `pnpm --dir src exec playwright install` prepares them for development.
 
 Repository management uses `.\tools.moorkyz.com.cmd help` on Windows or
 `sh ./tools.moorkyz.com help` on macOS/Linux. See the
@@ -82,12 +82,12 @@ Use the same repository and hostname in GitHub, Cloudflare and Coolify. See the
 
 ```powershell
 # Independent terminals, only for tools you want to run:
-pnpm tool:videocrunch
-pnpm tool:directory-cleaner
+pnpm --dir src tool:videocrunch
+pnpm --dir src tool:directory-cleaner
 # Portal terminal:
 $env:TOOLS_MOORKYZ_COM_VIDEOCRUNCH_ENABLED = "1"
 $env:TOOLS_MOORKYZ_COM_DIRECTORY_CLEANER_ENABLED = "1"
-pnpm --filter @moorkyz-tools/portal dev --hostname 127.0.0.1
+pnpm --dir src --filter @moorkyz-tools/portal dev --hostname 127.0.0.1
 ```
 
 Both connections are **off by default**. Nothing is installed or started by
@@ -98,21 +98,21 @@ its operations. No accounts, tenant isolation, hosted storage or telemetry.
 
 The [structure guide](docs/engineering/repository-structure.md) records the
 adaptation of [moorkyz-template](https://github.com/Moorky/moorkyz-template):
-shared systems in [.template](.template/README.md), application code in
-[packages/portal](packages/portal/README.md), independent [tools](tools/),
-product [automation](scripts/README.md), and new [task audits](.audits/README.md).
+shared systems in [.template](src/.template/README.md), application code in
+[packages/portal](src/packages/portal/README.md), independent [tools](tools),
+product [automation](src/scripts/README.md), and new [task audits](.audits/README.md).
 Both root launchers now share one implementation; existing commands, ports,
 configuration and runtime data remain compatible.
 
-Use `pnpm check:repository` for read-only syntax/structure checks,
-`pnpm test:unit` for tests without a rebuild, and `pnpm check` for the full gate.
+Use `pnpm --dir src check:repository` for read-only syntax/structure checks,
+`pnpm --dir src test:unit` for tests without a rebuild, and `pnpm --dir src check` for the full gate.
 Historical audits remain at their original paths.
 
 ## Governance
 
 [AGENTS.md](AGENTS.md), [decisions](docs/decisions/decision-register.md) and
 [testing](docs/engineering/testing.md) describe current behavior. Old specifications
-remain in Git history; [audits](docs/audits/) remain historical evidence.
+remain in Git history; [audits](docs/audits) remain historical evidence.
 Production deployments follow the authenticated CI pipeline and the approved hosting configuration.
 
 The root [Apache-2.0 license](LICENSE) covers first-party project code. The
@@ -122,6 +122,6 @@ retain their SIL OFL notices.
 
 ## Repository operations
 
-[Deployment and CI](docs/deployment/coolify.md), [security reporting](SECURITY.md) and [audit evidence](audits/) describe repository operations. [README.html](README.html) and [READM.html](READM.html) are offline HTML entry points.
+[Deployment and CI](docs/deployment/coolify.md), [security reporting](.github/SECURITY.md) and [audit evidence](audits) describe repository operations. [README.html](README.html) and [READM.html](docs/legacy/READM.html) are offline HTML entry points.
 
 The root `trash/`, `logs/`, `archive/` and `.moorkyz/` directories are local runtime data and ignored by Git and Docker. The shared `moorkyz` command manages project-scoped retention and saved ports; see its help and runtime documentation.
