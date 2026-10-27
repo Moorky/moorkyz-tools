@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { execFileSync, spawnSync } from "node:child_process";
+import { createHash } from "node:crypto";
 import { test } from "node:test";
 import {
   mkdtemp,
@@ -40,15 +41,21 @@ test("Visory source allowlist is complete, text-only and matches its recorded pr
   assert.equal(provenance.files.length, names.length - 1);
   for (const required of [
     "README.md",
-    "ARCHITECTURE.md",
-    "VISORY_INTEGRATION.md",
-    "TEST_REPORT.md",
-    "RELEASE_NOTES.md",
-    "MoorkszVisoryMediaDownloader.sln",
-    "scripts/publish.ps1",
-    "src/MoorkszVisoryMediaDownloader.App/MoorkszVisoryMediaDownloader.App.csproj",
-    "src/MoorkszVisoryMediaDownloader.Core/Providers/DiscoverySession.cs",
-    "tests/MoorkszVisoryMediaDownloader.Tests/Scenarios.cs",
+    "README.html",
+    "CMD.cmd",
+    "src/docs/ARCHITECTURE.md",
+    "src/docs/VISORY_INTEGRATION.md",
+    "src/docs/TEST_REPORT.md",
+    "src/docs/RELEASE_NOTES.md",
+    "src/MoorkszVisoryMediaDownloader.sln",
+    "src/scripts/startup/run.ps1",
+    "src/scripts/startup/diagnostics.ps1",
+    "src/scripts/development/publish.ps1",
+    "src/utils/diagnostics/RunLogger.cs",
+    "src/tools/desktop/MoorkszVisoryMediaDownloader.App.csproj",
+    "src/tools/engine/Providers/DiscoverySession.cs",
+    "src/tests/MoorkszVisoryMediaDownloader.Tests/Scenarios.cs",
+    "src/tests/MoorkszVisoryMediaDownloader.Tests/DiagnosticsScenarios.cs",
   ])
     assert.ok(names.includes(required), required);
   assert.ok(
@@ -72,6 +79,42 @@ test("Git checkout rules preserve every Visory source byte", async () => {
       options,
     ),
     "Desktop source must not undergo EOL conversion.",
+  );
+});
+
+test("Visory README is generated, offline and has a browser-normalized CSP stylesheet hash", async () => {
+  const tool = path.join(root, "tools", "visory-media-downloader");
+  const generator = path.join(
+    tool,
+    "src",
+    "scripts",
+    "development",
+    "readme.mjs",
+  );
+  const check = spawnSync(process.execPath, [generator, "--check"], {
+    encoding: "utf8",
+  });
+  assert.equal(check.status, 0, check.stderr);
+  const before = await readFile(path.join(tool, "README.html"), "utf8");
+  const invalid = spawnSync(process.execPath, [generator, "--invalid"], {
+    encoding: "utf8",
+  });
+  assert.notEqual(invalid.status, 0);
+  assert.equal(await readFile(path.join(tool, "README.html"), "utf8"), before);
+  assert.doesNotMatch(before, /<script\b|<link\b[^>]*rel=["']stylesheet/i);
+  const style = /<style>([\s\S]*?)<\/style>/.exec(before)?.[1];
+  assert.ok(style);
+  const hash = createHash("sha256")
+    .update(style.replace(/\r\n/g, "\n"))
+    .digest("base64");
+  assert.ok(before.includes(`style-src 'sha256-${hash}'`));
+  for (const match of before.matchAll(/href="([^"#]+)"/g)) {
+    if (/^https:/.test(match[1])) continue;
+    await readFile(path.resolve(tool, match[1]));
+  }
+  assert.match(
+    await readFile(path.join(tool, "CMD.cmd"), "utf8"),
+    /src\\scripts\\startup\\run\.ps1/,
   );
 });
 
@@ -119,6 +162,7 @@ test("Visory allowlist rejects traversal, duplicates, state, binaries, caches an
       "artifacts/release/README.md",
       ".fixtures/run.json",
       "state/settings.json",
+      "runtime/runs/log.md",
       "recording.mp4",
       "visory-backup.db",
       "MoorkszVisoryMediaDownloader.exe",

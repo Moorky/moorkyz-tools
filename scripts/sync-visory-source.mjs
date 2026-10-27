@@ -24,10 +24,10 @@ function validateNames(names) {
       !/^[\w./-]+$/.test(name) ||
       name.startsWith("/") ||
       name.split("/").some((part) => !part || part === "." || part === "..") ||
-      /(?:^|\/)(?:\.git|bin|obj|artifacts|node_modules|\.fixtures|state|sessions?)(?:\/|$)/i.test(
+      /(?:^|\/)(?:\.git|bin|obj|artifacts|node_modules|\.fixtures|runtime|state|sessions?)(?:\/|$)/i.test(
         name,
       ) ||
-      (!/\.(?:cs|xaml|csproj|sln|props|md|ps1|json|manifest|txt|b64)$/.test(
+      (!/\.(?:cs|xaml|csproj|sln|props|md|html|css|mjs|cmd|ps1|json|manifest|txt|b64)$/.test(
         name,
       ) &&
         !/(?:^|\/)(?:LICENSE|\.gitignore)$/.test(name))

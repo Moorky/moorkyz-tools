@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-zgSk99BORKMn98bgbYuIP9zs1HkrbQIWbfmlcWV1wlA='; base-uri 'none'; form-action 'none'">
+<title>Moorksz Visory Media Downloader</title><style>:root {
+  color-scheme: light dark;
+  --paper: #fafbf7;
+  --surface: #fff;
+  --ink: #18251b;
+  --muted: #526255;
+  --line: #d5ded2;
+  --accent: #245d35;
+  --code: #eef1e8;
+}
+* {
+  box-sizing: border-box;
+}
+html {
+  scroll-padding-top: 2rem;
+}
+body {
+  max-width: 90rem;
+  margin: 0 auto;
+  padding: 2rem clamp(1rem, 4vw, 3rem) 4rem;
+  font:
+    1rem/1.7 system-ui,
+    sans-serif;
+  color: var(--ink);
+  background: var(--paper);
+}
+main.document {
+  max-width: 66rem;
+  margin: auto;
+}
+h1,
+h2,
+h3 {
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+h1 {
+  font-size: clamp(2rem, 4vw, 3rem);
+  letter-spacing: -0.04em;
+}
+h2 {
+  margin-top: 2.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--line);
+}
+a {
+  color: var(--accent);
+  text-underline-offset: 0.2em;
+}
+a:focus-visible,
+summary:focus-visible,
+[tabindex]:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 4px;
+}
+nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--line);
+}
+pre,
+code {
+  font-family: Consolas, monospace;
+  background: var(--code);
+  border-radius: 0.3rem;
+}
+code {
+  padding: 0.1rem 0.3rem;
+}
+pre {
+  padding: 1rem;
+  overflow: auto;
+  line-height: 1.5;
+}
+pre code {
+  padding: 0;
+}
+p,
+li {
+  max-width: 80ch;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+  background: var(--surface);
+}
+caption {
+  text-align: left;
+  font-weight: 650;
+  padding: 0.75rem;
+}
+th,
+td {
+  text-align: left;
+  vertical-align: top;
+  padding: 0.75rem;
+  border-bottom: 1px solid var(--line);
+}
+th {
+  background: var(--code);
+  white-space: nowrap;
+}
+td {
+  overflow-wrap: anywhere;
+  min-width: 6rem;
+}
+td.path {
+  min-width: 16rem;
+}
+td.message {
+  min-width: 20rem;
+}
+td time {
+  white-space: nowrap;
+}
+.table-scroll {
+  overflow: auto;
+  border: 1px solid var(--line);
+  border-radius: 0.5rem;
+  margin: 1rem 0;
+}
+.stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  padding: 0;
+  list-style: none;
+}
+.stats li {
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--line);
+  border-radius: 0.5rem;
+  background: var(--surface);
+}
+.status {
+  font-weight: 700;
+  white-space: nowrap;
+}
+.success {
+  color: #216234;
+}
+.fail,
+.error {
+  color: #a12727;
+}
+.note {
+  color: var(--muted);
+}
+.skip-link {
+  position: absolute;
+  left: 1rem;
+  top: -5rem;
+  padding: 0.5rem;
+  background: var(--surface);
+}
+.skip-link:focus {
+  top: 1rem;
+}
+footer {
+  margin-top: 3rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #141c17;
+    --surface: #1a261e;
+    --ink: #e7eee6;
+    --muted: #b3c2b3;
+    --line: #3d5140;
+    --accent: #a9d8b1;
+    --code: #243429;
+  }
+  .success {
+    color: #a9d8b1;
+  }
+  .fail,
+  .error {
+    color: #ffb4ae;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  * {
+    scroll-behavior: auto !important;
+  }
+}
+@media print {
+  body {
+    max-width: none;
+    padding: 0;
+    color: #18251b;
+    background: white;
+  }
+  nav,
+  .skip-link {
+    display: none;
+  }
+  .table-scroll {
+    overflow: visible;
+  }
+  table {
+    font-size: 8pt;
+  }
+  h2 {
+    break-after: avoid;
+  }
+}
+</style></head>
+<body><a class="skip-link" href="#main">Skip to content</a><main class="document" id="main">
+<nav aria-label="Document navigation"><a href="README.md">Markdown source</a><a href="#start">Start</a><a href="#structure">Structure</a><a href="#daily-report">Daily report</a><a href="#logs-and-output">Logs and output</a><a href="#privacy">Privacy</a><a href="#developer-checks">Developer checks</a><a href="#further-reading">Further reading</a></nav>
+<h1 id="moorksz-visory-media-downloader">Moorksz Visory Media Downloader</h1>
+<p>A local Windows tool for recordings available through your own Visory session. This unreleased, unofficial project is currently rebuilding its structure, logging and reports. Real-account discovery remains unverified; this phase does not claim to repair missing recordings.</p>
+<h2 id="start">Start</h2>
+<pre><code>.\CMD.cmd
+.\CMD.cmd -CheckOnly</code></pre>
+<p><code>CMD.cmd</code> is the single normal entry point. Windows uses <code>.cmd</code> for batch launchers, so the requested command entry is not named <code>CMD.run</code>. Logging starts in the terminal before prerequisite checks, build or app launch. The terminal remains attached while the desktop hub is in the tray. Exit through the app for orderly completion. Failure keeps the console visible; automated callers can set <code>VISORY_NONINTERACTIVE=1</code> to disable the pause.</p>
+<p>Requirements: Windows 10/11 x64, Windows PowerShell 5.1 and .NET 10 SDK. The existing WebView2 NuGet package is restored by the build when necessary; unchanged build outputs are reused. WebView2 Runtime is checked before sign-in. Missing native prerequisites are reported, not automatically installed. Application-control policies are never bypassed. <code>-CheckOnly</code> does not build, start the UI or contact Visory.</p>
+<h2 id="structure">Structure</h2>
+<pre><code>visory-media-downloader/
+  CMD.cmd                         one terminal entry point
+  README.html                     local introduction and guide
+  README.md                       canonical documentation source
+  LICENSE                         existing project license
+  src/
+    tools/
+      desktop/                    WPF hub and WebView2 adapter
+      engine/
+        Providers/                discovery and synthetic demo provider
+        Download/                 transfers, resume and retry
+        Archive/                  verified ZIP creation
+        Backup/                   orchestration and result state
+        Storage/                  SQLite state
+        Scheduling.cs             explicit Windows scheduling feature
+    utils/
+      diagnostics/                per-line logging, redaction and daily reports
+      documents/                  shared local document presentation
+      system/                     path, formatting, URL and Windows helpers
+    config/                       runtime settings and output layout
+    localization/                 English/German text
+    scripts/
+      startup/                    launch checks and terminal capture
+      development/                build, test, publish, icon and README tooling
+    tests/                        synthetic and startup regression tests
+    docs/                         architecture and integration details
+  runtime/runs/                   generated startup/app logs and stage reports</code></pre>
+<p>These are responsibilities inside one tool, not separate apps or repositories. Runtime features belong under <code>src/tools</code>; shared helpers are utilities; one-off automation is a script. Arbitrary <code>scripts_a</code>/<code>scripts_b</code> groups are unnecessary when names describe their jobs. Project metadata and explicit source allowlists also remain at the root. No separate website or landing page is added.</p>
+<h2 id="daily-report">Daily report</h2>
+<p>Open <code>reports/report.html</code> in the selected backup folder. It groups every recorded local day and shows SUCCESS, FAIL and ERROR counts, known processing time, successful byte totals and success ratio. The same outcomes are in <code>report.csv</code> and <code>report.md</code>; HTML and Markdown embed the CSV data rather than only linking it.</p>
+<pre><code>ID | Timestamp | Status | Filename | Full Path | Time Spent (s)
+File Size (bytes) | Length (s) | Log | Error | Success Ratio | Message</code></pre>
+<ul>
+<li>ID: Unix milliseconds plus a unique suffix, stable once written.</li>
+<li>Timestamp: recorded local time, <code>yyyy-MM-dd HH:mm:ss</code>; detailed run CSV retains the UTC offset too.</li>
+<li>Status: SUCCESS, FAIL or ERROR. Already-verified SKIP entries and run summaries stay in detailed run records.</li>
+<li>Full Path: absolute saved destination, or the planned destination for a failed file. It does not imply the file exists.</li>
+<li>Time Spent: processing seconds, distinct from video/audio Length.</li>
+<li>File Size and Length: bytes and media seconds. Unknown values stay blank, never invented as zero.</li>
+<li>Log and Error: clickable relative Markdown file links with exact physical line numbers and same-line anchors.</li>
+<li>Success Ratio: <code>SUCCESS / (SUCCESS + FAIL + ERROR)</code> for the whole recorded day, across runs.</li>
+<li>Message: redacted result or diagnostic context.</li>
+</ul>
+<p>Metadata-only errors may have no filename, destination, size or duration. Media length is currently only shown when supplied by a result; no codec probe, external program or extra download is introduced to guess it. Rendered Markdown viewers honor log anchors; plain-text browsers may open the file without scrolling, so the link label also gives its exact line number.</p>
+<h2 id="logs-and-output">Logs and output</h2>
+<pre><code>runtime/runs/&lt;timestamp_guid&gt;/
+  logs/startup.md                  terminal/check/build/app output
+  logs/app.md                      lifecycle and discovery diagnostics
+  failed/startup-errors.md
+  failed/app-errors.md
+  reports/startup.csv              startup stage results and durations
+  reports/startup.html
+  reports/startup.md
+
+&lt;selected backup folder&gt;/
+  downloads/                      verified recordings; active files end in .part
+  archives/                       optional verified ZIPs
+  runs/&lt;run-id&gt;/
+    logs/log_&lt;run-id&gt;.md
+    failed/errors_&lt;run-id&gt;.md
+    reports/report_&lt;run-id&gt;.csv    durable detailed results
+    reports/report_&lt;run-id&gt;.html
+    reports/report_&lt;run-id&gt;.md
+  reports/report.csv              combined daily outcomes
+  reports/report.html             daily statistics and exact log links
+  reports/report.md</code></pre>
+<p>Regular logs and error logs are Markdown only. Each physical line has a timestamp with milliseconds and offset, severity, run and area, and is appended/flushed to disk immediately. Multiline errors get individually timestamped lines. DEBUG is part of the main Markdown log. CSV rows also flush immediately. HTML/Markdown reports are snapshots regenerated at initialization, summary and orderly disposal, not background connections. After a crash, views can be stale; completed run CSV rows remain authoritative. Cross-file/database writes are not one atomic transaction. Legacy artifacts are preserved; schema upgrades retain an original CSV copy. No automatic log deletion or rotation is introduced.</p>
+<h2 id="privacy">Privacy</h2>
+<p>No hosted processing, telemetry or logging network traffic. Passwords, tokens, cookies and URL query/fragment credentials are redacted before display/storage. Full signed-URL logging is not offered. No response/media bodies are logged. Filenames, paths and metadata may still identify people; treat reports as private. Generated state, sessions, build files and media are excluded from source downloads. Sign-in remains opt-in; tokens stay in memory and stored links use Windows DPAPI. Existing settings/session/scheduler identities are retained.</p>
+<h2 id="developer-checks">Developer checks</h2>
+<pre><code>.\src\scripts\development\build.ps1
+.\src\scripts\development\test.ps1 -Filter D1,D2,D3,D4,D5,D6
+.\src\scripts\development\test.ps1
+powershell.exe -NoProfile -File .\src\tests\startup\test-startup.ps1
+node .\src\scripts\development\readme.mjs --check</code></pre>
+<p>Run the README command without <code>--check</code> after editing this Markdown or the shared stylesheet. HTML is generated locally using a quiet documentation layout inspired by the main moorkyz-template README, not a marketing website. Tests use isolated <code>.fixtures</code> and loopback data, never personal recordings. No EXE, installer or signed release is distributed by this phase. After source changes, run <code>node scripts\sync-visory-source.mjs</code> and <code>pnpm tools:index</code> from the repository root.</p>
+<h2 id="further-reading">Further reading</h2>
+<ul>
+<li><a href="src/docs/ARCHITECTURE.md">Architecture and module boundaries</a></li>
+<li><a href="src/docs/VISORY_INTEGRATION.md">Visory integration and unverified behavior</a></li>
+<li><a href="src/docs/TEST_REPORT.md">Historical test evidence</a></li>
+<li><a href="src/docs/RELEASE_NOTES.md">Release notes</a></li>
+<li><a href="src/docs/THIRD-PARTY-NOTICES.md">Third-party notices</a></li>
+<li><a href="LICENSE">Existing MIT license</a></li>
+</ul>
+<footer>Local documentation. No server, scripts, fonts or external assets are loaded. Visual direction inspired by the main moorkyz-template README.</footer>
+</main></body></html>

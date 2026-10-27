@@ -1,138 +1,167 @@
 # Moorksz Visory Media Downloader
 
-**Open, connect, scan, back up, done.** A portable Windows desktop hub that backs up the
-recordings your authenticated Visory web session can access, then leaves the transfer
-running quietly in the background with resumable downloads, exact reports and a
-verified ZIP.
+A local Windows tool for recordings available through your own Visory session.
+This unreleased, unofficial project is currently rebuilding its structure,
+logging and reports. Real-account discovery remains unverified; this phase does
+not claim to repair missing recordings.
 
-> **Unofficial tool.** Not affiliated with, endorsed by or supported by Visory.
-> Real-account Visory behavior is **unverified** in development; see
-> [VISORY_INTEGRATION.md](VISORY_INTEGRATION.md) before relying on it for important
-> footage. Version 0.1.0 is an unreleased development preview.
-
-## What it does
-
-1. Sign in to the official Visory web app inside the hub (Microsoft Edge WebView2).
-2. Open your cloud recordings in Visory; the hub collects the recording metadata the app
-   loads (or press **Auto-scroll list**). Press **Finish scan**.
-3. Review the inventory: discovered recordings, cameras, already verified, missing,
-   corrupt, needing retry, estimated size, free space and scan completeness.
-4. **Start backup.** Minimize or close the window; the backup continues in the tray.
-5. Return to verified files, an optional verified ZIP, a run summary and reports.
-
-When the inventory cannot be confirmed complete, the hub says **Discovered recordings**
-and shows a warning instead of claiming every recording was found.
-
-**Demo mode** generates clearly labeled synthetic recordings in a separate demo folder,
-so the full workflow can be tried without a Visory account. Demo data is never shown as
-account data.
-
-## Requirements
-
-- Windows 10 or 11, x64.
-- Microsoft Edge WebView2 Runtime for Visory sign-in (preinstalled on Windows 11 and most
-  Windows 10 systems). If it is missing, the hub explains this and links to Microsoft's
-  official download page; nothing is installed silently. Demo mode works without it.
-- No .NET, Node.js, Python, PowerShell or other runtime is required to run the portable
-  EXE. It is self-contained (.NET 10.0.11, WPF).
-
-The EXE is **not code-signed**. Windows SmartScreen, Smart App Control or an organization's
-application-control policy may block unsigned builds. On the development machine, Smart
-App Control blocked some individual build outputs (see [TEST_REPORT.md](TEST_REPORT.md)).
-
-## Data and privacy
-
-Recordings are sensitive. Everything stays on your computer: no uploads, accounts on our
-side, telemetry or third-party services.
-
-| Data | Location |
-|---|---|
-| Settings, app log, demo backup | `VisoryBulkDownloader Data\` beside the EXE when that folder is writable (portable mode); otherwise `%LOCALAPPDATA%\VisoryBulkDownloader\` |
-| Visory sign-in session (WebView2 profile) | Always `%LOCALAPPDATA%\VisoryBulkDownloader\Sessions\<id>\` |
-| Backup (downloads, archives, runs, state) | Your chosen backup folder, default `Videos\Visory Backup` |
-
-**Portability versus account security.** The settings folder can travel with the EXE.
-These internal storage and scheduler names intentionally remain compatible with
-earlier builds; the rename does not move or delete settings, sessions or backups.
-If you enabled scheduling for an earlier EXE, explicitly re-save that setting
-from the renamed EXE to update its launch path. No task is changed by the rename.
-The sign-in session deliberately does not: WebView2 protects cookies with Windows
-encryption bound to your Windows account, so a copied profile would not work elsewhere,
-and keeping it off USB sticks avoids leaking an account session on removable media.
-Passwords are never stored by this app (WebView2 password saving is disabled).
-Download links that carry access tokens are stored in the state database encrypted with
-Windows DPAPI (current user). ID tokens are kept in memory only.
-
-**Settings → Privacy** offers **Sign out** (deletes the WebView2 profile and in-memory
-tokens) and **Delete local session data** (also removes stored download links). Failed
-reports redact URL query strings unless you explicitly enable full URLs, which shows a
-warning that signed URLs may grant temporary access. Authorization headers, cookies and
-tokens are never written to logs or reports.
-
-## Backup folder layout
-
-```
-Visory Backup/
-├── downloads/                 verified recordings (in-progress files end with .part)
-├── archives/                  Visory_<run-id>.zip (…_INCOMPLETE.zip when scope had failures)
-├── runs/<yyyy-MM-dd_HH-mm-ss>/
-│   ├── logs/log_<id>.txt              exact SUCCESS/FAIL lines, plus INFO/WARN/SKIP/RETRY
-│   ├── logs/log_report_<id>.csv       one row per file result (UTF-8, Excel-safe)
-│   ├── logs/debug_<id>.log            attempt-level diagnostics (redacted)
-│   ├── logs/run_summary_<id>.json     completion summary
-│   └── failed/failed_report_<id>.csv  timestamp, filename, filesize, message, url, …
-└── state/visory-backup.db     SQLite (Windows-supplied winsqlite3) recording state
-```
-
-Each file receives exactly one final SUCCESS or FAIL per run, enforced in the database.
-Already verified files receive one SKIP. A changed local file is preserved as
-`<name>.corrupt-<timestamp>` and downloaded again; nothing is overwritten.
-
-## Background behavior
-
-- **Smart background** (default) prefers Windows BITS for compatible links (no sign-in
-  headers, byte-range support, no bandwidth limit), lowers process priority and caps
-  direct transfers at two. **Balanced** and **Fast** raise BITS priority and use the
-  configured concurrency.
-- Closing the window during a backup minimizes to the tray (explained once). The tray
-  shows progress and speed and offers Pause/Resume, Open downloads, Open latest report
-  and **Exit safely**.
-- **Exit safely** hands compatible BITS jobs to Windows (they continue while you are
-  signed in) and stops direct downloads with their `.part` data. The next start
-  reconciles BITS jobs and offers **Resume interrupted run**. Transfers do not continue
-  after Windows sign-out for direct downloads, and BITS continuity depends on Windows.
-- Optional, user-enabled scheduling: a daily Task Scheduler task (`--scheduled`) and a
-  quiet start after sign-in (`--background`, Task Scheduler with a per-user startup
-  entry fallback). Scheduled scans reuse the routes you visited during an interactive
-  scan and require a still-valid Visory session; otherwise the hub notifies you.
-
-## Build and test (developers)
-
-The canonical source is `tools/visory-media-downloader` in the
-[Moorky/moorkyz-tools](https://github.com/Moorky/moorkyz-tools) repository. Requires the
-.NET 10 SDK on Windows; run the scripts from this folder.
+## Start
 
 ```powershell
-.\scripts\build.ps1                 # Release build of all projects
-.\scripts\test.ps1                  # automated suite (Debug), isolated .fixtures folder
-.\scripts\test.ps1 -Heavy -Filter 25b   # opt-in 4.2 GiB ZIP64 archive test
-.\scripts\publish.ps1               # artifacts\release\MoorkszVisoryMediaDownloader-<version>-win-x64\
+.\CMD.cmd
+.\CMD.cmd -CheckOnly
 ```
 
-`publish.ps1` produces one self-contained single-file `MoorkszVisoryMediaDownloader.exe`, copies
-these documents and all required license notices, and writes `SHA256SUMS.txt`.
-The app icon is stored as Base64 text (`app.ico.b64`) and decoded during the build;
-`scripts\make-icon.ps1` regenerates it.
+`CMD.cmd` is the single normal entry point. Windows uses `.cmd` for batch
+launchers, so the requested command entry is not named `CMD.run`.
+Logging starts in the terminal before prerequisite checks, build or app launch.
+The terminal remains attached while the desktop hub is in the tray.
+Exit through the app for orderly completion. Failure keeps the console visible;
+automated callers can set `VISORY_NONINTERACTIVE=1` to disable the pause.
 
-## Documentation
+Requirements: Windows 10/11 x64, Windows PowerShell 5.1 and .NET 10 SDK.
+The existing WebView2 NuGet package is restored by the build when necessary;
+unchanged build outputs are reused. WebView2 Runtime is checked before sign-in.
+Missing native prerequisites are reported, not automatically installed.
+Application-control policies are never bypassed.
+`-CheckOnly` does not build, start the UI or contact Visory.
 
-- [ARCHITECTURE.md](ARCHITECTURE.md) — components, data flow, state machine and safety rules.
-- [VISORY_INTEGRATION.md](VISORY_INTEGRATION.md) — verified facts, observation contract,
-  and what is unverified.
-- [TEST_REPORT.md](TEST_REPORT.md) — automated scenarios and smoke evidence.
-- [RELEASE_NOTES.md](RELEASE_NOTES.md) — version notes and known limitations.
-- [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md) — dependencies and redistributed components.
+## Structure
 
-## License
+```text
+visory-media-downloader/
+  CMD.cmd                         one terminal entry point
+  README.html                     local introduction and guide
+  README.md                       canonical documentation source
+  LICENSE                         existing project license
+  src/
+    tools/
+      desktop/                    WPF hub and WebView2 adapter
+      engine/
+        Providers/                discovery and synthetic demo provider
+        Download/                 transfers, resume and retry
+        Archive/                  verified ZIP creation
+        Backup/                   orchestration and result state
+        Storage/                  SQLite state
+        Scheduling.cs             explicit Windows scheduling feature
+    utils/
+      diagnostics/                per-line logging, redaction and daily reports
+      documents/                  shared local document presentation
+      system/                     path, formatting, URL and Windows helpers
+    config/                       runtime settings and output layout
+    localization/                 English/German text
+    scripts/
+      startup/                    launch checks and terminal capture
+      development/                build, test, publish, icon and README tooling
+    tests/                        synthetic and startup regression tests
+    docs/                         architecture and integration details
+  runtime/runs/                   generated startup/app logs and stage reports
+```
 
-MIT © 2026 Moorkyz contributors. Third-party components retain their own licenses.
+These are responsibilities inside one tool, not separate apps or repositories.
+Runtime features belong under `src/tools`; shared helpers are utilities;
+one-off automation is a script. Arbitrary `scripts_a`/`scripts_b` groups are
+unnecessary when names describe their jobs. Project metadata and explicit source
+allowlists also remain at the root. No separate website or landing page is added.
+
+## Daily report
+
+Open `reports/report.html` in the selected backup folder. It groups every recorded
+local day and shows SUCCESS, FAIL and ERROR counts, known processing time,
+successful byte totals and success ratio. The same outcomes are in `report.csv`
+and `report.md`; HTML and Markdown embed the CSV data rather than only linking it.
+
+```text
+ID | Timestamp | Status | Filename | Full Path | Time Spent (s)
+File Size (bytes) | Length (s) | Log | Error | Success Ratio | Message
+```
+
+- ID: Unix milliseconds plus a unique suffix, stable once written.
+- Timestamp: recorded local time, `yyyy-MM-dd HH:mm:ss`; detailed run CSV retains the UTC offset too.
+- Status: SUCCESS, FAIL or ERROR. Already-verified SKIP entries and run summaries stay in detailed run records.
+- Full Path: absolute saved destination, or the planned destination for a failed file. It does not imply the file exists.
+- Time Spent: processing seconds, distinct from video/audio Length.
+- File Size and Length: bytes and media seconds. Unknown values stay blank, never invented as zero.
+- Log and Error: clickable relative Markdown file links with exact physical line numbers and same-line anchors.
+- Success Ratio: `SUCCESS / (SUCCESS + FAIL + ERROR)` for the whole recorded day, across runs.
+- Message: redacted result or diagnostic context.
+
+Metadata-only errors may have no filename, destination, size or duration.
+Media length is currently only shown when supplied by a result; no codec probe,
+external program or extra download is introduced to guess it.
+Rendered Markdown viewers honor log anchors; plain-text browsers may open the
+file without scrolling, so the link label also gives its exact line number.
+
+## Logs and output
+
+```text
+runtime/runs/<timestamp_guid>/
+  logs/startup.md                  terminal/check/build/app output
+  logs/app.md                      lifecycle and discovery diagnostics
+  failed/startup-errors.md
+  failed/app-errors.md
+  reports/startup.csv              startup stage results and durations
+  reports/startup.html
+  reports/startup.md
+
+<selected backup folder>/
+  downloads/                      verified recordings; active files end in .part
+  archives/                       optional verified ZIPs
+  runs/<run-id>/
+    logs/log_<run-id>.md
+    failed/errors_<run-id>.md
+    reports/report_<run-id>.csv    durable detailed results
+    reports/report_<run-id>.html
+    reports/report_<run-id>.md
+  reports/report.csv              combined daily outcomes
+  reports/report.html             daily statistics and exact log links
+  reports/report.md
+```
+
+Regular logs and error logs are Markdown only. Each physical line has a
+timestamp with milliseconds and offset, severity, run and area, and is
+appended/flushed to disk immediately. Multiline errors get individually
+timestamped lines. DEBUG is part of the main Markdown log.
+CSV rows also flush immediately. HTML/Markdown reports are snapshots regenerated
+at initialization, summary and orderly disposal, not background connections.
+After a crash, views can be stale; completed run CSV rows remain authoritative.
+Cross-file/database writes are not one atomic transaction.
+Legacy artifacts are preserved; schema upgrades retain an original CSV copy.
+No automatic log deletion or rotation is introduced.
+
+## Privacy
+
+No hosted processing, telemetry or logging network traffic. Passwords, tokens,
+cookies and URL query/fragment credentials are redacted before display/storage.
+Full signed-URL logging is not offered. No response/media bodies are logged.
+Filenames, paths and metadata may still identify people; treat reports as private.
+Generated state, sessions, build files and media are excluded from source downloads.
+Sign-in remains opt-in; tokens stay in memory and stored links use Windows DPAPI.
+Existing settings/session/scheduler identities are retained.
+
+## Developer checks
+
+```powershell
+.\src\scripts\development\build.ps1
+.\src\scripts\development\test.ps1 -Filter D1,D2,D3,D4,D5,D6
+.\src\scripts\development\test.ps1
+powershell.exe -NoProfile -File .\src\tests\startup\test-startup.ps1
+node .\src\scripts\development\readme.mjs --check
+```
+
+Run the README command without `--check` after editing this Markdown or the
+shared stylesheet. HTML is generated locally using a quiet documentation layout
+inspired by the main moorkyz-template README, not a marketing website.
+Tests use isolated `.fixtures` and loopback data, never personal recordings.
+No EXE, installer or signed release is distributed by this phase.
+After source changes, run `node scripts\sync-visory-source.mjs` and
+`pnpm tools:index` from the repository root.
+
+## Further reading
+
+- [Architecture and module boundaries](src/docs/ARCHITECTURE.md)
+- [Visory integration and unverified behavior](src/docs/VISORY_INTEGRATION.md)
+- [Historical test evidence](src/docs/TEST_REPORT.md)
+- [Release notes](src/docs/RELEASE_NOTES.md)
+- [Third-party notices](src/docs/THIRD-PARTY-NOTICES.md)
+- [Existing MIT license](LICENSE)

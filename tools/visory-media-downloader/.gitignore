@@ -2,6 +2,7 @@
 **/obj/
 artifacts/
 .fixtures/
+runtime/
 .vs/
 *.user
 *.db

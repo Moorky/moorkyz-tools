@@ -51,7 +51,10 @@ test("Moorksz Visory Media Downloader explains the unofficial desktop workflow, 
     "Verify",
     "Archive and report",
   ]);
-  await expect(page.locator("#setup")).toContainText(".\\scripts\\publish.ps1");
+  await expect(page.locator("#setup")).toContainText(".\\CMD.cmd");
+  await expect(page.locator("#setup")).toContainText(
+    "logging before prerequisites",
+  );
   await expect(page.locator("#downloads")).toContainText("Not yet released");
   await expect(page.locator("#downloads a, #downloads button")).toHaveCount(0);
   await expect(

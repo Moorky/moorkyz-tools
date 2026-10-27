@@ -7,7 +7,7 @@
     "category": "CLOUD RECORDING BACKUP",
     "version": "1.0.0",
     "releaseDate": null,
-    "updatedOn": "2026-10-26",
+    "updatedOn": "2026-10-27",
     "summary": "Back up the cloud recordings your own Visory account can access to a local folder, with resumable background transfers, exact reports and a verified ZIP.",
     "catalogDescription": "Keep your Visory cloud recordings on your own disk without babysitting a browser. Sign in once inside this Windows desktop hub, let it collect the recordings the official web app shows you, and review the count before anything downloads. Backups continue quietly in the background with resumable transfers, verified files, exact reports and an optional verified ZIP. An unofficial development preview: real-account discovery is still unverified.",
     "usefulness": 10,
@@ -35,7 +35,7 @@
       },
       {
         "title": "Archive and report",
-        "text": "Read the run summary, text log, CSV report and failed report, and optionally keep one verified ZIP64 archive with a manifest that lists anything not included."
+        "text": "Read timestamped Markdown logs and error logs plus CSV reports embedded in HTML and Markdown, and optionally keep a verified ZIP64 archive. RUN.cmd captures terminal output from startup onward."
       }
     ],
     "features": [
@@ -53,7 +53,7 @@
       },
       {
         "title": "Reports & archives",
-        "text": "The exact SUCCESS/FAIL log format, Excel-safe UTF-8 CSV reports with redacted URLs, a JSON summary and streaming ZIP64 archives verified by re-reading."
+        "text": "Per-line flushed, timestamped Markdown logs/error logs; Excel-safe CSV reports with HTML and Markdown views; redacted credentials/URLs and streaming ZIP64 archives verified by re-reading."
       },
       {
         "title": "Privacy & background",
@@ -79,9 +79,9 @@
         "text": "Windows 10/11 x64 with the Microsoft Edge WebView2 Runtime, which is preinstalled on Windows 11. The portable EXE bundles .NET; building from source requires the .NET 10 SDK. Nothing is installed by visiting this page."
       },
       {
-        "title": "Build the portable EXE",
-        "text": "No public executable release exists yet. From tools/visory-media-downloader in this repository, build one self-contained MoorkszVisoryMediaDownloader.exe with notices and documentation.",
-        "command": ".\\scripts\\publish.ps1"
+        "title": "Start with terminal diagnostics",
+        "text": "No public executable release exists yet. From tools/visory-media-downloader, CMD.cmd begins logging before prerequisites, incremental build and app launch. Requires the .NET 10 SDK. Use CMD.cmd -CheckOnly for checks without launching the app; missing native prerequisites are reported, not installed. The generated local report.html groups daily results and links to exact Markdown log lines.",
+        "command": ".\\CMD.cmd"
       },
       {
         "title": "Try demo mode first",
