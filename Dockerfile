@@ -1,4 +1,4 @@
-FROM node:22-alpine AS base
+FROM node:26-alpine AS base
 
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
@@ -24,7 +24,7 @@ ENV NEXT_TELEMETRY_DISABLED=1
 
 RUN pnpm build
 
-FROM node:22-alpine AS runner
+FROM node:26-alpine AS runner
 
 WORKDIR /app
 
