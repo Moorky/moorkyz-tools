@@ -3,7 +3,12 @@ import { execFileSync } from "node:child_process";
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
-import { pathToFileURL } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
+
+const repositoryRoot = path.resolve(
+  path.dirname(fileURLToPath(import.meta.url)),
+  "../../..",
+);
 
 let fixture, url, emptyUrl;
 test.beforeAll(async () => {
@@ -21,7 +26,7 @@ test.beforeAll(async () => {
       "--report-browser-fixture",
       fixture,
     ],
-    { encoding: "utf8", timeout: 30000 },
+    { cwd: repositoryRoot, encoding: "utf8", timeout: 30000 },
   );
   url = pathToFileURL(
     path.join(fixture, "backup", "reports", "report.html"),
@@ -41,7 +46,7 @@ test.beforeAll(async () => {
       emptyFolder,
       "--empty",
     ],
-    { encoding: "utf8", timeout: 30000 },
+    { cwd: repositoryRoot, encoding: "utf8", timeout: 30000 },
   );
   emptyUrl = pathToFileURL(
     path.join(emptyFolder, "backup", "reports", "report.html"),

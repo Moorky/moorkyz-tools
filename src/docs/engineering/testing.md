@@ -50,3 +50,5 @@ without privileged operations or third-party dependencies.
 Report exact commands and observed `PASS`, `FAIL`, `NOT RUN` or `N/A` in a
 task-specific audit. Automated tests are not independent security, manual
 accessibility, clean-VM, container or production readiness certification.
+
+The portal browser gate runs on Linux with 111 cross-browser cases. Native Visory report fixtures run in the required Windows job after the .NET test project is built; the Windows job also remains a prerequisite of production. VideoCrunch API tests run only in their required Windows job, using `pnpm --dir src test:videocrunch:api` locally.
