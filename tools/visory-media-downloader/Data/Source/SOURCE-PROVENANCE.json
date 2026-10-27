@@ -3,7 +3,7 @@
   "repository": "Moorky/moorkyz-tools",
   "sourceDirectory": "tools/visory-media-downloader",
   "identity": "Moorksz Visory Media Downloader",
-  "treeSha256": "1bcd5ff3f64c0a74c8d8e3064d3519b393a158ce46146e08a1717cf344057005",
+  "treeSha256": "047d7a6e2e31522c66b5eb7b4491db5e98e632c4de6028b172bb51f5190e8972",
   "files": [
     {
       "path": ".gitignore",
@@ -11,11 +11,11 @@
     },
     {
       "path": "AGENTS.md",
-      "sha256": "95fc37205e9c745baa1c28a148e054e5d669e7c3eab003435a06c44842259b63"
+      "sha256": "243da36f53d7ef6ce4986260d630d14c857f83423bb05e9d2680ff5339198bae"
     },
     {
       "path": "src/docs/ARCHITECTURE.md",
-      "sha256": "a13f2f267cd060a3c6d5fd0fe4737a3bbb2a6ff3ae83180f8eb2ac733d4d9408"
+      "sha256": "3fbe6ed4c3cdd635cae609786c569f217a6aef7e350a74e1c1d0e98ab21a3452"
     },
     {
       "path": "src/Directory.Build.props",
@@ -27,14 +27,14 @@
     },
     {
       "path": "README.md",
-      "sha256": "bd91b4c7fdf0fb33135361a8f0454561d8089b95923bf50003d94363d0d32c40"
+      "sha256": "3501c2e613b3c84c1f2fb3bec721d9ca6fe5eca72e216d291b4f38e92e1eb285"
     },
     {
       "path": "README.html",
-      "sha256": "2002874245dc732a129bba543e558c59635f060c3b3832ff7644e63d10c87c3f"
+      "sha256": "e951c0a230ab495f68f85b660fdd6d089a32e659881ab423190af726ad7127b6"
     },
     {
-      "path": "CMD.cmd",
+      "path": "RUN.cmd",
       "sha256": "908e5aae9948cebfdd681acf7f5460073f90dfb1d33202ad071d599d598fc56d"
     },
     {
@@ -47,7 +47,7 @@
     },
     {
       "path": "src/docs/THIRD-PARTY-NOTICES.md",
-      "sha256": "0f87d2d4942a3c66f56bd620ad986b5d464c7de0fc1252dc8a7c85c2ead97b4d"
+      "sha256": "240a1feec539949df22e8037311b213c8a677b6503ab02b03231e8fbf28ba94a"
     },
     {
       "path": "src/docs/VISORY_INTEGRATION.md",
@@ -55,7 +55,7 @@
     },
     {
       "path": "src/MoorkszVisoryMediaDownloader.sln",
-      "sha256": "6ff1d1b8267d02d30a88b8c62b2941c84b60b110dcf8a9fe059b53f89ee1640d"
+      "sha256": "c790f7d581cc00bf92b999f056f1178a88df982624c36cd29cba6852d735ae3b"
     },
     {
       "path": "src/scripts/development/build.ps1",
@@ -67,7 +67,7 @@
     },
     {
       "path": "src/scripts/development/publish.ps1",
-      "sha256": "e3f71c166dc8149aaf3aa1a240f970ebcb642aab02c99e346516ab55d3afbe6c"
+      "sha256": "bd26cbf3c55d108755d8a745ce82e7deab8e697e767dba2e624ad4c93565ffa0"
     },
     {
       "path": "src/scripts/development/test.ps1",
@@ -75,15 +75,15 @@
     },
     {
       "path": "src/scripts/startup/run.ps1",
-      "sha256": "1e05f69520acaae0dbc40cbb73c80ca9e6cd98d1ec03d3b5fc19597323d8e52c"
+      "sha256": "b20e56acf740993ce14d8e6d0687dc71a6e347ddbea4ef2a70a19f8707e0b532"
     },
     {
       "path": "src/scripts/startup/diagnostics.ps1",
-      "sha256": "241fcf88f28d0c33367e1bc40dcc252589327fcb948f284aa40e7f057fbcadf9"
+      "sha256": "5ea3db347329cd3f06bafa285b2921e9306e8e05112b8740aa5259d0cebefcdd"
     },
     {
       "path": "src/tests/startup/test-startup.ps1",
-      "sha256": "57e9a3050639b2907c1792507f9d726265382ee3a47ecc4642129ad3b125b2cf"
+      "sha256": "1824adc3b342d6808832e73b8893dd930e68d347512a15e3e44fea98fc994191"
     },
     {
       "path": "src/tools/desktop/app.ico.b64",
@@ -115,7 +115,7 @@
     },
     {
       "path": "src/tools/desktop/MainViewModel.Pages.cs",
-      "sha256": "77dacbd2b25bc7d39931b59d3ac60651dc5f0093d989594e80ff8c8b62334cdf"
+      "sha256": "ff5bcf1b6ca70b90c5e3737def1be6e08f3564702b0c482a84bc3c4ec98e3057"
     },
     {
       "path": "src/tools/desktop/MainViewModel.Settings.cs",
@@ -195,30 +195,30 @@
     },
     {
       "path": "src/tools/desktop/MoorkszVisoryMediaDownloader.App.csproj",
-      "sha256": "fdc456bce098f465ddd05ddbd7fd2e84e17d267fa1443cbe411886f701bfa352"
+      "sha256": "00c420617a40dbfea4ed68c67ec63b45503bd856226e038949ac5e624c65a68a"
     },
     {
-      "path": "src/tools/engine/Archive/ArchiveService.cs",
+      "path": "src/core/Archive/ArchiveService.cs",
       "sha256": "0a379b3adaed506e1e298c9a63cc0a94873a4deeffc6a022efd23183ced9d1c8"
     },
     {
-      "path": "src/tools/engine/Backup/BackupCoordinator.cs",
+      "path": "src/core/Backup/BackupCoordinator.cs",
       "sha256": "75cdc20399887afeaed045c3d45a0fe0045ec102f935e133b7338ac840fa1fcc"
     },
     {
-      "path": "src/tools/engine/Download/Bits.cs",
+      "path": "src/core/Download/Bits.cs",
       "sha256": "591e5e40152faf1b7043c28f3925319c813a21fc6e84f60447859ba5510efdab"
     },
     {
-      "path": "src/tools/engine/Download/DestinationPlanner.cs",
+      "path": "src/core/Download/DestinationPlanner.cs",
       "sha256": "bc521e5e0582466e472fc60266af128597c2673b20801026ed1ecb773bb55cf6"
     },
     {
-      "path": "src/tools/engine/Download/DownloadEngine.cs",
+      "path": "src/core/Download/DownloadEngine.cs",
       "sha256": "f6b6f116c6fcf477e977a26987d9f746264609792bd82a0c37d5622630c06606"
     },
     {
-      "path": "src/tools/engine/Download/HttpTransfer.cs",
+      "path": "src/core/Download/HttpTransfer.cs",
       "sha256": "becdefab9314528a30b55d95de183459fefd2c3384ea6bedc450c8f69b46956c"
     },
     {
@@ -234,7 +234,7 @@
       "sha256": "c17c65cb8fc6bc00a86c9994273dc2bb70803c16ba8ddff2b912b7808998f89e"
     },
     {
-      "path": "src/tools/engine/Scheduling.cs",
+      "path": "src/core/Scheduling.cs",
       "sha256": "ee6dd15d5f0a229b5986fbc71871a3fc9f50c018a1f3689c2b03a86ec10a2fe0"
     },
     {
@@ -250,19 +250,19 @@
       "sha256": "c15a2da0be236d51b91f0b7bbe9fca7925dd6b5be69aea8785e99d86da6dcd79"
     },
     {
-      "path": "src/tools/engine/Models.cs",
+      "path": "src/core/Models.cs",
       "sha256": "526bb7fb2d61e46177a736d0e91b29491d3d95adc42cd98ad525007855adae71"
     },
     {
-      "path": "src/tools/engine/Providers/Contracts.cs",
+      "path": "src/core/Providers/Contracts.cs",
       "sha256": "0fb9b18cc3d5ae2acb11f3d7916ae140d7f133609c604a7b0d8eeeefbeeae6ed"
     },
     {
-      "path": "src/tools/engine/Providers/DemoRecordingProvider.cs",
+      "path": "src/core/Providers/DemoRecordingProvider.cs",
       "sha256": "6658751fe4967e3179d2e4a99cca62cb5372be209b3335a1111ef8932ad5a574"
     },
     {
-      "path": "src/tools/engine/Providers/DiscoverySession.cs",
+      "path": "src/core/Providers/DiscoverySession.cs",
       "sha256": "98d9a939c2e284625823f217ca109636b04656f4bf655856c38303509c79cf2c"
     },
     {
@@ -271,35 +271,35 @@
     },
     {
       "path": "src/utils/diagnostics/DiagnosticLog.cs",
-      "sha256": "a7655ca5db76543c23a5c47594784504128a0a68f29a63c905df89dc5466298a"
+      "sha256": "7718b59313db6e9680db76bfa12835a60daad2ca4724061dd828a938eb31a8fd"
     },
     {
       "path": "src/utils/diagnostics/CsvReport.cs",
-      "sha256": "4758cc3dec972844be367d7b5f412d6283cf2a27806b3560537f50579a804eb3"
+      "sha256": "6c9acdce3a11e7d4d84bdebecdcb5857bad3ed0a78deab440c0581e8b18e9eb9"
     },
     {
-      "path": "src/tools/engine/Storage/Sqlite.cs",
+      "path": "src/core/Storage/Sqlite.cs",
       "sha256": "6a3560979563c4788f7af78c5c92064d7114b6e7d40d5d2d5ee0e853e3c71fb6"
     },
     {
-      "path": "src/tools/engine/Storage/StateStore.cs",
+      "path": "src/core/Storage/StateStore.cs",
       "sha256": "9a7086c2a11086bccdfa480e7c7b2d12cba132e356844930cce340619d4ccf71"
     },
     {
-      "path": "src/tools/engine/MoorkszVisoryMediaDownloader.Core.csproj",
-      "sha256": "0d7cb4e0708847cd3aa3d048fcb158c6b9c09c4bd20e3aa3188fb2c2142b9c00"
+      "path": "src/core/MoorkszVisoryMediaDownloader.Core.csproj",
+      "sha256": "087ab403d23818ead7e326129799983e647181b255cf9d18748bb8e00c557382"
     },
     {
       "path": "src/tests/MoorkszVisoryMediaDownloader.Tests/Harness.cs",
-      "sha256": "2e9f555f3e927373694b9cdc286f41deb74341aef51b70b4319c9fa93444ed09"
+      "sha256": "381d464395ad1e10270909a65dc1c286e5ac26c871c0e40b7f0df8b0786bd45d"
     },
     {
       "path": "src/tests/MoorkszVisoryMediaDownloader.Tests/Scenarios.cs",
-      "sha256": "da3677309433a5db8b51d928c8c0e1a28d7eb3e83d7c33c6c084a8ef0a40ab31"
+      "sha256": "90fd2fa215569abffcf3812c5ca04bff2b97e33dc8511aaf03ef8d7e0439169c"
     },
     {
       "path": "src/tests/MoorkszVisoryMediaDownloader.Tests/DiagnosticsScenarios.cs",
-      "sha256": "b6d585af896125e9b1d9898727597fd02f8b64d7cee11893291c14566198579d"
+      "sha256": "562c7e1a5146f793fc828726ccf2c52b355ffc15c44adc645bddff9a4698cc41"
     },
     {
       "path": "src/tests/MoorkszVisoryMediaDownloader.Tests/TestServer.cs",
@@ -307,35 +307,51 @@
     },
     {
       "path": "src/tests/MoorkszVisoryMediaDownloader.Tests/MoorkszVisoryMediaDownloader.Tests.csproj",
-      "sha256": "e322ca06da9940bea624750dec2aae26ebe650d418571eea9fd60743c4bc9b4c"
+      "sha256": "9f7875cfcf734eb71a5a29b52a958dfb2617790d042d9ceb143308bb4d40f4ec"
     },
     {
-      "path": "third-party/wpf-10.0.11-NOTICES.txt",
+      "path": "src/third-party/wpf-10.0.11-NOTICES.txt",
       "sha256": "d9d14b48bbeaf60d2b528d8c086af1baaab70f2ebbaaf1ccb11c1c16a08bdaeb"
     },
     {
-      "path": "portal.json",
-      "sha256": "edb65dd2ef05917e3fe98ba922ec9644787ca1d577a5207872b263d4e753b9bd"
+      "path": "Data/Portal/portal.json",
+      "sha256": "227d9172a92551a443152156225677bec6192db36b45ae1680a443c7240ad251"
     },
     {
-      "path": "source-files.json",
-      "sha256": "03f639f7459366731acee2c4ccf630beea5f6707d75f45069f21c2da6029567b"
+      "path": "Data/Source/source-files.json",
+      "sha256": "3ceb3f668c06c047e11f6cdad33295b4e7141bf72b65201a901888840d08c307"
     },
     {
       "path": "src/utils/diagnostics/DailyReport.cs",
-      "sha256": "03c5d45421fd9e679d93476a151b6fce707bd3ea65e226fd76272fcb92b23d7d"
+      "sha256": "2fc308ec3eed79f9a3cfc215ce113da868bebdde4ebd94e46dc4e90e1c1eef2f"
     },
     {
       "path": "src/utils/documents/DocumentHtml.cs",
-      "sha256": "5541dee2d8ebfff2d095aa42ae316ca1ebfe2391453c7c7c5da7a0b231c35e65"
+      "sha256": "211f8e61ff7a07548172cf85657b372cba9a837ed914ec05651e2f8b23abd356"
     },
     {
       "path": "src/utils/documents/document.css",
-      "sha256": "4da3e22b836bc25a1038b240b0060556e5d859472d0c29448fec68cb050cc8fd"
+      "sha256": "581c6ba84b171945991d890e72fcd1fc373d1ce9b2741beea6b244bba2449045"
     },
     {
       "path": "src/scripts/development/readme.mjs",
-      "sha256": "69c5cf00030e1a73181bbde481535bc8a03b2a16bd9b9ce547f9484cbb16db61"
+      "sha256": "835b8ca510854b87c78a7dc141babc7d09d775a838a87771a8a9a4ec3175ced2"
+    },
+    {
+      "path": "src/utils/documents/report.mjs",
+      "sha256": "683a9b6640f1f3e3af50369c35d16b41620e9c0b74a2059eeabfc4dd0d40731a"
+    },
+    {
+      "path": "src/utils/documents/fonts/DMMono-Regular.ttf.b64",
+      "sha256": "73fc27b779d9870f60071eb91c671ab08e560fcd4f8c34516aba2142e5eba252"
+    },
+    {
+      "path": "src/utils/documents/fonts/DMMono-OFL.txt",
+      "sha256": "228be05ec8631191c95d714258c850c78d48ca8c5b0c02848f7c011f6fa7a5a0"
+    },
+    {
+      "path": "src/tests/MoorkszVisoryMediaDownloader.Tests/ReportBrowserFixture.cs",
+      "sha256": "322d6d7e1b0af973ddd63b0936c9eba9446d5af0f575d1c4ec479679a0973b47"
     }
   ],
   "note": "Canonical UTF-8 source maintained in tools/visory-media-downloader in this repository, not a release. After local edits, refresh this manifest using node scripts/sync-visory-source.mjs."

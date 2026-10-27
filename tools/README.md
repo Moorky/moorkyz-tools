@@ -17,7 +17,9 @@ tools/
 ## Register a dragged-in project
 
 Add `portal.json` inside the project. Existing projects provide complete examples,
-including [Visory](visory-media-downloader/portal.json).
+including [Visory](visory-media-downloader/Data/Portal/portal.json).
+To keep user-facing metadata separate, `Data/Portal/portal.json` is also
+supported. Use one location only; duplicate root/Data manifests fail explicitly.
 
 ```json
 {
@@ -49,11 +51,21 @@ sort by folder name. Editorial `usefulness` is an integer 1-10, not a benchmark.
 For the current catalog supply the 50-100-word `catalogDescription` and score;
 the indexer also accepts older metadata retained in Git history.
 
-For `"source": {}`, add `source-files.json`:
+For `"source": {}`, add `source-files.json` at the project root or
+`Data/Source/source-files.json`:
 
 ```json
 ["README.md", "src/main.mjs", "portal.json", "source-files.json"]
 ```
+
+For the capitalized `Data` layout, use the actual paths in the allowlist:
+
+```json
+["README.md", "src/main.mjs", "Data/Portal/portal.json", "Data/Source/source-files.json"]
+```
+
+Entries always resolve from the project root, not the allowlist's directory.
+Use only one source manifest; root and `Data/Source` duplicates are rejected.
 
 Every entry is an exact relative path to UTF-8 text; no globs, binaries, media,
 secrets, runtime state, caches, dependencies, Git internals or linked paths.
@@ -76,7 +88,7 @@ needed. `pnpm tools:index:check` verifies the generated index without changing i
 Additions/removals take effect on the next index/build; restart an already running
 server. This is not a filesystem watcher.
 
-Plain dragged-in folders without `portal.json` are reported as **not indexed**.
+Plain dragged-in folders without either supported `portal.json` are reported as **not indexed**.
 Their README can be used to prepare honest metadata, but arbitrary code is never
 run to guess descriptions, install dependencies or enable services. Existing
 Media Recover/Visory SHA-256 provenance must still be explicitly refreshed after

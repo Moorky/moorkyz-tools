@@ -1,5 +1,14 @@
 # Third-party components
 
+## Documentation font
+
+DM Mono Regular is reused from this repository's existing local font asset.
+Copyright 2020 The DM Mono Project Authors. Licensed under the SIL Open Font
+License 1.1; the complete notice is in
+[DMMono-OFL.txt](../utils/documents/fonts/DMMono-OFL.txt).
+The text-encoded font is embedded into generated local HTML; no hosted font
+service is contacted. Markdown viewers can substitute their own fonts.
+
 ## Source dependencies
 
 - **Microsoft.Web.WebView2 1.0.4314.35** (NuGet, Microsoft). The only package
@@ -13,9 +22,9 @@ The test project uses no test framework package.
 
 The self-contained single-file EXE redistributes the Microsoft .NET 10 runtime and the
 Windows Desktop (WPF, Windows Forms) runtime 10.0.11 under their upstream MIT licenses
-and third-party notices. `scripts\publish.ps1` copies the restored runtime-pack license
+and third-party notices. `src\scripts\development\publish.ps1` copies the restored runtime-pack license
 and notice files. The WindowsDesktop 10.0.11 runtime pack omits its notices file, so the
-verbatim upstream WPF v10.0.11 notice is kept in `third-party\wpf-10.0.11-NOTICES.txt`
+verbatim upstream WPF v10.0.11 notice is kept in `src\third-party\wpf-10.0.11-NOTICES.txt`
 (source: https://raw.githubusercontent.com/dotnet/wpf/v10.0.11/THIRD-PARTY-NOTICES.TXT).
 The script fails instead of producing a package with missing notices.
 

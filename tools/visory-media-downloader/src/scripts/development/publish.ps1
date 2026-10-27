@@ -1,4 +1,4 @@
-param([string]$OutputRoot = 'artifacts\release')
+param([string]$OutputRoot = 'src\artifacts\release')
 # Reproducible portable release: one self-contained single-file EXE plus notices and documentation.
 # Development-time tooling only; the published EXE does not need PowerShell.
 $ErrorActionPreference = 'Stop'
@@ -21,6 +21,7 @@ New-Item -ItemType Directory -Path $docs, $notices | Out-Null
 Copy-Item .\README.md, .\README.html, .\src\docs\ARCHITECTURE.md, .\src\docs\VISORY_INTEGRATION.md, .\src\docs\TEST_REPORT.md, .\src\docs\RELEASE_NOTES.md -Destination $docs
 Copy-Item .\LICENSE (Join-Path $notices 'MoorkszVisoryMediaDownloader-LICENSE.txt')
 Copy-Item .\src\docs\THIRD-PARTY-NOTICES.md $notices
+Copy-Item .\src\utils\documents\fonts\DMMono-OFL.txt $notices
 
 $nuget = if ($env:NUGET_PACKAGES) { $env:NUGET_PACKAGES } else { Join-Path $env:USERPROFILE '.nuget\packages' }
 $webview = Join-Path $nuget 'microsoft.web.webview2\1.0.4314.35'
@@ -32,7 +33,7 @@ $required = @(
     @{ Source = "$netcore\LICENSE.TXT"; Name = 'dotnet-runtime-LICENSE.txt' },
     @{ Source = "$netcore\THIRD-PARTY-NOTICES.TXT"; Name = 'dotnet-runtime-THIRD-PARTY-NOTICES.txt' },
     @{ Source = "$desktop\LICENSE"; Name = 'dotnet-windowsdesktop-LICENSE.txt' },
-    @{ Source = '.\third-party\wpf-10.0.11-NOTICES.txt'; Name = 'dotnet-wpf-THIRD-PARTY-NOTICES.txt' }
+    @{ Source = '.\src\third-party\wpf-10.0.11-NOTICES.txt'; Name = 'dotnet-wpf-THIRD-PARTY-NOTICES.txt' }
 )
 foreach ($item in $required) {
     if (-not (Test-Path $item.Source)) { throw "Required license/notice missing: $($item.Source)" }

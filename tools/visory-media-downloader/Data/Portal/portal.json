@@ -80,8 +80,8 @@
       },
       {
         "title": "Start with terminal diagnostics",
-        "text": "No public executable release exists yet. From tools/visory-media-downloader, CMD.cmd begins logging before prerequisites, incremental build and app launch. Requires the .NET 10 SDK. Use CMD.cmd -CheckOnly for checks without launching the app; missing native prerequisites are reported, not installed. The generated local report.html groups daily results and links to exact Markdown log lines.",
-        "command": ".\\CMD.cmd"
+        "text": "No public executable release exists yet. From tools/visory-media-downloader, RUN.cmd begins logging before prerequisites, incremental build and app launch. Requires the .NET 10 SDK. Use RUN.cmd -CheckOnly for checks without launching the app; missing native prerequisites are reported, not installed. The generated local report.html groups daily results and links to exact Markdown log lines.",
+        "command": ".\\RUN.cmd"
       },
       {
         "title": "Try demo mode first",
@@ -98,7 +98,7 @@
     ],
     "downloadNotice": "Not yet released. There is no public EXE, installer or signed build. Downloads in the Tool section are text source, not an executable release; a local build is not a published release. Nothing is installed, launched or connected by opening this page.",
     "source": {
-      "notice": "Canonical source maintained in tools/visory-media-downloader in Moorky/moorkyz-tools. Edit it in this repository, then refresh SOURCE-PROVENANCE.json to record the allowlisted files' SHA-256 and source tree hash. The ZIP contains buildable source, not a public executable release."
+      "notice": "Canonical source maintained in tools/visory-media-downloader in Moorky/moorkyz-tools. Edit it in this repository, then refresh Data/Source/SOURCE-PROVENANCE.json to record the allowlisted files' SHA-256 and source tree hash. The ZIP contains buildable source, not a public executable release."
     }
   }
 }

@@ -1,3 +1,10 @@
+@font-face {
+  font-family: "DM Mono";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("data:font/ttf;base64,__DM_MONO__") format("truetype");
+}
 :root {
   color-scheme: light dark;
   --paper: #fafbf7;
@@ -7,6 +14,9 @@
   --line: #d5ded2;
   --accent: #245d35;
   --code: #eef1e8;
+  --success: #216234;
+  --fail: #b42323;
+  --error: #711b24;
 }
 * {
   box-sizing: border-box;
@@ -48,6 +58,9 @@ a {
   text-underline-offset: 0.2em;
 }
 a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+button:focus-visible,
 summary:focus-visible,
 [tabindex]:focus-visible {
   outline: 3px solid var(--accent);
@@ -61,8 +74,13 @@ nav {
   border-bottom: 1px solid var(--line);
 }
 pre,
+code,
+.mono {
+  font-family: "DM Mono", Consolas, monospace;
+  font-variant-numeric: tabular-nums;
+}
+pre,
 code {
-  font-family: Consolas, monospace;
   background: var(--code);
   border-radius: 0.3rem;
 }
@@ -139,12 +157,134 @@ td time {
   font-weight: 700;
   white-space: nowrap;
 }
-.success {
-  color: #216234;
+.success,
+.status-success,
+.metric-better {
+  color: var(--success);
 }
 .fail,
-.error {
-  color: #a12727;
+.status-fail,
+.error-message,
+.metric-worse {
+  color: var(--fail);
+}
+.error,
+.status-error {
+  color: var(--error);
+  background: #f9e9eb;
+  border-radius: 0.2rem;
+}
+.report-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 1rem;
+}
+.report-toolbar label,
+.report-field {
+  display: grid;
+  gap: 0.35rem;
+  font-weight: 600;
+}
+.report-search {
+  flex: 1 1 19rem;
+}
+.report-view {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin: 0;
+}
+.report-view label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.report-view input {
+  min-height: auto;
+  accent-color: var(--accent);
+}
+dialog {
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 0.6rem;
+  width: min(32rem, calc(100vw - 2rem));
+  max-height: 90vh;
+  overflow: auto;
+}
+dialog::backdrop {
+  background: #0008;
+}
+dialog h2 {
+  margin-top: 0;
+  border-top: 0;
+}
+.calendar-days {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 0.2rem;
+  margin-top: 0.75rem;
+  text-align: center;
+}
+.calendar-days button {
+  padding: 0.35rem;
+  min-width: 0;
+  font-family: "DM Mono", monospace;
+}
+.calendar-days button:disabled {
+  background: var(--code);
+  color: var(--muted);
+  opacity: 0.4;
+}
+.calendar-days .outside-month {
+  color: var(--muted);
+}
+input,
+select,
+button {
+  font: inherit;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 0.4rem;
+  padding: 0.6rem 0.8rem;
+  min-height: 2.75rem;
+  max-width: 100%;
+}
+button {
+  cursor: pointer;
+}
+button[aria-pressed="true"] {
+  border-color: var(--accent);
+  background: var(--code);
+}
+button:disabled,
+input:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+fieldset {
+  margin: 1rem 0;
+  border: 1px solid var(--line);
+  border-radius: 0.4rem;
+}
+.report-scroll {
+  max-height: 65vh;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+}
+.report-scroll th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+[hidden] {
+  display: none !important;
+}
+.metric-better,
+.metric-worse {
+  font-weight: 600;
 }
 .note {
   color: var(--muted);
@@ -174,13 +314,16 @@ footer {
     --line: #3d5140;
     --accent: #a9d8b1;
     --code: #243429;
+    --success: #a9d8b1;
+    --fail: #ffb4ae;
+    --error: #711b24;
   }
   .success {
     color: #a9d8b1;
   }
   .fail,
   .error {
-    color: #ffb4ae;
+    color: var(--fail);
   }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -201,6 +344,7 @@ footer {
   }
   .table-scroll {
     overflow: visible;
+    max-height: none;
   }
   table {
     font-size: 8pt;

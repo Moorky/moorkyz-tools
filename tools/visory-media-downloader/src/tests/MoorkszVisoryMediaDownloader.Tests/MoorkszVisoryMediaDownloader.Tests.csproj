@@ -4,6 +4,6 @@
     <RootNamespace>MoorkszVisoryMediaDownloader.Tests</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\tools\engine\MoorkszVisoryMediaDownloader.Core.csproj" />
+    <ProjectReference Include="..\..\core\MoorkszVisoryMediaDownloader.Core.csproj" />
   </ItemGroup>
 </Project>

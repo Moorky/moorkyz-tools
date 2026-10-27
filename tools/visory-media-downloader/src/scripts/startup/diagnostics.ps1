@@ -35,12 +35,28 @@ function Add-VisoryLine([string]$Path, [string]$Line) {
     finally { $stream.Dispose() }
 }
 
+function ConvertTo-VisoryLogLine([string]$Timestamp, [string]$Level, [string]$Text) {
+    $color = switch ($Level) { { $_ -in @('SUCCESS', 'SKIP') } { '#216234' } 'FAIL' { '#b42323' } { $_ -in @('ERROR', 'FATAL') } { '#711b24' } default { '#344054' } }
+    $messageColor = if ($Level -in @('ERROR', 'FATAL', 'FAIL')) { '#b42323' } else { 'inherit' }
+    $mono = "font-family:'DM Mono',Consolas,monospace"
+    $encoded = ConvertTo-VisoryMarkdown $Text
+    $messageStyle = if ($messageColor -eq 'inherit') { 'color:inherit' } else { 'color:' + $messageColor + ';background:#fafbf7' }
+    return '<code style="' + $mono + '">[' + (ConvertTo-VisoryMarkdown $Timestamp) + ']</code> <strong style="color:' + $color + ';background:#fafbf7">[' + $Level + ']</strong> <span style="' + $messageStyle + '">' + $encoded + '</span><br>'
+}
+
+function Get-VisoryDocumentStyle {
+    $docs = Join-Path $script:ProjectRoot 'src\utils\documents'
+    $css = [IO.File]::ReadAllText((Join-Path $docs 'document.css')).Replace("`r`n", "`n")
+    $font = [IO.File]::ReadAllText((Join-Path $docs 'fonts\DMMono-Regular.ttf.b64')).Trim()
+    return $css.Replace('__DM_MONO__', $font)
+}
+
 function Write-VisoryEvent([string]$Level, [string]$Message, [string]$Area = 'startup') {
     $clean = Protect-VisoryText $Message
     foreach ($part in ($clean -split '\r\n|\r|\n')) {
         $prefix = '[{0}] [{1}] ' -f [DateTimeOffset]::Now.ToString('yyyy-MM-dd HH:mm:ss.fff zzz'), $Level
         $text = '{0} | Run: {1} | Area: {2}' -f $part, $script:RunId, $Area
-        $line = $prefix + (ConvertTo-VisoryMarkdown $text)
+        $line = ConvertTo-VisoryLogLine ([DateTimeOffset]::Now.ToString('yyyy-MM-dd HH:mm:ss.fff zzz')) $Level $text
         Add-VisoryLine $script:LogPath $line
         if ($Level -in @('ERROR', 'FATAL', 'FAIL')) { Add-VisoryLine $script:ErrorPath $line }
         [Console]::WriteLine($prefix + $text)
@@ -59,18 +75,33 @@ function Write-VisoryReport {
     [void]$md.AppendLine('[CSV report](startup.csv)').AppendLine()
     [void]$md.AppendLine('| run_id | timestamp | area | action | status | elapsed_seconds | message |').AppendLine('| --- | --- | --- | --- | --- | --- | --- |')
     $html = [System.Text.StringBuilder]::new()
-    [void]$html.Append('<!doctype html><html lang="en"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src ''none''; base-uri ''none''; form-action ''none''"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Visory startup report</title></head><body><h1>Visory startup report</h1><p>')
+    $css = Get-VisoryDocumentStyle
+    $sha = [Security.Cryptography.SHA256]::Create()
+    try { $hash = [Convert]::ToBase64String($sha.ComputeHash([Text.Encoding]::UTF8.GetBytes($css))) } finally { $sha.Dispose() }
+    [void]$html.Append('<!doctype html><html lang="en"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src ''none''; font-src data:; style-src ''sha256-').Append($hash).Append('''; base-uri ''none''; form-action ''none''"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Visory startup report</title><style>').Append($css).Append('</style></head><body><main class="document"><h1>Visory startup report</h1><p>')
     [void]$html.Append([System.Net.WebUtility]::HtmlEncode($summary)).Append('</p><p><a href="startup.csv">CSV report</a></p><table><caption>CSV report contents</caption><thead><tr>')
     foreach ($column in $columns) { [void]$html.Append('<th scope="col">').Append($column).Append('</th>') }
     [void]$html.Append('</tr></thead><tbody>')
     foreach ($row in $rows) {
-        $cells = foreach ($column in $columns) { ConvertTo-VisoryMarkdown ([string]$row.$column) }
+        $cells = foreach ($column in $columns) {
+            $cell = (ConvertTo-VisoryMarkdown ([string]$row.$column)).Replace('|', '&#124;').Replace("`r", '').Replace("`n", '<br>')
+            if ($column -in @('timestamp','run_id')) { '<code style="font-family:''DM Mono'',Consolas,monospace">' + $cell + '</code>' }
+            elseif ($column -eq 'status') {
+                $color = if ($row.status -eq 'SUCCESS') { '#216234' } elseif ($row.status -eq 'FAIL') { '#b42323' } else { '#711b24' }
+                '<strong style="color:' + $color + ';background:#fafbf7">' + $cell + '</strong>'
+            }
+            elseif ($column -eq 'message' -and $row.status -in @('FAIL','ERROR')) { '<span style="color:#b42323;background:#fafbf7">' + $cell + '</span>' }
+            else { $cell }
+        }
         [void]$md.AppendLine('| ' + (($cells | ForEach-Object { $_.Replace('|', '&#124;').Replace("`r", '').Replace("`n", '<br>') }) -join ' | ') + ' |')
         [void]$html.Append('<tr>')
-        foreach ($column in $columns) { [void]$html.Append('<td>').Append([System.Net.WebUtility]::HtmlEncode([string]$row.$column)).Append('</td>') }
+        foreach ($column in $columns) {
+            $class = if ($column -in @('timestamp','run_id')) { 'mono' } elseif ($column -eq 'status') { 'status status-' + $row.status.ToLowerInvariant() } elseif ($column -eq 'message' -and $row.status -in @('FAIL','ERROR')) { 'error-message' } else { '' }
+            [void]$html.Append('<td class="').Append($class).Append('">').Append([System.Net.WebUtility]::HtmlEncode([string]$row.$column)).Append('</td>')
+        }
         [void]$html.Append('</tr>')
     }
-    [void]$html.Append('</tbody></table></body></html>')
+    [void]$html.Append('</tbody></table></main></body></html>')
     foreach ($item in @(@{ Path = $script:MarkdownPath; Text = $md.ToString() }, @{ Path = $script:HtmlPath; Text = $html.ToString() })) {
         $temp = $item.Path + '.tmp'
         try {
@@ -118,7 +149,7 @@ function Invoke-VisoryProcess([string]$File, [string[]]$Arguments, [string]$Area
                         $level = $Matches[1]
                         $clean = Protect-VisoryText $line
                         if ($clean -notmatch '^(\[[^\]]+\] \[[A-Z]+\] )(.*)$') { throw 'Malformed app diagnostic line.' }
-                        $markdown = $Matches[1] + (ConvertTo-VisoryMarkdown $Matches[2])
+                        $markdown = if ($clean -match '^\[([^\]]+)\] \[([A-Z]+)\] (.*)$') { ConvertTo-VisoryLogLine $Matches[1] $Matches[2] $Matches[3] } else { throw 'Malformed app diagnostic line.' }
                         Add-VisoryLine $script:LogPath $markdown
                         if ($level -in @('ERROR', 'FATAL', 'FAIL')) { Add-VisoryLine $script:ErrorPath $markdown }
                         [Console]::WriteLine($clean)

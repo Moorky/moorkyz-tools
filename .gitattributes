@@ -7,4 +7,4 @@ tools.moorkyz.com text eol=lf
 tools/mediarecover/** -text whitespace=trailing-space,space-before-tab,cr-at-eol
 tools/mediarecover/third-party/wpf-10.0.11-NOTICES.txt -whitespace
 tools/visory-media-downloader/** -text whitespace=trailing-space,space-before-tab,cr-at-eol
-tools/visory-media-downloader/third-party/wpf-10.0.11-NOTICES.txt -whitespace
+tools/visory-media-downloader/src/third-party/wpf-10.0.11-NOTICES.txt -whitespace

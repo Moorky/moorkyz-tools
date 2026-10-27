@@ -16,15 +16,24 @@ independently usable Windows desktop app, not a portal runtime. Root `AGENTS.md`
 - One final SUCCESS/FAIL per file per run. Keep the exact logging contract.
 - No new NuGet/native dependencies beyond Microsoft.Web.WebView2, no elevation, signing,
   publishing, scheduled-task creation in tests, or prerequisite installs without approval.
-- Tests use isolated synthetic fixtures under `.fixtures` and the loopback server only.
-- Start through `CMD.cmd` so terminal logging begins before checks/build/launch.
+- Tests use isolated synthetic fixtures under `src/.fixtures` and the loopback server only.
+- Start through `RUN.cmd` so terminal logging begins before checks/build/launch.
 - Commands: `src\scripts\development\build.ps1`, `src\scripts\development\test.ps1`,
   `src\tests\startup\test-startup.ps1`. Functional modules live in `src/tools`,
-  shared helpers in `src/utils`, automation in `src/scripts`.
+  the shared non-UI engine in `src/core`, helpers in `src/utils`, automation in `src/scripts`.
+  Implementation/generated directories stay under `src`, including third-party
+  notices, artifacts and startup runtime output. User-facing metadata folders
+  start capitalized: `Data/Portal/portal.json` and
+  `Data/Source/{source-files.json,SOURCE-PROVENANCE.json}`. Keep the launcher and
+  README/license files at the root; do not duplicate JSON manifests there.
   New logs/error logs are Markdown only; reports are CSV with HTML/Markdown views.
   The daily `reports/report.html` uses stable outcome IDs and exact Markdown line anchors.
+  Its local hash-authorized viewer batches 50 rows, searches the full snapshot,
+  offers task/statistics modes and bounded calendars, and compares measured
+  successes with an unfiltered weighted all-time baseline. Never fetch fonts or
+  report data from a server; DM Mono and its SIL-OFL notice stay bundled locally.
   Do not claim GUI, BITS hand-off or Visory account results that were not observed.
-- Keep this project's `source-files.json` allowlist complete and
+- Keep this project's `Data/Source/source-files.json` allowlist complete and
   text-only, then refresh provenance with `node scripts\sync-visory-source.mjs` from the
   repository root. Never include artifacts, bin/obj, `.fixtures`, state databases,
   sessions or recordings.

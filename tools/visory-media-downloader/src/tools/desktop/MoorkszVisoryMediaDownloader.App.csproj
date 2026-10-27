@@ -30,7 +30,7 @@
     <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.4314.35" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\engine\MoorkszVisoryMediaDownloader.Core.csproj" />
+    <ProjectReference Include="..\..\core\MoorkszVisoryMediaDownloader.Core.csproj" />
   </ItemGroup>
 
   <!-- The icon is kept as Base64 text so the source tree stays text-only; it is decoded deterministically before build. -->

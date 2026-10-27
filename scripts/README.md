@@ -17,6 +17,12 @@ command never imports or copies a separate project.
 `pnpm tools:index` discovers the self-contained project folders described in
 [tools/README.md](../tools/README.md). Portal dev/build run indexing before source
 packaging; `pnpm tools:index:check` and typecheck reject stale generated indexes.
+Manifest discovery supports root `portal.json` / `source-files.json` and the
+capitalized `Data/Portal/portal.json` / `Data/Source/source-files.json` layout.
+Duplicate locations and linked metadata ancestors fail explicitly. All source
+allowlist entries stay relative to the project root.
+After editing Visory, run `node scripts\sync-visory-source.mjs` to refresh
+`tools/visory-media-downloader/Data/Source/SOURCE-PROVENANCE.json`.
 No project commands, dependency installs, services or external connections run.
 Do not put application workspaces, downloaded sources or runtime data here.
 Reusable local lifecycle/storage and checkups live in

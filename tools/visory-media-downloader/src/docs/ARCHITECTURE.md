@@ -76,14 +76,15 @@ received; only a server digest (Firebase/GCS MD5) is checked against the origin.
 
 ## Reports (logging foundation, 2026-10-27)
 
-`CMD.cmd` delegates to `src/scripts/startup/run.ps1`. The terminal remains attached until
+`RUN.cmd` delegates to `src/scripts/startup/run.ps1`. The terminal remains attached until
 the app exits, including when its hub is hidden in the tray. Startup output is
 redacted before display and persisted line by line with an OS disk flush, before
 prerequisite checks, build or launch. Missing native prerequisites fail explicitly;
 no SDK or WebView2 installation is attempted.
 
 The existing App/Core assembly split is retained to avoid changing runtime boundaries.
-`src/tools/desktop` is the WPF app; `src/tools/engine` owns discovery, downloads,
+`src/tools/desktop` is the standalone WPF app; `src/core` is its shared non-UI
+application engine and owns discovery, downloads,
 archives, coordination, scheduling and SQLite state. Shared diagnostics/document
 rendering and platform helpers are in `src/utils`, configuration in `src/config`
 and translations in `src/localization`. These remain one application, not a new
@@ -91,6 +92,16 @@ SDK or separately hosted services. Namespaces are retained for source compatibil
 `src/scripts/startup` contains bootstrap orchestration; `src/scripts/development`
 contains build/test/publish/icon/README development automation. Tests belong under
 `src/tests`, not in runtime modules.
+Implementation and generated directories live under `src`, including redistribution notices in
+`src/third-party`, generated releases in `src/artifacts`, bootstrap runs in
+`src/runtime/runs` and isolated test data in `src/.fixtures`. Previously generated
+root test outputs are retained in `src/artifacts/legacy-test-build` without
+overwriting current builds. User-selected backup folders and profile data locations
+are unchanged. User-facing metadata is the capitalized `Data` exception:
+`Data/Portal/portal.json`, `Data/Source/source-files.json` and
+`Data/Source/SOURCE-PROVENANCE.json`. Source allowlist paths remain relative to
+the project root; portal tooling also supports the existing root manifests of
+other tools and rejects duplicate root/Data manifests.
 
 New logs (including DEBUG) are Markdown only, with a separate Markdown error log
 for ERROR/FATAL/FAIL. Each physical line has a timestamp, severity, run and area.
@@ -115,6 +126,26 @@ file and physical line number and survive resume/appends. Plain-text browsers
 may open the file without scrolling; a rendered Markdown viewer honors anchors.
 Aggregate reports are snapshots regenerated at summary/disposal, not a background
 watcher. A hard exit can leave them stale; flushed run CSVs remain authoritative.
+
+The HTML viewer embeds local `src/utils/documents/report.mjs` as a CSP-hashed
+module, with JSON-escaped snapshot data. It creates table nodes with textContent
+and constrained local links, not HTML injection sinks. Only 50 task/day rows are
+rendered per batch; scroll and a keyboard button append batches. Search covers
+the whole snapshot. Full Statistics aggregates inclusive recorded-date spans.
+An accessible local calendar disables out-of-snapshot days (including month
+navigation), with explicit typed-range validation instead of silent clamping.
+Two native radio options avoid WebKit's CSP-incompatible native select styling.
+
+Compare performance uses successful, known-time/positive-size rows only:
+all-time seconds per MiB = total qualifying seconds / total qualifying MiB.
+The speed is the reciprocal when measured seconds are positive; unknown or
+zero denominators stay neutral/empty. Daily and task colors compare with this
+constant all-time weighted baseline, unaffected by search/date selection.
+The initial HTML has a complete-data CSV/Markdown fallback and a 50-row preview.
+DM Mono is embedded from the repository's existing SIL-OFL font, not fetched.
+Markdown keeps physical line anchors on the same styled log line, and the app
+strips generated markup before parsing old/new lines. HTML-sanitizing Markdown
+viewers may retain text but ignore the requested colors/font.
 
 The existing SUCCESS/FAIL fields are retained with precise timestamps and run/area context:
 

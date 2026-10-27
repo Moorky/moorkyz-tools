@@ -141,6 +141,92 @@ test("new tools are discovered without registry edits; removal retires old gener
   });
 });
 
+test("capitalized Data manifests discover and package root-relative source without executing it", async () => {
+  await fixture(async ({ options, add }) => {
+    const project = await add("fixture", { tool: { ...tool(), source: {} } });
+    await mkdir(path.join(project, "Data", "Portal"), { recursive: true });
+    await mkdir(path.join(project, "Data", "Source"), { recursive: true });
+    await rename(
+      path.join(project, "portal.json"),
+      path.join(project, "Data", "Portal", "portal.json"),
+    );
+    const source = 'throw new Error("Project code must never execute");\r\n';
+    await writeFile(path.join(project, "entry.mjs"), source);
+    const names = [
+      "entry.mjs",
+      "Data/Portal/portal.json",
+      "Data/Source/source-files.json",
+    ];
+    await writeFile(
+      path.join(project, "Data", "Source", "source-files.json"),
+      JSON.stringify(names),
+    );
+    await prepareToolSources(options);
+    const downloads = JSON.parse(
+      await readFile(path.join(options.output, "fixture.json"), "utf8"),
+    );
+    assert.deepEqual(Object.keys(downloads), names);
+    assert.equal(downloads["entry.mjs"], source);
+    await indexTools({
+      toolsRoot: options.toolsRoot,
+      output: options.indexOutput,
+      check: true,
+    });
+  });
+});
+
+test("duplicate root/Data manifests and missing source manifests fail explicitly", async () => {
+  await fixture(async ({ toolsRoot, add }) => {
+    const metadata = { tool: { ...tool(), source: {} } };
+    const project = await add("fixture", metadata);
+    await assert.rejects(discoverTools(toolsRoot), /Missing source-files.json/);
+    await mkdir(path.join(project, "Data", "Portal"), { recursive: true });
+    await mkdir(path.join(project, "Data", "Source"), { recursive: true });
+    const portal = path.join(project, "Data", "Portal", "portal.json");
+    await writeFile(portal, JSON.stringify(metadata));
+    await assert.rejects(discoverTools(toolsRoot), /Ambiguous portal.json/);
+    await rm(path.join(project, "portal.json"));
+    await writeFile(path.join(project, "README.md"), "# Fixture");
+    const sourceManifest = path.join(
+      project,
+      "Data",
+      "Source",
+      "source-files.json",
+    );
+    await writeFile(sourceManifest, '["README.md"]');
+    await writeFile(path.join(project, "source-files.json"), '["README.md"]');
+    await assert.rejects(
+      discoverTools(toolsRoot),
+      /Ambiguous source-files.json/,
+    );
+    await rm(path.join(project, "source-files.json"));
+    await writeFile(sourceManifest, "{");
+    await assert.rejects(readSourceFiles(project), SyntaxError);
+    await writeFile(portal, "{");
+    await assert.rejects(discoverTools(toolsRoot), SyntaxError);
+  });
+});
+
+test("Data manifest ancestor junctions are rejected before metadata is read", async () => {
+  for (const relative of ["Data", "Data/Portal", "Data/Source"]) {
+    await fixture(async ({ root, toolsRoot, add }) => {
+      const project = await add("fixture");
+      const outside = path.join(root, "outside");
+      await mkdir(outside);
+      const linked = path.join(project, ...relative.split("/"));
+      await mkdir(path.dirname(linked), { recursive: true });
+      await symlink(outside, linked, "junction");
+      if (relative === "Data/Source")
+        await assert.rejects(readSourceFiles(project), /Linked/);
+      else await assert.rejects(discoverTools(toolsRoot), /Linked/);
+      assert.deepEqual(
+        await readFile(path.join(project, "portal.json"), "utf8"),
+        JSON.stringify({ tool: tool("fixture") }),
+      );
+    });
+  }
+});
+
 test("folders without metadata are explicitly reported, not guessed or published", async () => {
   await fixture(async ({ toolsRoot }) => {
     await mkdir(path.join(toolsRoot, "draft"));

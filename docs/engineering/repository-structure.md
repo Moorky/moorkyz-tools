@@ -31,6 +31,9 @@ moorkyz-tools/
   Each drop-in project keeps its `portal.json` metadata and `source-files.json`
   allowlist inside its own folder. `pnpm tools:index` and portal dev/build discover
   them automatically; see the [project contract](../../tools/README.md).
+  Metadata can stay at the project root or use capitalized user-facing folders:
+  `Data/Portal/portal.json` and `Data/Source/source-files.json`. Never duplicate
+  either manifest in both locations; allowlist paths stay project-root-relative.
   Independent use does not imply separate Git ownership. Split a repository only
   for a concrete, explicitly approved need; do not add nested Git roots, submodules
   or sibling-source sync requirements. Media Recover is edited in

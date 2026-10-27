@@ -1,10 +1,11 @@
 import { createHash } from "node:crypto";
-import { lstat, readFile, realpath, writeFile } from "node:fs/promises";
+import { lstat, mkdir, readFile, realpath, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { findToolManifest } from "./index-tools.mjs";
 
 const root = fileURLToPath(new URL("..", import.meta.url));
-export const provenanceName = "SOURCE-PROVENANCE.json";
+export const provenanceName = "Data/Source/SOURCE-PROVENANCE.json";
 const repository = "Moorky/moorkyz-tools";
 const sourceDirectory = "tools/visory-media-downloader";
 const digest = (bytes) => createHash("sha256").update(bytes).digest("hex");
@@ -99,7 +100,7 @@ export async function createVisorySnapshot(sourceRoot, names) {
 export async function verifyVisorySnapshot(sourceRoot, names) {
   const { provenance } = await createVisorySnapshot(sourceRoot, names);
   const recorded = JSON.parse(
-    await readFile(path.join(sourceRoot, provenanceName), "utf8"),
+    (await readSource(sourceRoot, provenanceName)).toString("utf8"),
   );
   if (JSON.stringify(recorded) !== JSON.stringify(provenance))
     throw new Error(
@@ -112,6 +113,7 @@ export async function updateVisoryProvenance(sourceRoot, names) {
   const target = path.join(sourceRoot, provenanceName);
   await checkOutput(target);
   const { provenance } = await createVisorySnapshot(sourceRoot, names);
+  await mkdir(path.dirname(target), { recursive: true });
   await writeFile(target, `${JSON.stringify(provenance, null, 2)}\n`);
   return provenance;
 }
@@ -121,16 +123,14 @@ async function sync() {
     throw new Error(
       "Arguments are not supported. Edit tools\\visory-media-downloader in this repository, then run node scripts\\sync-visory-source.mjs.",
     );
-  const names = JSON.parse(
-    await readFile(
-      path.join(root, "tools", "visory-media-downloader", "source-files.json"),
-      "utf8",
-    ),
-  );
-  const provenance = await updateVisoryProvenance(
-    path.join(root, "tools", "visory-media-downloader"),
-    names,
-  );
+  const sourceRoot = path.join(root, "tools", "visory-media-downloader");
+  const manifest = await findToolManifest(sourceRoot, "source-files.json");
+  if (!manifest)
+    throw new Error(
+      "Missing Moorksz Visory Media Downloader source-files.json.",
+    );
+  const names = JSON.parse(await readFile(manifest, "utf8"));
+  const provenance = await updateVisoryProvenance(sourceRoot, names);
   console.log(
     `Updated ${repository} ${sourceDirectory}: ${provenance.files.length} local text files, tree SHA-256 ${provenance.treeSha256}. No release or remote operation performed.`,
   );

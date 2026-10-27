@@ -1,7 +1,7 @@
 $ErrorActionPreference = 'Stop'
 $project = Split-Path (Split-Path (Split-Path $PSScriptRoot -Parent) -Parent) -Parent
 $startup = Join-Path $project 'src\scripts\startup'
-$fixture = Join-Path $project ('.fixtures\startup-' + [Guid]::NewGuid().ToString('N'))
+$fixture = Join-Path $project ('src\.fixtures\startup-' + [Guid]::NewGuid().ToString('N'))
 $originalPath = $env:PATH
 $originalNoninteractive = $env:VISORY_NONINTERACTIVE
 function Assert-Startup([bool]$Condition, [string]$Message) {
@@ -10,15 +10,20 @@ function Assert-Startup([bool]$Condition, [string]$Message) {
 try {
     $scripts = Join-Path $fixture 'src\scripts\startup'
     [void][IO.Directory]::CreateDirectory($scripts)
-    Copy-Item (Join-Path $project 'CMD.cmd') $fixture
+    Copy-Item (Join-Path $project 'RUN.cmd') $fixture
     Copy-Item (Join-Path $startup 'run.ps1'), (Join-Path $startup 'diagnostics.ps1') $scripts
+    $documents = Join-Path $fixture 'src\utils\documents'
+    [void][IO.Directory]::CreateDirectory((Join-Path $documents 'fonts'))
+    Copy-Item (Join-Path $project 'src\utils\documents\document.css') $documents
+    Copy-Item (Join-Path $project 'src\utils\documents\fonts\DMMono-Regular.ttf.b64') (Join-Path $documents 'fonts')
     $env:VISORY_NONINTERACTIVE = '1'
-    $run = Join-Path $fixture 'CMD.cmd'
+    $run = Join-Path $fixture 'RUN.cmd'
     Push-Location $env:TEMP
     try { $output = & $run -CheckOnly; $code = $LASTEXITCODE }
     finally { Pop-Location }
     Assert-Startup ($code -eq 0) 'RUN works from a different working directory.'
-    $runs = Join-Path $fixture 'runtime\runs'
+    $runs = Join-Path $fixture 'src\runtime\runs'
+    Assert-Startup (@(Get-ChildItem -LiteralPath $fixture -Directory | Where-Object Name -ne 'src').Count -eq 0) 'startup creates directories only under src.'
     $first = @(Get-ChildItem -LiteralPath $runs -Directory)[0].FullName
     $log = Get-Content -LiteralPath (Join-Path $first 'logs\startup.md')
     Assert-Startup ($log[0] -match 'RUN started') 'logging starts before SDK checks.'
@@ -29,6 +34,7 @@ try {
         $text = [IO.File]::ReadAllText((Join-Path $first "reports\startup.$extension"))
         Assert-Startup ($text -match 'Windows x64 and .NET 10 SDK available.') "$extension includes CSV row contents."
     }
+    Assert-Startup ([IO.File]::ReadAllText((Join-Path $first 'reports\startup.html')) -match 'DM Mono' ) 'startup report shares offline monospace typography.'
     & $run -CheckOnly | Out-Null
     Assert-Startup ($LASTEXITCODE -eq 0 -and @(Get-ChildItem -LiteralPath $runs -Directory).Count -eq 2) 'repeat starts do not overwrite earlier runs.'
     $env:PATH = "$env:SystemRoot\System32;$env:SystemRoot"

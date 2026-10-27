@@ -149,8 +149,8 @@ internal sealed class Fixture : IAsyncDisposable
         return await coordinator.RunBackupAsync(new BackupRequest { CreateArchive = archive }, null, cancellationToken);
     }
 
-    public string LogText(RunSummary summary) => File.ReadAllText(summary.LogPath!);
-    public string DebugText(RunSummary summary) => File.ReadAllText(summary.DebugLogPath!);
+    public string LogText(RunSummary summary) => Core.Reporting.DiagnosticLog.PlainText(File.ReadAllText(summary.LogPath!));
+    public string DebugText(RunSummary summary) => Core.Reporting.DiagnosticLog.PlainText(File.ReadAllText(summary.DebugLogPath!));
 
     public async ValueTask DisposeAsync()
     {
@@ -182,6 +182,8 @@ internal static partial class Program
 
     private static async Task<int> Main(string[] args)
     {
+        if (args is ["--report-browser-fixture", var reportFolder]) return ReportBrowserFixture(reportFolder);
+        if (args is ["--report-browser-fixture", var emptyFolder, "--empty"]) return ReportBrowserFixture(emptyFolder, empty: true);
         if (args is ["--diagnostic-child", var folder])
         {
             var log = new Core.Reporting.DiagnosticLog(Path.Combine(folder, "log.md"), Path.Combine(folder, "errors.md"), "abrupt-test");
@@ -192,7 +194,7 @@ internal static partial class Program
             Environment.Exit(37);
         }
         var repo = FindRepoRoot();
-        FixtureRoot = Path.Combine(repo ?? Path.GetTempPath(), ".fixtures");
+        FixtureRoot = Path.Combine(repo is null ? Path.GetTempPath() : Path.Combine(repo, "src"), ".fixtures");
         Directory.CreateDirectory(FixtureRoot);
         var filter = args.FirstOrDefault(a => !a.StartsWith("--", StringComparison.Ordinal));
         var tests = AllTests().Where(t => filter is null || filter.Split(',').Any(value => t.Name.Contains(value, StringComparison.OrdinalIgnoreCase))).ToList();

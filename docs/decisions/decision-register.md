@@ -203,6 +203,31 @@ SUCCESS divided by SUCCESS + FAIL + ERROR. SKIP and run summaries remain in
 detailed run data but do not inflate outcome counts. Log/error output stays
 Markdown only, with same-line anchors and explicit physical line numbers.
 
+## 2026-10-27: interactive Visory reports and command-name clarification
+
+The owner explicitly clarified the launcher name as **RUN.cmd**, superseding
+the earlier CMD.cmd interpretation. The shared non-UI application engine is
+`src/core`; the independently launched desktop tool stays in `src/tools/desktop`.
+Parallel same-tool work places user-facing portal/source metadata under
+`Data/Portal` and `Data/Source`, while implementation and generated directories
+stay beneath `src`. Existing tools with root manifests remain supported.
+
+The report remains a self-contained, locally generated file, not a hosted
+website. Single Tasks provides search across the entire snapshot and incremental
+50-row scroll batches with a keyboard alternative. Full Statistics aggregates
+selected outcomes/days and allows inclusive From/To calendar selection only
+between the first and last recorded dates; unavailable days are visibly disabled.
+Invalid typed spans are reported rather than silently changed.
+
+A separate Compare performance toggle swaps derived columns into the table.
+Successful outcomes with known nonnegative time and positive size are compared
+against all-time weighted seconds per MiB and MiB per second; filters never alter
+the baseline. Faster is green, slower red; unknown/equal values remain neutral.
+SUCCESS is green, FAIL red, ERROR dark red and error messages red. DM Mono is
+bundled from the existing repository font for IDs/timestamps; its SIL-OFL notice
+is retained. Markdown viewers may override inline colors/fonts, with severity
+labels and text preserved. No new hosted fonts, network traffic or dependencies.
+
 ## Change authority
 
 Reversible implementation details/tests/docs can proceed autonomously. New

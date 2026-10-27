@@ -75,7 +75,7 @@ export async function prepareToolSources({
   });
   for (const folder of unregistered)
     console.warn(
-      `Not indexed: tools/${folder}. Add portal.json to register it.`,
+      `Not indexed: tools/${folder}. Add portal.json at the project root or Data/Portal/portal.json to register it.`,
     );
   await assertNoLinks(output);
   await mkdir(output, { recursive: true });

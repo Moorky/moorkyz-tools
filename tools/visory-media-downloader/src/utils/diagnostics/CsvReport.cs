@@ -23,12 +23,29 @@ public static class CsvReport
         {
             var row = rows[index].Select(Redactor.Clean).ToList();
             if (row.Count != rows[0].Count) throw new InvalidDataException($"Malformed report row {index + 1}.");
-            md.Append("| ").AppendJoin(" | ", row.Select(cell => DiagnosticLog.MarkdownText(cell)
-                .Replace("|", "&#124;", StringComparison.Ordinal).Replace("\r", "", StringComparison.Ordinal).Replace("\n", "<br>", StringComparison.Ordinal))).AppendLine(" |");
+            md.Append("| ").AppendJoin(" | ", row.Select((cell, column) =>
+            {
+                var text = DiagnosticLog.MarkdownText(cell).Replace("|", "&#124;", StringComparison.Ordinal)
+                    .Replace("\r", "", StringComparison.Ordinal).Replace("\n", "<br>", StringComparison.Ordinal);
+                if (index == 0) return text;
+                var name = rows[0][column];
+                var status = rows[0].IndexOf("status") is var statusColumn && statusColumn >= 0 ? row[statusColumn] : "";
+                if (name is "timestamp" or "timestamp_offset" or "id" or "run_id" or "recording_id")
+                    return $"<code style=\"font-family:'DM Mono',Consolas,monospace\">{text}</code>";
+                if (name == "status" && status is "SUCCESS" or "FAIL" or "ERROR")
+                    return $"<strong style=\"color:{(status == "SUCCESS" ? "#216234" : status == "FAIL" ? "#b42323" : "#711b24")};background:#fafbf7\">{text}</strong>";
+                return name == "message" && status is "FAIL" or "ERROR" ? $"<span style=\"color:#b42323;background:#fafbf7\">{text}</span>" : text;
+            })).AppendLine(" |");
             if (index == 0) md.Append("| ").AppendJoin(" | ", row.Select(_ => "---")).AppendLine(" |");
             html.Append("<tr>");
-            foreach (var cell in row)
-                html.Append(index == 0 ? "<th scope=\"col\">" : "<td>").Append(WebUtility.HtmlEncode(cell)).Append(index == 0 ? "</th>" : "</td>");
+            for (var column = 0; column < row.Count; column++)
+            {
+                var name = rows[0][column];
+                var status = rows[0].IndexOf("status") is var statusColumn && statusColumn >= 0 ? row[statusColumn] : "";
+                var css = name is "id" or "run_id" or "recording_id" or "timestamp" or "timestamp_offset" ? "mono" :
+                    name == "status" ? "status status-" + status.ToLowerInvariant() : name == "message" && status is "ERROR" or "FAIL" ? "error-message" : "";
+                html.Append(index == 0 ? "<th scope=\"col\">" : $"<td class=\"{WebUtility.HtmlEncode(css)}\">").Append(WebUtility.HtmlEncode(row[column])).Append(index == 0 ? "</th>" : "</td>");
+            }
             html.Append("</tr>");
             if (index == 0) html.Append("</thead><tbody>");
         }

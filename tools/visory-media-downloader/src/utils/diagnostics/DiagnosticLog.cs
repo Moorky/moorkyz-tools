@@ -1,5 +1,6 @@
 using System.Net;
 using System.Text;
+using System.Text.RegularExpressions;
 using MoorkszVisoryMediaDownloader.Core.Infrastructure;
 
 namespace MoorkszVisoryMediaDownloader.Core.Reporting;
@@ -75,9 +76,10 @@ public sealed class DiagnosticLog : IDisposable
                 var text = $"{part} | Run: {RunId} | Area: {area}";
                 var prefix = $"[{Format.LogTime(now)}] [{level}] ";
                 var line = prefix + text;
-                log.WriteLine(prefix + MarkdownText(text) + $"<a id=\"L{log.LineCount + 1}\"></a>");
+                var markdown = MarkdownLine(Format.LogTime(now), level, text);
+                log.WriteLine(markdown + $"<a id=\"L{log.LineCount + 1}\"></a>");
                 if (level is "ERROR" or "FATAL" or "FAIL")
-                    errors.WriteLine(prefix + MarkdownText(text) + $"<a id=\"L{errors.LineCount + 1}\"></a>");
+                    errors.WriteLine(markdown + $"<a id=\"L{errors.LineCount + 1}\"></a>");
                 Console.WriteLine(line);
                 Entry?.Invoke(new LogEntry(now, level, text));
             }
@@ -88,6 +90,20 @@ public sealed class DiagnosticLog : IDisposable
     public static string MarkdownText(string value) => WebUtility.HtmlEncode(value)
         .Replace("[", "&#91;", StringComparison.Ordinal).Replace("]", "&#93;", StringComparison.Ordinal)
         .Replace("`", "&#96;", StringComparison.Ordinal);
+
+    public static string MarkdownLine(string timestamp, string level, string text)
+    {
+        var color = level switch { "SUCCESS" or "SKIP" => "#216234", "FAIL" => "#b42323", "ERROR" or "FATAL" => "#711b24", _ => "#344054" };
+        var messageColor = level is "FAIL" or "ERROR" or "FATAL" ? "#b42323" : "inherit";
+        const string mono = "font-family:'DM Mono',Consolas,monospace";
+        var encoded = MarkdownText(text);
+        encoded = Regex.Replace(encoded, @"(?<=Run: )[^|]+", match => $"<code style=\"{mono}\">{match.Value.TrimEnd()}</code> ");
+        return $"<code style=\"{mono}\">[{MarkdownText(timestamp)}]</code> " +
+            $"<strong style=\"color:{color};background:#fafbf7\">[{MarkdownText(level)}]</strong> " +
+            $"<span style=\"color:{messageColor}{(messageColor == "inherit" ? "" : ";background:#fafbf7")}\">{encoded}</span><br>";
+    }
+
+    public static string PlainText(string markdown) => WebUtility.HtmlDecode(Regex.Replace(markdown, "<[^>]*>", ""));
 
     public void Dispose()
     {

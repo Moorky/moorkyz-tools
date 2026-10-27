@@ -23,7 +23,24 @@ const css = (
     path.join(root, "src", "utils", "documents", "document.css"),
     "utf8",
   )
-).replace(/\r\n/g, "\n");
+)
+  .replace(/\r\n/g, "\n")
+  .replace(
+    "__DM_MONO__",
+    (
+      await readFile(
+        path.join(
+          root,
+          "src",
+          "utils",
+          "documents",
+          "fonts",
+          "DMMono-Regular.ttf.b64",
+        ),
+        "utf8",
+      )
+    ).trim(),
+  );
 const escape = (text) =>
   text
     .replaceAll("&", "&amp;")
@@ -92,7 +109,7 @@ flush();
 const hash = createHash("sha256").update(css).digest("base64");
 const output = `<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-${hash}'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; font-src data:; style-src 'sha256-${hash}'; base-uri 'none'; form-action 'none'">
 <title>Moorksz Visory Media Downloader</title><style>${css}</style></head>
 <body><a class="skip-link" href="#main">Skip to content</a><main class="document" id="main">
 <nav aria-label="Document navigation"><a href="README.md">Markdown source</a>${headings.map(({ text, id }) => `<a href="#${id}">${escape(text)}</a>`).join("")}</nav>

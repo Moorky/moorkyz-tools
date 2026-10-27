@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>MoorkszVisoryMediaDownloader.Core</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="MoorkszVisoryMediaDownloader.Tests" />
+    <Compile Include="..\utils\**\*.cs" />
+    <Compile Include="..\config\**\*.cs" />
+    <Compile Include="..\localization\**\*.cs" />
+    <EmbeddedResource Include="..\utils\documents\document.css" LogicalName="Visory.Document.css" />
+    <EmbeddedResource Include="..\utils\documents\fonts\DMMono-Regular.ttf.b64" LogicalName="Visory.DMMono.b64" />
+    <EmbeddedResource Include="..\utils\documents\report.mjs" LogicalName="Visory.Report.mjs" />
+  </ItemGroup>
+</Project>

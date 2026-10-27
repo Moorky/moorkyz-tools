@@ -51,7 +51,7 @@ test("Moorksz Visory Media Downloader explains the unofficial desktop workflow, 
     "Verify",
     "Archive and report",
   ]);
-  await expect(page.locator("#setup")).toContainText(".\\CMD.cmd");
+  await expect(page.locator("#setup")).toContainText(".\\RUN.cmd");
   await expect(page.locator("#setup")).toContainText(
     "logging before prerequisites",
   );
@@ -101,7 +101,7 @@ test("Visory desktop source is readable, downloadable and never executed", async
   expect(await readFile(await download.path(), "utf8")).toBe(
     await readFile(
       new URL(
-        "../../tools/visory-media-downloader/SOURCE-PROVENANCE.json",
+        "../../tools/visory-media-downloader/Data/Source/SOURCE-PROVENANCE.json",
         import.meta.url,
       ),
       "utf8",

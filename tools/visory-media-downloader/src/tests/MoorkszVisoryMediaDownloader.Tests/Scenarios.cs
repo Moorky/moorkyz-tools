@@ -16,8 +16,8 @@ namespace MoorkszVisoryMediaDownloader.Tests;
 
 internal static partial class Program
 {
-    private static readonly Regex SuccessLine = new(@"^\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{3} [+-]\d{2}:\d{2}\] \[SUCCESS\] @(?<file>[^|]+) \| Time: \d+\.\d{2}s \| Filesize: (?<size>[\d.]+ (B|KB|MB|GB|TB)) \| Current Average: \d+\.\d{2}s / [\d.]+ (B|KB|MB|GB|TB) \| Avg Speed: [\d.]+ (B|KB|MB|GB|TB)/s \| Progress: (?<done>\d+)/(?<total>\d+) \| Run: [^|]+ \| Area: backup<a id=""L\d+""></a>\r?$", RegexOptions.Multiline);
-    private static readonly Regex FailLine = new(@"^\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{3} [+-]\d{2}:\d{2}\] \[FAIL\] @(?<file>[^|]+) \| Added to failed report \| (?<message>[^\r\n]+?) \| Run: [^|]+ \| Area: backup<a id=""L\d+""></a>\r?$", RegexOptions.Multiline);
+    private static readonly Regex SuccessLine = new(@"^\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{3} [+-]\d{2}:\d{2}\] \[SUCCESS\] @(?<file>[^|]+) \| Time: \d+\.\d{2}s \| Filesize: (?<size>[\d.]+ (B|KB|MB|GB|TB)) \| Current Average: \d+\.\d{2}s / [\d.]+ (B|KB|MB|GB|TB) \| Avg Speed: [\d.]+ (B|KB|MB|GB|TB)/s \| Progress: (?<done>\d+)/(?<total>\d+) \| Run: [^|]+ \| Area: backup\r?$", RegexOptions.Multiline);
+    private static readonly Regex FailLine = new(@"^\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{3} [+-]\d{2}:\d{2}\] \[FAIL\] @(?<file>[^|]+) \| Added to failed report \| (?<message>[^\r\n]+?) \| Run: [^|]+ \| Area: backup\r?$", RegexOptions.Multiline);
 
     private static IEnumerable<(string Name, Func<Task> Body)> AllTests() =>
     [
@@ -702,7 +702,7 @@ internal static partial class Program
         Assert.True(Strings.En.Count(kv => Strings.De[kv.Key] != kv.Value) > Strings.En.Count * 0.8, "German is actually translated");
         foreach (var key in Strings.En.Keys.Where(k => Strings.En[k].Contains("{0}", StringComparison.Ordinal)))
             Assert.True(Strings.De[key].Contains("{0}", StringComparison.Ordinal), "placeholder kept in German: " + key);
-        var repo = Path.GetDirectoryName(FixtureRoot)!;
+        var repo = Path.GetDirectoryName(Path.GetDirectoryName(FixtureRoot))!;
         var appDir = Path.Combine(repo, "src", "MoorkszVisoryMediaDownloader.App");
         if (Directory.Exists(appDir))
         {

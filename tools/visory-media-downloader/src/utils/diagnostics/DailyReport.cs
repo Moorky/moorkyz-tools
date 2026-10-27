@@ -2,6 +2,7 @@ using System.Globalization;
 using System.Net;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.Json;
 using MoorkszVisoryMediaDownloader.Core.Infrastructure;
 
 namespace MoorkszVisoryMediaDownloader.Core.Reporting;
@@ -29,15 +30,48 @@ public static class DailyReport
                 .AppendLine("Recorded local days. Success ratio = SUCCESS / (SUCCESS + FAIL + ERROR). SKIP and run summaries are excluded.")
                 .AppendLine("Length is media duration; unavailable values stay blank. Log links name the exact Markdown file and physical line.")
                 .AppendLine("\n[CSV report](report.csv)\n");
-            var html = new StringBuilder(DocumentHtml.Start("Visory daily report"))
+            var script = DocumentHtml.LoadResource("Visory.Report.mjs");
+            var html = new StringBuilder(DocumentHtml.Start("Visory daily report", script))
                 .Append("<main id=\"main\"><header><p class=\"note\">LOCAL RUN HISTORY</p><h1>Visory daily report</h1>")
                 .Append("<p>SUCCESS, FAIL and ERROR outcomes, grouped by the local day recorded in each run.</p>")
                 .Append("<nav aria-label=\"Report formats\"><a href=\"report.csv\">CSV</a><a href=\"report.md\">Markdown</a></nav></header>")
                 .Append("<p class=\"note\">Snapshot generated ").Append(WebUtility.HtmlEncode(DateTimeOffset.Now.ToString("O", Format.Invariant)))
                 .Append(". Success ratio = SUCCESS / (SUCCESS + FAIL + ERROR). Skipped files and run summaries are excluded. ")
                 .Append("Length is media duration, not processing time. Blank values are unknown. ")
-                .Append("Log links include the file and physical line; Markdown viewers support the line anchors, while plain-text browsers may not scroll to them.</p>");
-            if (results.Count == 0) html.Append("<p>No SUCCESS, FAIL or ERROR outcomes have been recorded yet.</p>");
+                .Append("Log links include the file and physical line; Markdown viewers support the line anchors, while plain-text browsers may not scroll to them.</p>")
+                .Append("""
+                    <section id="report-controls" aria-label="Report controls" hidden>
+                    <div class="report-toolbar">
+                    <label class="report-search">Search all tasks<input id="report-search" type="text" role="searchbox" enterkeyhint="search" placeholder="Filename, status, message, ID..." autocomplete="off"></label>
+                    <fieldset class="report-view"><legend>View</legend>
+                    <label><input type="radio" name="report-view" value="tasks" checked>Single Tasks</label>
+                    <label><input type="radio" name="report-view" value="statistics">Full Statistics</label></fieldset>
+                    <button id="report-performance" type="button" aria-pressed="false">Compare performance</button>
+                    </div>
+                    <fieldset id="report-dates" hidden><legend>Statistics timeframe</legend>
+                    <div class="report-toolbar"><label>From<input id="report-from" type="text" inputmode="numeric" placeholder="yyyy-mm-dd" aria-describedby="report-available report-error"></label>
+                    <button id="report-from-calendar" type="button" aria-haspopup="dialog">Choose From date</button>
+                    <label>To<input id="report-to" type="text" inputmode="numeric" placeholder="yyyy-mm-dd" aria-describedby="report-available report-error"></label>
+                    <button id="report-to-calendar" type="button" aria-haspopup="dialog">Choose To date</button>
+                    <button id="report-reset" type="button">All recorded dates</button></div><p id="report-available" class="note"></p>
+                    </fieldset><p id="report-baseline" class="note" hidden></p>
+                    <dialog id="report-calendar" aria-labelledby="calendar-title"><h2 id="calendar-title">Choose date</h2>
+                    <div class="report-toolbar"><button id="calendar-previous" type="button" aria-label="Previous month">Previous</button>
+                    <p id="calendar-month" class="mono" aria-live="polite"></p><button id="calendar-next" type="button" aria-label="Next month">Next</button></div>
+                    <div id="calendar-days" class="calendar-days" role="group" aria-label="Dates"></div>
+                    <p class="note">Only recorded-range dates can be selected. Use arrow keys to move between available days.</p>
+                    <button id="calendar-close" type="button">Close calendar</button></dialog>
+                    </section>
+                    <p id="report-error" class="error-message" role="alert"></p>
+                    <p id="report-no-script" class="note">Preview of the first 50 tasks. Enable local JavaScript for search, scroll loading, statistics and comparisons, or use the complete CSV/Markdown export.</p>
+                    <ul id="report-totals" class="stats" aria-label="Filtered totals"></ul>
+                    <p id="report-count" role="status" aria-live="polite"></p>
+                    <div id="report-scroll" class="table-scroll report-scroll" tabindex="0" role="region" aria-label="Scrollable report results">
+                    <table id="report-table"><caption>Recorded outcomes</caption><thead><tr>
+                    """);
+            foreach (var column in Columns) html.Append("<th scope=\"col\">").Append(WebUtility.HtmlEncode(column)).Append("</th>");
+            html.Append("</tr></thead><tbody>");
+            var initialRows = 0;
             foreach (var day in results.GroupBy(row => row.Cells[1][..10]))
             {
                 var rows = day.ToList();
@@ -49,18 +83,13 @@ public static class DailyReport
                 md.Append("## ").AppendLine(day.Key).AppendLine().AppendLine(stats).AppendLine();
                 md.Append("| ").AppendJoin(" | ", Columns).AppendLine(" |");
                 md.Append("| ").AppendJoin(" | ", Columns.Select(_ => "---")).AppendLine(" |");
-                html.Append("<section aria-labelledby=\"day-").Append(day.Key).Append("\"><h2 id=\"day-").Append(day.Key).Append("\">")
-                    .Append(day.Key).Append("</h2><p>").Append(WebUtility.HtmlEncode(stats)).Append("</p>")
-                    .Append("<div class=\"table-scroll\" tabindex=\"0\" role=\"region\" aria-label=\"Results for ").Append(day.Key)
-                    .Append("\"><table><caption>Outcomes for ").Append(day.Key).Append("</caption><thead><tr>");
-                foreach (var column in Columns) html.Append("<th scope=\"col\">").Append(WebUtility.HtmlEncode(column)).Append("</th>");
-                html.Append("</tr></thead><tbody>");
                 foreach (var result in rows)
                 {
                     var cells = result.Cells;
                     cells[10] = ratio;
                     csv.Append(Csv.Line(cells.Select(Csv.Text))).Append("\r\n");
-                    html.Append("<tr id=\"result-").Append(WebUtility.HtmlEncode(cells[0])).Append("\">");
+                    var inPreview = initialRows++ < 50;
+                    if (inPreview) html.Append("<tr id=\"result-").Append(WebUtility.HtmlEncode(cells[0])).Append("\">");
                     var mdCells = new List<string>();
                     for (var index = 0; index < cells.Length; index++)
                     {
@@ -68,6 +97,9 @@ public static class DailyReport
                         var encoded = WebUtility.HtmlEncode(cell);
                         var markdown = DiagnosticLog.MarkdownText(cell).Replace("|", "&#124;", StringComparison.Ordinal)
                             .Replace("\r", "", StringComparison.Ordinal).Replace("\n", "<br>", StringComparison.Ordinal);
+                        if (index <= 1) markdown = $"<code style=\"font-family:'DM Mono',Consolas,monospace\">{markdown}</code>";
+                        if (index == 2) markdown = $"<strong style=\"color:{(cell == "SUCCESS" ? "#216234" : cell == "FAIL" ? "#b42323" : "#711b24")};background:#fafbf7\">{markdown}</strong>";
+                        if (index == 11 && cells[2] is "FAIL" or "ERROR") markdown = $"<span style=\"color:#b42323;background:#fafbf7\">{markdown}</span>";
                         if (index is 8 or 9 && cell.Length > 0)
                         {
                             var hash = cell.LastIndexOf("#L", StringComparison.Ordinal);
@@ -75,16 +107,24 @@ public static class DailyReport
                             encoded = $"<a href=\"{WebUtility.HtmlEncode(cell)}\">{WebUtility.HtmlEncode(label)}</a>";
                             markdown = $"[{DiagnosticLog.MarkdownText(label)}]({cell})";
                         }
-                        html.Append(index == 4 ? "<td class=\"path\">" : index == 11 ? "<td class=\"message\">" : "<td>").Append(encoded).Append("</td>");
+                        if (inPreview)
+                        {
+                            var className = index <= 1 ? "mono" : index == 2 ? "status status-" + cells[2].ToLowerInvariant() :
+                                index == 4 ? "path" : index == 11 ? cells[2] == "SUCCESS" ? "message" : "message error-message" : "";
+                            html.Append("<td class=\"").Append(className).Append("\">").Append(encoded).Append("</td>");
+                        }
                         mdCells.Add(markdown);
                     }
                     md.Append("| ").AppendJoin(" | ", mdCells).AppendLine(" |");
-                    html.Append("</tr>");
+                    if (inPreview) html.Append("</tr>");
                 }
-                html.Append("</tbody></table></div></section>");
                 md.AppendLine();
             }
-            html.Append("</main><footer>Local files only. No account data is uploaded and no network request is made by this report.</footer>").Append(DocumentHtml.End);
+            html.Append("</tbody></table></div><button id=\"report-more\" type=\"button\" hidden>Load more results</button>")
+                .Append("</main><footer>Local files only. Search, comparisons and calendar filtering use the embedded snapshot without sending data anywhere. ")
+                .Append("Typography: DM Mono, distributed under the SIL Open Font License.</footer>")
+                .Append("<script id=\"report-data\" type=\"application/json\">").Append(JsonSerializer.Serialize(results.Select(row => row.Cells)))
+                .Append("</script><script type=\"module\">").Append(script).Append("</script>").Append(DocumentHtml.End);
             CsvReport.WriteAtomic(layout.DailyCsvPath, csv.ToString());
             CsvReport.WriteAtomic(layout.DailyMarkdownPath, md.ToString());
             CsvReport.WriteAtomic(layout.DailyHtmlPath, html.ToString());

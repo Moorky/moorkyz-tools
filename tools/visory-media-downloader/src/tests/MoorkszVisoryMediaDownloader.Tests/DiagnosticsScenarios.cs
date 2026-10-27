@@ -31,7 +31,7 @@ internal static partial class Program
             Assert.Equal(45, File.ReadAllLines(logPath).Length, "concurrent lines are complete");
             Assert.Equal(45, entries.Count, "live events and saved lines share a source");
             foreach (var line in File.ReadAllLines(logPath))
-                Assert.True(Regex.IsMatch(line, @"^\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{3} [+-]\d{2}:\d{2}\] \[[A-Z]+\] .+ \| Run: diagnostics-test \| Area: app<a id=""L\d+""></a>$"), "timestamp, severity, run and area on each line");
+                Assert.True(Regex.IsMatch(DiagnosticLog.PlainText(line), @"^\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{3} [+-]\d{2}:\d{2}\] \[[A-Z]+\] .+ \| Run: diagnostics-test \| Area: app$"), "timestamp, severity, run and area on each line");
             using (var locked = new FileStream(logPath, FileMode.Open, FileAccess.Read, FileShare.None))
                 Assert.Throws<IOException>(() => log.Write("INFO", "blocked"), "storage failures propagate explicitly");
         }
@@ -64,13 +64,13 @@ internal static partial class Program
             log.WriteSummary(new RunSummary { RunId = "views", State = RunState.CompletedWithErrors, Failed = 1, ElapsedSeconds = 1.234 });
             var csv = Csv.Parse(File.ReadAllText(log.ReportPath));
             var html = File.ReadAllText(log.HtmlPath);
-            var cells = Regex.Matches(html, @"<(?:td|th scope=""col"")>(.*?)</(?:td|th)>", RegexOptions.Singleline)
+            var cells = Regex.Matches(html, @"<(?:td(?: class=""[^""]*"")?|th scope=""col"")>(.*?)</(?:td|th)>", RegexOptions.Singleline)
                 .Select(match => WebUtility.HtmlDecode(match.Groups[1].Value)).ToList();
             Assert.True(csv.SelectMany(row => row).SequenceEqual(cells), "HTML embeds the exact CSV cells, not merely a link");
             var md = File.ReadAllText(log.SummaryPath);
             Assert.True(md.Contains("&#124;&lt;img", StringComparison.Ordinal) && md.Contains("<br>", StringComparison.Ordinal), "Markdown table escaping");
             var markdownCells = md.Split('\n').Where(line => line.StartsWith("| ", StringComparison.Ordinal) && !line.StartsWith("| ---", StringComparison.Ordinal))
-                .SelectMany(line => line.TrimEnd('\r').Split('|').Skip(1).SkipLast(1).Select(cell => WebUtility.HtmlDecode(cell.Trim().Replace("<br>", "\n", StringComparison.Ordinal))));
+                .SelectMany(line => line.TrimEnd('\r').Split('|').Skip(1).SkipLast(1).Select(cell => DiagnosticLog.PlainText(cell.Trim().Replace("<br>", "\n", StringComparison.Ordinal))));
             Assert.True(csv.SelectMany(row => row).SequenceEqual(markdownCells), "Markdown embeds the exact CSV cells");
             Assert.True(html.Contains("default-src &#39;none&#39;", StringComparison.Ordinal) || html.Contains("default-src 'none'", StringComparison.Ordinal), "offline CSP");
             foreach (var path in Directory.GetFiles(f.Layout.RunFolder("views"), "*", SearchOption.AllDirectories))
@@ -217,9 +217,11 @@ internal static partial class Program
         Assert.True(Path.IsPathFullyQualified(failure[4]), "failed outcome has planned absolute destination");
         Assert.True(failure[8].Length > 0 && failure[9].Length > 0, "failure links both log and error lines");
         var html = File.ReadAllText(f.Layout.DailyHtmlPath);
-        Assert.True(html.Contains("day-2026-10-27", StringComparison.Ordinal) && html.Contains("day-2026-10-28", StringComparison.Ordinal), "HTML groups both days");
+        Assert.True(html.Contains("2026-10-27", StringComparison.Ordinal) && html.Contains("2026-10-28", StringComparison.Ordinal), "HTML embeds both recorded days");
         Assert.True(html.Contains("href=\"../runs/", StringComparison.Ordinal) && html.Contains("#L", StringComparison.Ordinal), "HTML trace links are clickable local files");
-        Assert.True(!html.Contains("<script", StringComparison.Ordinal), "no website or executable report scripts");
+        Assert.True(html.Contains("script-src 'sha256-", StringComparison.Ordinal) && !html.Contains("<script src=", StringComparison.Ordinal), "interactive script is hash-authorized and embedded, never fetched");
+        Assert.True(html.Contains("DM Mono", StringComparison.Ordinal) && html.Contains("data:font/ttf;base64,", StringComparison.Ordinal), "local typography is embedded");
+        Assert.True(!html.Contains("__DM_MONO__", StringComparison.Ordinal), "font placeholder is fully replaced");
         using (var resumed = new RunLogger(f.Layout, "day-one", store, false, clock))
             Assert.Equal(1, resumed.Stats.Succeeded, "resumed run retains file statistics");
         Assert.True(rows.Skip(1).Select(row => row[0]).SequenceEqual(Csv.Parse(File.ReadAllText(f.Layout.DailyCsvPath)).Skip(1).Select(row => row[0])), "stable IDs and no duplicates after resume");

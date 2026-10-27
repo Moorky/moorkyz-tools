@@ -6,6 +6,7 @@ import {
   mkdtemp,
   mkdir,
   readFile,
+  readdir,
   rm,
   symlink,
   writeFile,
@@ -24,7 +25,14 @@ const root = fileURLToPath(new URL("../..", import.meta.url));
 const allowlist = async () =>
   JSON.parse(
     await readFile(
-      path.join(root, "tools", "visory-media-downloader", "source-files.json"),
+      path.join(
+        root,
+        "tools",
+        "visory-media-downloader",
+        "Data",
+        "Source",
+        "source-files.json",
+      ),
       "utf8",
     ),
   );
@@ -42,7 +50,10 @@ test("Visory source allowlist is complete, text-only and matches its recorded pr
   for (const required of [
     "README.md",
     "README.html",
-    "CMD.cmd",
+    "RUN.cmd",
+    "Data/Portal/portal.json",
+    "Data/Source/source-files.json",
+    provenanceName,
     "src/docs/ARCHITECTURE.md",
     "src/docs/VISORY_INTEGRATION.md",
     "src/docs/TEST_REPORT.md",
@@ -53,17 +64,49 @@ test("Visory source allowlist is complete, text-only and matches its recorded pr
     "src/scripts/development/publish.ps1",
     "src/utils/diagnostics/RunLogger.cs",
     "src/tools/desktop/MoorkszVisoryMediaDownloader.App.csproj",
-    "src/tools/engine/Providers/DiscoverySession.cs",
+    "src/core/Providers/DiscoverySession.cs",
     "src/tests/MoorkszVisoryMediaDownloader.Tests/Scenarios.cs",
     "src/tests/MoorkszVisoryMediaDownloader.Tests/DiagnosticsScenarios.cs",
+    "src/third-party/wpf-10.0.11-NOTICES.txt",
   ])
     assert.ok(names.includes(required), required);
   assert.ok(
     !names.some((name) =>
-      /(?:^|\/)(?:bin|obj|artifacts|\.fixtures)\/|\.(?:exe|dll|db|zip|mp4|webm|part)$/i.test(
+      /(?:^|\/)(?:bin|obj|artifacts|runtime|\.fixtures)\/|\.(?:exe|dll|db|zip|mp4|webm|part)$/i.test(
         name,
       ),
     ),
+  );
+});
+
+test("Visory separates user-facing Data from src and preserves publish notices", async () => {
+  const tool = path.join(root, "tools", "visory-media-downloader");
+  const entries = await readdir(tool, { withFileTypes: true });
+  assert.deepEqual(
+    entries
+      .filter((entry) => entry.isDirectory())
+      .map((entry) => entry.name)
+      .sort(),
+    ["Data", "src"],
+  );
+  assert.ok(!entries.some((entry) => entry.name.endsWith(".json")));
+  const data = await readdir(path.join(tool, "Data"), { withFileTypes: true });
+  assert.deepEqual(data.map((entry) => entry.name).sort(), [
+    "Portal",
+    "Source",
+  ]);
+  assert.ok(data.every((entry) => entry.isDirectory()));
+  const publish = await readFile(
+    path.join(tool, "src", "scripts", "development", "publish.ps1"),
+    "utf8",
+  );
+  assert.match(publish, /OutputRoot = 'src\\artifacts\\release'/);
+  assert.match(
+    publish,
+    /Source = '\.\\src\\third-party\\wpf-10\.0\.11-NOTICES\.txt'/,
+  );
+  await readFile(
+    path.join(tool, "src", "third-party", "wpf-10.0.11-NOTICES.txt"),
   );
 });
 
@@ -113,7 +156,7 @@ test("Visory README is generated, offline and has a browser-normalized CSP style
     await readFile(path.resolve(tool, match[1]));
   }
   assert.match(
-    await readFile(path.join(tool, "CMD.cmd"), "utf8"),
+    await readFile(path.join(tool, "RUN.cmd"), "utf8"),
     /src\\scripts\\startup\\run\.ps1/,
   );
 });
@@ -135,6 +178,7 @@ test("Visory provenance is deterministic, rejects changed bytes and refuses argu
     assert.deepEqual(first, await createVisorySnapshot(folder, names));
     assert.match(first.provenance.treeSha256, /^[a-f0-9]{64}$/);
     await updateVisoryProvenance(folder, names);
+    assert.ok(await readFile(path.join(folder, provenanceName)));
     await verifyVisorySnapshot(folder, names);
     await writeFile(path.join(folder, "README.md"), "Modified");
     await assert.rejects(
@@ -151,6 +195,21 @@ test("Visory provenance is deterministic, rejects changed bytes and refuses argu
   });
 });
 
+test("Visory nested provenance rejects linked input and output directories", async () => {
+  await fixture(async (folder) => {
+    const outside = path.join(folder, "outside");
+    await mkdir(outside);
+    await symlink(outside, path.join(folder, "Data"), "junction");
+    const names = ["README.md", provenanceName];
+    await assert.rejects(
+      updateVisoryProvenance(folder, names),
+      /Linked provenance output/,
+    );
+    assert.deepEqual(await readdir(outside), []);
+    await assert.rejects(verifyVisorySnapshot(folder, names), /Linked source/);
+  });
+});
+
 test("Visory allowlist rejects traversal, duplicates, state, binaries, caches and links", async () => {
   await fixture(async (folder) => {
     for (const name of [
@@ -163,6 +222,9 @@ test("Visory allowlist rejects traversal, duplicates, state, binaries, caches an
       ".fixtures/run.json",
       "state/settings.json",
       "runtime/runs/log.md",
+      "src/artifacts/release/README.md",
+      "src/.fixtures/run.json",
+      "src/runtime/runs/log.md",
       "recording.mp4",
       "visory-backup.db",
       "MoorkszVisoryMediaDownloader.exe",

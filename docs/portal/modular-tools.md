@@ -93,12 +93,16 @@ navigation, not this generated toolbar.
 ## Adding tools
 
 1. Put the entire project in `tools/<project>/` and add `portal.json` there.
+   `Data/Portal/portal.json` is also supported for capitalized user-facing metadata.
+   Keep only one portal manifest; duplicates fail explicitly.
    The catalog, detail metadata, use cases, setup and search derive automatically
    from these manifests via [`index-tools.mjs`](../../scripts/index-tools.mjs).
    Supply a longer `catalogDescription` and an integer `usefulness` score from
    1 to 10 for the catalog card.
 2. For source downloads, add `"source": {}` to the tool metadata and an explicit
-   `source-files.json` allowlist inside the same folder. Bundle names and file
+   `source-files.json` allowlist at the project root or `Data/Source/source-files.json`.
+   Keep one allowlist; entries resolve from the project root in either layout.
+   Bundle names and file
    lists are discovered, not registered in a central script. Never include local state,
    downloaded files, credentials, Git internals, caches or dependencies.
 3. Add a workspace integration only when needed. Metadata-only tools can use the
@@ -197,8 +201,8 @@ loopback server, a mock provider and a labeled demo mode; their results and the
 Application Control blocks on the development machine are recorded in the tool's
 `TEST_REPORT.md`. Do not disable machine policy to run the preview.
 
-Source downloads use the [allowlist](../../tools/visory-media-downloader/source-files.json)
-and [`SOURCE-PROVENANCE.json`](../../tools/visory-media-downloader/SOURCE-PROVENANCE.json)
+Source downloads use the [allowlist](../../tools/visory-media-downloader/Data/Source/source-files.json)
+and [`SOURCE-PROVENANCE.json`](../../tools/visory-media-downloader/Data/Source/SOURCE-PROVENANCE.json)
 with the same text-only, link-refusing, SHA-256 rules and EOL-preserving Git attributes
 as Media Recover. After reviewing local edits:
 

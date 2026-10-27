@@ -275,7 +275,7 @@ public sealed partial class MainViewModel
         RunSummaryText = selectedRun.Record.Summary is { } summary ? SummaryText(summary) : Loc.T("Run" + selectedRun.Record.State);
         var logPath = File.Exists(layout.LogPath(id)) ? layout.LogPath(id) : layout.LegacyLogPath(id);
         foreach (var line in ReadShared(logPath).Split('\n', StringSplitOptions.RemoveEmptyEntries).TakeLast(5000))
-            runLogLines.Add(ParseLogLine(Redactor.Clean(WebUtility.HtmlDecode(System.Text.RegularExpressions.Regex.Replace(line.TrimEnd('\r'), "<a id=\"L\\d+\"></a>$", "")))));
+            runLogLines.Add(ParseLogLine(Redactor.Clean(DiagnosticLog.PlainText(line.TrimEnd('\r')))));
         var failed = Csv.Parse(ReadShared(File.Exists(layout.CsvReportPath(id)) ? layout.CsvReportPath(id) : layout.LegacyFailedReportPath(id)));
         if (failed.Count > 1)
         {
