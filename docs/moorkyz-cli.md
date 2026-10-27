@@ -17,6 +17,8 @@ configuration and runtime namespaces.
 
 ```powershell
 .\moorkyz.cmd help
+# Optional Explorer shortcut with the supplied Moorkyz icon:
+.\create-moorkyz-shortcut.ps1
 # Optional one-time installation of a shell function so `moorkyz` works in every project folder:
 & .\install-moorkyz.ps1
 . $PROFILE
@@ -24,6 +26,12 @@ moorkyz help
 ```
 
 The optional installer edits **only the current user's PowerShell profile**, creating a function pointing at this CLI file; it does not change the system PATH. Keep this CLI file in place after installing. To remove the function, run `& .\install-moorkyz.ps1 -Uninstall`, then restart PowerShell. If PowerShell blocks scripts by policy, use `.\moorkyz.cmd` directly; don't weaken the system execution policy just to install the shortcut.
+
+Windows batch files cannot carry an individual file icon. The optional shortcut
+script creates `moorkyz.lnk` beside the launcher, starts an interactive command
+prompt in this repository, and uses `src/.moorkyz/public/favicon.ico` as its
+icon. It refuses to overwrite an existing shortcut; remove the generated
+`moorkyz.lnk` yourself if you want to recreate it.
 
 Two Windows details worth knowing:
 

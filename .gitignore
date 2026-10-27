@@ -14,6 +14,7 @@ directory-cleaner-settings.json
 
 # Project-local runtime data and recoverable disposable files. Never commit.
 /.moorkyz/
+/moorkyz.lnk
 /trash/
 /logs/
 /archive/
