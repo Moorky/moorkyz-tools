@@ -416,12 +416,13 @@ footer {
 <p>MiB and MiB per second, plus an all-time comparison. Statistics can show the same weighted metrics per day. Only SUCCESS rows with known nonnegative time and positive size qualify. The all-time baseline uses total measured seconds divided by total measured MiB, never an unweighted mean of file rates. Search and date filters do not change that baseline. Faster is green, slower red, equal or unknown neutral. Zero-time data has no invented infinite speed. A MiB is 1,048,576 bytes; this measures processing time, not just network speed.</p>
 </ul>
 <p>HTML snapshots embed their interaction script and <strong>DM Mono</strong> font locally, with exact CSP hashes and no external assets. IDs/timestamps use DM Mono; SUCCESS is green, FAIL red, ERROR dark red, and failure/error messages red. Markdown logs and report tables carry matching inline styling and code-formatted IDs/times; viewers that strip HTML styles still retain readable text and severity labels, but their own fonts/colors apply. Complete CSV/Markdown exports remain available when JavaScript is disabled; the HTML preview then shows its first 50 tasks. Scrolling loads more of the current snapshot, not newly generated future runs; reopen or reload a regenerated report for later outcomes.</p>
-<pre><code>ID | Timestamp | Status | Filename | Full Path | Time Spent (s)
+<pre><code>ID | Timestamp | Status | Filename | Camera | Full Path | Time Spent (s)
 File Size (bytes) | Length (s) | Log | Error | Success Ratio | Message</code></pre>
 <ul>
 <li>ID: Unix milliseconds plus a unique suffix, stable once written.</li>
 <li>Timestamp: recorded local time, <code>yyyy-MM-dd HH:mm:ss</code>; detailed run CSV retains the UTC offset too.</li>
 <li>Status: SUCCESS, FAIL or ERROR. Already-verified SKIP entries and run summaries stay in detailed run records.</li>
+<li>Camera: the recording's camera name or ID already captured in its run report. Search includes camera text; unavailable historical metadata stays blank and is never guessed from a filename.</li>
 <li>Full Path: absolute saved destination, or the planned destination for a failed file. It does not imply the file exists.</li>
 <li>Time Spent: processing seconds, distinct from video/audio Length.</li>
 <li>File Size and Length: bytes and media seconds. Unknown values stay blank, never invented as zero.</li>

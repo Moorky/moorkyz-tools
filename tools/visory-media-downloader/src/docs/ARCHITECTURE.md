@@ -117,9 +117,12 @@ Reports never contain full signed URLs, even if an old setting requests them.
 The chosen backup root's `reports/report.{csv,html,md}` aggregates canonical run
 CSVs, grouping outcomes by recorded local day. Only SUCCESS/FAIL/ERROR contribute
 to the daily ratio; SKIP/RUN rows remain in detailed run records. Each outcome has
-a unique millisecond-plus-GUID ID, human timestamp, filename/full path, time spent,
+a unique millisecond-plus-GUID ID, human timestamp, filename, source camera, full path, time spent,
 byte size, nullable media length, log/error links, daily success ratio and message.
 Media length is independent of transfer duration and remains empty unless known.
+Camera is read from the existing per-run `camera` field and included in CSV,
+HTML, Markdown and full-snapshot search. Historical reports without that field
+produce an empty camera cell; aggregation never rewrites those run reports.
 Failed paths are planned destinations, not evidence that a file exists.
 Markdown log lines carry a same-line `L<number>` anchor; links contain the real
 file and physical line number and survive resume/appends. Plain-text browsers

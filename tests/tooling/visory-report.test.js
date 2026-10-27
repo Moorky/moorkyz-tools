@@ -6,14 +6,16 @@ import {
   groupDays,
   filterRows,
   validateRange,
+  taskColumns,
 } from "../../tools/visory-media-downloader/src/utils/documents/report.mjs";
 
-const row = (id, day, status, seconds, size, message = "") =>
+const row = (id, day, status, seconds, size, message = "", camera = "") =>
   [
     id,
     `${day} 12:00:00`,
     status,
     `${id}.mp4`,
+    camera,
     "",
     seconds,
     size,
@@ -24,7 +26,7 @@ const row = (id, day, status, seconds, size, message = "") =>
     message,
   ].map(String);
 const rows = [
-  row("fast", "2026-10-25", "SUCCESS", "1", "1048576"),
+  row("fast", "2026-10-25", "SUCCESS", "1", "1048576", "", "Front Door"),
   row("slow", "2026-10-26", "SUCCESS", "6", "2097152"),
   row("zero", "2026-10-26", "SUCCESS", "", "0"),
   row("fail", "2026-10-27", "FAIL", "100", "", "Camera offline"),
@@ -50,6 +52,10 @@ test("Visory performance uses size-weighted successful all-time measurements onl
 });
 
 test("Visory search covers the full data, including rows not yet displayed", () => {
+  assert.equal(taskColumns[4], "Camera");
+  assert.equal(rows[0].length, taskColumns.length);
+  assert.equal(rows[1][4], "", "unavailable camera identity stays blank");
+  assert.deepEqual(filterRows(rows, "front door"), [rows[0]]);
   assert.deepEqual(filterRows(rows, "CAMERA fail"), [rows[3]]);
   assert.deepEqual(filterRows(rows, "disk"), [rows[4]]);
   assert.deepEqual(filterRows(rows, "unknown"), []);

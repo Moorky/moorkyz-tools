@@ -66,6 +66,12 @@ test("local report batches scroll rows, searches all tasks and stays offline", a
   await page.goto(url);
   await expect(page.locator("#report-controls")).toBeVisible();
   await expect(page.locator("#report-table tbody tr")).toHaveCount(50);
+  await expect(
+    page.getByRole("columnheader", { name: "Camera", exact: true }),
+  ).toBeVisible();
+  await expect(
+    page.locator("#report-table tbody tr").first().locator("td").nth(4),
+  ).toHaveText("Camera 1");
   await expect(page.locator("#report-count")).toHaveText(
     "Showing 50 of 165 tasks.",
   );
@@ -84,6 +90,12 @@ test("local report batches scroll rows, searches all tasks and stays offline", a
   );
   await expect(page.locator("#report-table img")).toHaveCount(0);
   await expect(page.locator("#report-table tbody a")).toHaveCount(2);
+  await page.getByRole("searchbox").fill("North Gate");
+  await expect(page.locator("#report-table tbody tr")).toHaveCount(1);
+  await expect(page.locator("#report-table tbody td").nth(4)).toHaveText(
+    "Camera, <b>North Gate</b>",
+  );
+  await expect(page.locator("#report-table tbody b")).toHaveCount(0);
   await page.getByRole("searchbox").fill("does-not-exist");
   await expect(page.locator("#report-count")).toHaveText("No matching tasks.");
   await expect(page.locator("#report-more")).toBeHidden();
@@ -168,6 +180,9 @@ test("empty reports disable calendar selection and no-script reports retain read
     const preview = await context.newPage();
     await preview.goto(url);
     await expect(preview.locator("#report-table tbody tr")).toHaveCount(50);
+    await expect(
+      preview.getByRole("columnheader", { name: "Camera", exact: true }),
+    ).toBeVisible();
     await expect(preview.locator("#report-controls")).toBeHidden();
     await expect(preview.locator("#report-no-script")).toBeVisible();
     await expect(
@@ -195,20 +210,23 @@ test("performance swaps columns, retains the all-time baseline and uses local DM
   await expect(page.locator("#report-table tbody .metric-better")).toHaveCount(
     3,
   );
-  await expect(page.locator("#report-table tbody td").nth(6)).toHaveText(
-    "1.000",
+  await expect(page.locator("#report-table tbody td").nth(4)).toHaveText(
+    "Camera 1",
   );
   await expect(page.locator("#report-table tbody td").nth(7)).toHaveText(
+    "1.000",
+  );
+  await expect(page.locator("#report-table tbody td").nth(8)).toHaveText(
     "1.000",
   );
   await search.fill("fixture-27-30.mp4");
   await expect(page.locator("#report-table tbody .metric-worse")).toHaveCount(
     3,
   );
-  await expect(page.locator("#report-table tbody td").nth(6)).toHaveText(
+  await expect(page.locator("#report-table tbody td").nth(7)).toHaveText(
     "3.000",
   );
-  await expect(page.locator("#report-table tbody td").nth(7)).toHaveText(
+  await expect(page.locator("#report-table tbody td").nth(8)).toHaveText(
     "0.333",
   );
   await expect(page.locator("#report-baseline")).toContainText("2.000 s/MiB");

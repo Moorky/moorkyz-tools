@@ -122,13 +122,14 @@ Scrolling loads more of the current snapshot, not newly generated future runs;
 reopen or reload a regenerated report for later outcomes.
 
 ```text
-ID | Timestamp | Status | Filename | Full Path | Time Spent (s)
+ID | Timestamp | Status | Filename | Camera | Full Path | Time Spent (s)
 File Size (bytes) | Length (s) | Log | Error | Success Ratio | Message
 ```
 
 - ID: Unix milliseconds plus a unique suffix, stable once written.
 - Timestamp: recorded local time, `yyyy-MM-dd HH:mm:ss`; detailed run CSV retains the UTC offset too.
 - Status: SUCCESS, FAIL or ERROR. Already-verified SKIP entries and run summaries stay in detailed run records.
+- Camera: the recording's camera name or ID already captured in its run report. Search includes camera text; unavailable historical metadata stays blank and is never guessed from a filename.
 - Full Path: absolute saved destination, or the planned destination for a failed file. It does not imply the file exists.
 - Time Spent: processing seconds, distinct from video/audio Length.
 - File Size and Length: bytes and media seconds. Unknown values stay blank, never invented as zero.

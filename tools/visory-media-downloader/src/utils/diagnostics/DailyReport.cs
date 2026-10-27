@@ -11,7 +11,7 @@ public static class DailyReport
 {
     public static readonly string[] Columns =
     [
-        "ID", "Timestamp", "Status", "Filename", "Full Path", "Time Spent (s)",
+        "ID", "Timestamp", "Status", "Filename", "Camera", "Full Path", "Time Spent (s)",
         "File Size (bytes)", "Length (s)", "Log", "Error", "Success Ratio", "Message",
     ];
     private static readonly object Gate = new();
@@ -42,7 +42,7 @@ public static class DailyReport
                 .Append("""
                     <section id="report-controls" aria-label="Report controls" hidden>
                     <div class="report-toolbar">
-                    <label class="report-search">Search all tasks<input id="report-search" type="text" role="searchbox" enterkeyhint="search" placeholder="Filename, status, message, ID..." autocomplete="off"></label>
+                    <label class="report-search">Search all tasks<input id="report-search" type="text" role="searchbox" enterkeyhint="search" placeholder="Filename, camera, status, message, ID..." autocomplete="off"></label>
                     <fieldset class="report-view"><legend>View</legend>
                     <label><input type="radio" name="report-view" value="tasks" checked>Single Tasks</label>
                     <label><input type="radio" name="report-view" value="statistics">Full Statistics</label></fieldset>
@@ -86,7 +86,7 @@ public static class DailyReport
                 foreach (var result in rows)
                 {
                     var cells = result.Cells;
-                    cells[10] = ratio;
+                    cells[11] = ratio;
                     csv.Append(Csv.Line(cells.Select(Csv.Text))).Append("\r\n");
                     var inPreview = initialRows++ < 50;
                     if (inPreview) html.Append("<tr id=\"result-").Append(WebUtility.HtmlEncode(cells[0])).Append("\">");
@@ -99,8 +99,8 @@ public static class DailyReport
                             .Replace("\r", "", StringComparison.Ordinal).Replace("\n", "<br>", StringComparison.Ordinal);
                         if (index <= 1) markdown = $"<code style=\"font-family:'DM Mono',Consolas,monospace\">{markdown}</code>";
                         if (index == 2) markdown = $"<strong style=\"color:{(cell == "SUCCESS" ? "#216234" : cell == "FAIL" ? "#b42323" : "#711b24")};background:#fafbf7\">{markdown}</strong>";
-                        if (index == 11 && cells[2] is "FAIL" or "ERROR") markdown = $"<span style=\"color:#b42323;background:#fafbf7\">{markdown}</span>";
-                        if (index is 8 or 9 && cell.Length > 0)
+                        if (index == 12 && cells[2] is "FAIL" or "ERROR") markdown = $"<span style=\"color:#b42323;background:#fafbf7\">{markdown}</span>";
+                        if (index is 9 or 10 && cell.Length > 0)
                         {
                             var hash = cell.LastIndexOf("#L", StringComparison.Ordinal);
                             var label = Path.GetFileName(cell[..hash].Replace('/', Path.DirectorySeparatorChar)) + " : line " + cell[(hash + 2)..];
@@ -110,7 +110,7 @@ public static class DailyReport
                         if (inPreview)
                         {
                             var className = index <= 1 ? "mono" : index == 2 ? "status status-" + cells[2].ToLowerInvariant() :
-                                index == 4 ? "path" : index == 11 ? cells[2] == "SUCCESS" ? "message" : "message error-message" : "";
+                                index == 5 ? "path" : index == 12 ? cells[2] == "SUCCESS" ? "message" : "message error-message" : "";
                             html.Append("<td class=\"").Append(className).Append("\">").Append(encoded).Append("</td>");
                         }
                         mdCells.Add(markdown);
@@ -171,7 +171,7 @@ public static class DailyReport
                 long? bytes = size.Length == 0 ? null : long.TryParse(size, NumberStyles.None, Format.Invariant, out var parsed) ? parsed
                     : throw new InvalidDataException("A report size is invalid: " + file);
                 yield return new Result([
-                    id, local.ToString("yyyy-MM-dd HH:mm:ss", Format.Invariant), status, Value("filename"), Value("local_path"),
+                    id, local.ToString("yyyy-MM-dd HH:mm:ss", Format.Invariant), status, Value("filename"), Value("camera"), Value("local_path"),
                     Csv.Number(seconds, "0.000"), Csv.Number(bytes), Csv.Number(length, "0.000"),
                     TraceLink(layout, Value("log_file"), Value("log_line")), TraceLink(layout, Value("error_file"), Value("error_line")), "", Value("message"),
                 ], seconds, bytes);

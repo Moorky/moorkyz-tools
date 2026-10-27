@@ -4,6 +4,7 @@ export const taskColumns = [
   "Timestamp",
   "Status",
   "Filename",
+  "Camera",
   "Full Path",
   "Time Spent (s)",
   "File Size (bytes)",
@@ -47,9 +48,9 @@ export function summarize(rows) {
     if (row[2] === "SUCCESS") result.success++;
     else if (row[2] === "FAIL") result.fail++;
     else if (row[2] === "ERROR") result.error++;
-    const seconds = number(row[5]),
-      bytes = number(row[6]),
-      length = number(row[7]);
+    const seconds = number(row[6]),
+      bytes = number(row[7]),
+      length = number(row[8]);
     if (finite(seconds)) result.seconds += seconds;
     if (finite(length)) result.length += length;
     if (row[2] === "SUCCESS" && finite(bytes)) result.bytes += bytes;
@@ -71,8 +72,8 @@ export function summarize(rows) {
 }
 
 export function performance(row, baseline) {
-  const seconds = number(row[5]),
-    bytes = number(row[6]);
+  const seconds = number(row[6]),
+    bytes = number(row[7]);
   if (row[2] !== "SUCCESS" || !finite(seconds) || !finite(bytes) || bytes <= 0)
     return null;
   const secondsPerMiB = seconds / (bytes / mib);
@@ -210,7 +211,7 @@ function init() {
     tr.id = `result-${row[0]}`;
     const metric = comparing ? performance(row, baseline) : null;
     for (let index = 0; index < row.length; index++) {
-      if (comparing && index === 6) {
+      if (comparing && index === 7) {
         metricCell(
           tr,
           precise(metric?.secondsPerMiB),
@@ -219,7 +220,7 @@ function init() {
         );
         continue;
       }
-      if (comparing && index === 7) {
+      if (comparing && index === 8) {
         metricCell(
           tr,
           precise(metric?.miBPerSecond),
@@ -228,7 +229,7 @@ function init() {
         );
         continue;
       }
-      if (comparing && index === 10) {
+      if (comparing && index === 11) {
         metricCell(
           tr,
           comparisonLabel(metric),
@@ -243,13 +244,13 @@ function init() {
         tr,
         index <= 1
           ? "mono"
-          : index === 4
+          : index === 5
             ? "path"
-            : index === 11
+            : index === 12
               ? "message"
               : "",
       );
-      if (index === 8 || index === 9) reportLink(cell, row[index]);
+      if (index === 9 || index === 10) reportLink(cell, row[index]);
       else if (index === 2)
         add(
           "span",
@@ -259,7 +260,7 @@ function init() {
         );
       else {
         cell.textContent = row[index];
-        if (index === 11 && row[2] !== "SUCCESS")
+        if (index === 12 && row[2] !== "SUCCESS")
           cell.classList.add("error-message");
       }
     }
@@ -374,9 +375,9 @@ function init() {
       add("li", `${label}: ${value}`, totals, className);
     const columns = [...(statistics ? statisticColumns : taskColumns)];
     if (comparing) {
-      columns[statistics ? 7 : 6] = "Seconds / MiB";
-      columns[statistics ? 8 : 7] = "MiB / second";
-      if (!statistics) columns[10] = "vs all-time average";
+      columns[7] = "Seconds / MiB";
+      columns[8] = "MiB / second";
+      if (!statistics) columns[11] = "vs all-time average";
     }
     head.replaceChildren();
     const header = add("tr", "", head);

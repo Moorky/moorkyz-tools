@@ -172,6 +172,7 @@ internal static partial class Program
 
     private static async Task DailyReports()
     {
+        const string camera = "Front <Door> | \"East\"";
         await using var f = Fixture.Create();
         f.Layout.Ensure();
         using var store = new StateStore(f.Layout.DatabasePath);
@@ -180,7 +181,7 @@ internal static partial class Program
         store.AddRunItems("day-one", ["one", "two", "skip"], "scheduled");
         using (var log = new RunLogger(f.Layout, "day-one", store, false, clock))
         {
-            log.Success(new SuccessRecord("one", "one", "door.mp4", null, 2.5, 1200, 1200, 2, 1, TransferEngineKind.Http,
+            log.Success(new SuccessRecord("one", "one", "door.mp4", camera, 2.5, 1200, 1200, 2, 1, TransferEngineKind.Http,
                 Path.Combine(f.Layout.Downloads, "door.mp4"), null) { MediaLengthSeconds = 12.25 });
             log.Fail(new FailRecord("two", "two", "bad.mp4", null, null, "failed\nsecond detail", 404, 1, TransferEngineKind.Http, null, 3.25)
                 { LocalPath = Path.Combine(f.Layout.Downloads, "bad.mp4") });
@@ -201,8 +202,8 @@ internal static partial class Program
         foreach (var row in rows.Skip(1))
         {
             Assert.True(Regex.IsMatch(row[1], @"^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$"), "human timestamp format");
-            Assert.Equal(row[1].StartsWith("2026-10-28", StringComparison.Ordinal) ? "100.00%" : "25.00%", row[10], "ratio includes SUCCESS/FAIL/ERROR across runs on each day");
-            foreach (var trace in new[] { row[8], row[9] }.Where(value => value.Length > 0))
+            Assert.Equal(row[1].StartsWith("2026-10-28", StringComparison.Ordinal) ? "100.00%" : "25.00%", row[11], "ratio includes SUCCESS/FAIL/ERROR across runs on each day");
+            foreach (var trace in new[] { row[9], row[10] }.Where(value => value.Length > 0))
             {
                 var parts = trace.Split("#L", StringSplitOptions.None);
                 var target = Path.GetFullPath(Path.Combine(f.Layout.Reports, Uri.UnescapeDataString(parts[0]).Replace('/', Path.DirectorySeparatorChar)));
@@ -210,20 +211,32 @@ internal static partial class Program
                 Assert.True(File.ReadAllLines(target)[number - 1].Contains($"<a id=\"L{number}\"></a>", StringComparison.Ordinal), "trace opens the exact Markdown file and physical line");
             }
         }
-        Assert.Equal("12.250", rows.Single(row => row[3] == "door.mp4")[7], "known media length");
+        Assert.Equal(camera, rows.Single(row => row[3] == "door.mp4")[4], "source camera is retained beside the filename");
+        Assert.Equal("12.250", rows.Single(row => row[3] == "door.mp4")[8], "known media length");
         var failure = rows.Single(row => row[3] == "bad.mp4");
-        Assert.Equal("", failure[6], "unknown size stays empty");
-        Assert.Equal("", failure[7], "unknown media length stays empty");
-        Assert.True(Path.IsPathFullyQualified(failure[4]), "failed outcome has planned absolute destination");
-        Assert.True(failure[8].Length > 0 && failure[9].Length > 0, "failure links both log and error lines");
+        Assert.Equal("", failure[4], "unknown camera stays empty");
+        Assert.Equal("", failure[7], "unknown size stays empty");
+        Assert.Equal("", failure[8], "unknown media length stays empty");
+        Assert.True(Path.IsPathFullyQualified(failure[5]), "failed outcome has planned absolute destination");
+        Assert.True(failure[9].Length > 0 && failure[10].Length > 0, "failure links both log and error lines");
         var html = File.ReadAllText(f.Layout.DailyHtmlPath);
         Assert.True(html.Contains("2026-10-27", StringComparison.Ordinal) && html.Contains("2026-10-28", StringComparison.Ordinal), "HTML embeds both recorded days");
         Assert.True(html.Contains("href=\"../runs/", StringComparison.Ordinal) && html.Contains("#L", StringComparison.Ordinal), "HTML trace links are clickable local files");
         Assert.True(html.Contains("script-src 'sha256-", StringComparison.Ordinal) && !html.Contains("<script src=", StringComparison.Ordinal), "interactive script is hash-authorized and embedded, never fetched");
         Assert.True(html.Contains("DM Mono", StringComparison.Ordinal) && html.Contains("data:font/ttf;base64,", StringComparison.Ordinal), "local typography is embedded");
         Assert.True(!html.Contains("__DM_MONO__", StringComparison.Ordinal), "font placeholder is fully replaced");
+        Assert.True(html.Contains(System.Net.WebUtility.HtmlEncode(camera), StringComparison.Ordinal), "HTML camera text is escaped");
+        Assert.True(File.ReadAllText(f.Layout.DailyMarkdownPath).Contains("Front &lt;Door&gt; &#124; &quot;East&quot;", StringComparison.Ordinal), "Markdown camera text and table separators are escaped");
         using (var resumed = new RunLogger(f.Layout, "day-one", store, false, clock))
             Assert.Equal(1, resumed.Stats.Succeeded, "resumed run retains file statistics");
         Assert.True(rows.Skip(1).Select(row => row[0]).SequenceEqual(Csv.Parse(File.ReadAllText(f.Layout.DailyCsvPath)).Skip(1).Select(row => row[0])), "stable IDs and no duplicates after resume");
+        Directory.CreateDirectory(f.Layout.ReportFolder("legacy-camera"));
+        var legacyPath = f.Layout.CsvReportPath("legacy-camera");
+        var legacy = Csv.Line(["timestamp", "status", "filename", "local_path", "message", "elapsed_seconds", "filesize_bytes"]) + "\r\n"
+            + Csv.Line(["2026-10-29 12:00:00", "SUCCESS", "legacy.mp4", "", "Legacy camera unavailable", "1", "42"]) + "\r\n";
+        File.WriteAllText(legacyPath, legacy);
+        DailyReport.Render(f.Layout);
+        Assert.Equal("", Csv.Parse(File.ReadAllText(f.Layout.DailyCsvPath)).Single(row => row[3] == "legacy.mp4")[4], "historical reports without camera metadata retain an empty camera");
+        Assert.Equal(legacy, File.ReadAllText(legacyPath), "aggregation never rewrites historical per-run reports");
     }
 }

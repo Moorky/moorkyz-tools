@@ -3,7 +3,7 @@
   "repository": "Moorky/moorkyz-tools",
   "sourceDirectory": "tools/visory-media-downloader",
   "identity": "Moorksz Visory Media Downloader",
-  "treeSha256": "047d7a6e2e31522c66b5eb7b4491db5e98e632c4de6028b172bb51f5190e8972",
+  "treeSha256": "3201815c766fcf592c894e90dbc0dd119361bdee76592da22f4ba5bdc64d6e6f",
   "files": [
     {
       "path": ".gitignore",
@@ -15,7 +15,7 @@
     },
     {
       "path": "src/docs/ARCHITECTURE.md",
-      "sha256": "3fbe6ed4c3cdd635cae609786c569f217a6aef7e350a74e1c1d0e98ab21a3452"
+      "sha256": "2a9b42547b08f59509d2091e775d36dfec7c009288985dc15549027d0aa692bb"
     },
     {
       "path": "src/Directory.Build.props",
@@ -27,11 +27,11 @@
     },
     {
       "path": "README.md",
-      "sha256": "3501c2e613b3c84c1f2fb3bec721d9ca6fe5eca72e216d291b4f38e92e1eb285"
+      "sha256": "dba309a7b2fbc355753d25595d49bf84e595aabd1a2fb7d89aef5690cf500098"
     },
     {
       "path": "README.html",
-      "sha256": "e951c0a230ab495f68f85b660fdd6d089a32e659881ab423190af726ad7127b6"
+      "sha256": "f1b6536cc16adff0e860a7f2d9d648b95b8fcff8a4f3b9afc4dbad728db6e1c4"
     },
     {
       "path": "RUN.cmd",
@@ -299,7 +299,7 @@
     },
     {
       "path": "src/tests/MoorkszVisoryMediaDownloader.Tests/DiagnosticsScenarios.cs",
-      "sha256": "562c7e1a5146f793fc828726ccf2c52b355ffc15c44adc645bddff9a4698cc41"
+      "sha256": "5b520aaecde26b54c105a1408fcf5e8f21451395eddd78a9364dcef8fae69411"
     },
     {
       "path": "src/tests/MoorkszVisoryMediaDownloader.Tests/TestServer.cs",
@@ -323,7 +323,7 @@
     },
     {
       "path": "src/utils/diagnostics/DailyReport.cs",
-      "sha256": "2fc308ec3eed79f9a3cfc215ce113da868bebdde4ebd94e46dc4e90e1c1eef2f"
+      "sha256": "be54436e8d58517ef49c92c14bee481ef15609c8825c4ab5244362e896eca75a"
     },
     {
       "path": "src/utils/documents/DocumentHtml.cs",
@@ -339,7 +339,7 @@
     },
     {
       "path": "src/utils/documents/report.mjs",
-      "sha256": "683a9b6640f1f3e3af50369c35d16b41620e9c0b74a2059eeabfc4dd0d40731a"
+      "sha256": "bb8ab1f7401c077fd4cd9ae92d27456c72ec62695aa1680d5649919c3a22e1c5"
     },
     {
       "path": "src/utils/documents/fonts/DMMono-Regular.ttf.b64",
@@ -351,7 +351,7 @@
     },
     {
       "path": "src/tests/MoorkszVisoryMediaDownloader.Tests/ReportBrowserFixture.cs",
-      "sha256": "322d6d7e1b0af973ddd63b0936c9eba9446d5af0f575d1c4ec479679a0973b47"
+      "sha256": "c3dd135b9d889c42f815346f51177d1b4db0ae9afd6bf0aa09e68c181ee1f4e8"
     }
   ],
   "note": "Canonical UTF-8 source maintained in tools/visory-media-downloader in this repository, not a release. After local edits, refresh this manifest using node scripts/sync-visory-source.mjs."

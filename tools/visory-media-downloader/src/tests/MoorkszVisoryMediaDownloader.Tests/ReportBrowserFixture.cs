@@ -31,6 +31,7 @@ internal static partial class Program
                 values[0] = "synthetic-browser";
                 values[1] = $"{(day == 25 ? "2026-09-25" : $"2026-10-{day}")} 12:00:{index:00}";
                 values[3] = $"fixture-{day}-{index}.mp4";
+                values[4] = day == 25 && index == 54 ? "Camera, <b>North Gate</b>" : $"Camera {index % 3 + 1}";
                 values[5] = status;
                 values[6] = index < 40 ? index < 20 ? "1" : "3" : "";
                 values[7] = index < 40 ? "1048576" : "";
