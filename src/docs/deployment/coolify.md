@@ -22,7 +22,7 @@ The Next.js standalone portal needs no runtime secret or persistent volume. Keep
 
 ## GitHub configuration
 
-Use a `production` environment, with a deploy-scoped Coolify API token in the `COOLIFY_TOKEN` environment secret. Set repository/environment variables `COOLIFY_BASE_URL` (HTTPS origin), `COOLIFY_RESOURCE_UUID` and optionally `APP_HEALTH_URL` (default `https://tools.moorkyz.com/`). Enable Coolify API access. Keep secrets out of files and Docker build arguments.
+Use a `production` environment, with a Coolify API token authorized to deploy and read deployment status in the `COOLIFY_TOKEN` environment secret. Set repository/environment variables `COOLIFY_BASE_URL` (HTTPS origin), `COOLIFY_RESOURCE_UUID` and optionally `APP_HEALTH_URL` (default `https://tools.moorkyz.com/`). Set the repository variable `COOLIFY_DEPLOY_ENABLED=true` to enable the production job; any other value leaves it skipped. Enable Coolify API access. Keep secrets out of files and Docker build arguments. A deploy-only token can queue a release but cannot verify its completion.
 
 Pull requests and manual CI runs validate without production access. Only a passing push to `master` reaches the serialized deployment job. It confirms the current branch head, calls `scripts/deployment/deploy-coolify.cjs`, requires the returned deployment commit to match the tested SHA, polls for a successful terminal status, then checks public HTTP health. A queued API response alone is not deployment success. Protect `master` with the `verify` and `container` checks. Configure environment reviewers only if your release process requires them.
 
@@ -37,3 +37,4 @@ Reviewed on 2026-10-23:
 - [GitHub Actions secure use](https://docs.github.com/en/actions/reference/security/secure-use): least privilege, secrets and immutable action references.
 - [Docker build practices](https://docs.docker.com/build/building/best-practices/): small multi-stage images, non-root runtime and context exclusions.
 - [Coolify deploy webhooks](https://coolify.io/docs/core/automation/deploy-webhooks): authenticated triggers and deployment verification.
+- [Coolify deployment status](https://coolify.io/docs/api/endpoints/deployments/get-deployment-by-uuid): returned terminal status and source commit.

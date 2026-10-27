@@ -41,9 +41,50 @@ jobs:
       - run: pnpm audit --audit-level=low
       - run: pnpm licenses list --json
 
+  videocrunch-windows:
+    runs-on: windows-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .node-version
+      - name: Verify Windows VideoCrunch API contract
+        run: node --test tools/videocrunch/test/server.test.js
+
+  visory-report-windows:
+    runs-on: windows-latest
+    timeout-minutes: 25
+    defaults:
+      run:
+        working-directory: src
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413
+        with:
+          version: 11.8.0
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version: 24
+      - uses: actions/setup-dotnet@26b0ec14cb23fa6904739307f278c14f94c95bf1
+        with:
+          dotnet-version: '10.0.x'
+      - run: pnpm install --frozen-lockfile
+      - run: dotnet build ../tools/visory-media-downloader/src/tests/MoorkszVisoryMediaDownloader.Tests -c Debug
+      - run: pnpm build
+      - run: pnpm exec playwright install chromium
+      - name: Verify native report browser contract
+        env:
+          TOOLS_NATIVE_REPORT_TESTS: '1'
+        run: pnpm exec playwright test --config playwright/playwright.config.mjs --project=chromium visory-report.spec.js
+
   container:
     runs-on: ubuntu-latest
-    needs: verify
+    needs: [verify, videocrunch-windows, visory-report-windows]
     timeout-minutes: 25
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
@@ -75,8 +116,8 @@ jobs:
   deploy:
     name: Deploy to Coolify
     runs-on: ubuntu-latest
-    needs: [verify, container]
-    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    needs: [verify, videocrunch-windows, visory-report-windows, container]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master' && vars.COOLIFY_DEPLOY_ENABLED == 'true'
     environment: production
     timeout-minutes: 25
     concurrency:

@@ -34,6 +34,9 @@ export default defineConfig({
   outputDir: path.join(repositoryRoot, "src", "playwright", "test-results"),
   testMatch: "**/*.spec.js",
   testIgnore: [
+    ...(process.env.TOOLS_NATIVE_REPORT_TESTS === "1"
+      ? []
+      : ["**/visory-report.spec.js"]),
     "**/local-service.spec.js",
     "**/directory-cleaner-service.spec.js",
   ],

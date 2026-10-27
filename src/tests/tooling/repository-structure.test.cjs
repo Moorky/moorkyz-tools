@@ -72,6 +72,7 @@ test("the root contains only user entrypoints and required platform discovery fi
     "LICENSE",
     "README.md",
     "README.html",
+    "RUN.cmd",
     "moorkyz",
   ]);
   const tracked = spawnSync("git", ["ls-files", "-z"], {
@@ -101,15 +102,18 @@ test("the single root launcher and internal namespace alias delegate to one core
     "moorkyz",
     "src/.moorkyz/scripts/tools.moorkyz.com.cjs",
   ]) {
-    assert.match(
-      read(entrypoint),
-      /require\("[^"]*moorkyz\.cjs"\)/,
-    );
+    assert.match(read(entrypoint), /require\("[^"]*moorkyz\.cjs"\)/);
     assert.doesNotMatch(read(entrypoint), /function |spawn\(|createServer\(/);
   }
-  assert.equal(typeof require("../../.moorkyz/scripts/helpers/storage.cjs").createLog, "function");
+  assert.equal(
+    typeof require("../../.moorkyz/scripts/helpers/storage.cjs").createLog,
+    "function",
+  );
   assert.equal(fs.existsSync(path.join(root, "docs/legacy/READM.html")), false);
-  assert.equal(fs.existsSync(path.join(root, "src/docs/legacy/READM.html")), false);
+  assert.equal(
+    fs.existsSync(path.join(root, "src/docs/legacy/READM.html")),
+    false,
+  );
 });
 
 test("both launcher configs resolve existing workspace scripts and preserve their preferred ports", () => {

@@ -7,5 +7,4 @@
 - [Shared tooling catalog](../.template/README.md)
 - [CI and Coolify deployment](deployment/coolify.md)
 - [Current task audit records](../../.audits/README.md)
-- [Historical operations records](../../audits/README.md)
-- [Historical implementation evidence](audits)
+- [Historical implementation evidence](../../.audits/)

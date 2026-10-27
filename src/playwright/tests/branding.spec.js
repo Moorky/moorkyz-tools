@@ -19,8 +19,8 @@ for (const width of [320, 390, 1280]) {
       const icon = brand.locator("img");
       await expect(icon).toHaveAttribute("src", "/moorkyz-tools.svg");
       await expect(icon).toHaveAttribute("alt", "");
-      await expect(icon).toHaveCSS("width", "64px");
-      await expect(icon).toHaveCSS("height", "64px");
+      await expect(icon).toHaveCSS("width", "40px");
+      await expect(icon).toHaveCSS("height", "40px");
       await expect(icon).toHaveCSS("background-color", "rgb(255, 255, 255)");
       await expect
         .poll(() =>

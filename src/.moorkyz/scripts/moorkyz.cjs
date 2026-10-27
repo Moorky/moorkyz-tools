@@ -975,10 +975,12 @@ function createAudit(title) {
     .replace(/\.\d{3}Z$/, "Z")
     .replace(/:/g, "-");
   const slug = slugify(title);
-  const auditDirectory =
-    [path.join(ROOT, "src", "docs", "AUDIT_TEMPLATE.md"), path.join(ROOT, "docs", "AUDIT_TEMPLATE.md")].includes(source)
-      ? ".audits"
-      : path.join("docs", "audits");
+  const auditDirectory = [
+    path.join(ROOT, "src", "docs", "AUDIT_TEMPLATE.md"),
+    path.join(ROOT, "docs", "AUDIT_TEMPLATE.md"),
+  ].includes(source)
+    ? ".audits"
+    : path.join("docs", "audits");
   const dest = path.join(ROOT, auditDirectory, `${timestamp}-${slug}.md`);
   const auditFolder = storage.scopedPath(ROOT, path.dirname(dest), true);
   fs.mkdirSync(auditFolder, { recursive: true });
