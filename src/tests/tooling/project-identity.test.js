@@ -68,7 +68,23 @@ test("workspace, portal package and command filters use the project identity", (
   );
 });
 
-test("all repository text and paths, including historical docs, omit retired project identifiers", () => {
+function isPreservedCopyReference(file, line) {
+  return (
+    file === ".audits/2026-11-02-pending-workspace-checkpoint.md" &&
+    line ===
+      `The nested \`moorkyz-site/${previousBrand}-${retiredPackage}\` folder was another obsolete incomplete`
+  );
+}
+
+test("recovery provenance exception is exact and cannot allow retired active branding", () => {
+  const file = ".audits/2026-11-02-pending-workspace-checkpoint.md";
+  const line = `The nested \`moorkyz-site/${previousBrand}-${retiredPackage}\` folder was another obsolete incomplete`;
+  assert.equal(isPreservedCopyReference(file, line), true);
+  assert.equal(isPreservedCopyReference("README.md", line), false);
+  assert.equal(isPreservedCopyReference(file, line + " active project"), false);
+});
+
+test("repository identity stays current while one exact archived-copy provenance reference is preserved", () => {
   const files = new Set(
     execFileSync(
       "git",
@@ -88,7 +104,10 @@ test("all repository text and paths, including historical docs, omit retired pro
     const text = bytes.toString("utf8");
     if (!Buffer.from(text).equals(bytes)) continue;
     for (const [index, line] of text.split(/\r?\n/).entries()) {
-      if (previousIdentity.test(line.replace(/\\+\./g, ".")))
+      if (
+        previousIdentity.test(line.replace(/\\+\./g, ".")) &&
+        !isPreservedCopyReference(file, line)
+      )
         findings.push(`${file}:${index + 1}`);
     }
   }

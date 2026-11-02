@@ -14,6 +14,27 @@ const root = path.resolve(__dirname, "..", "..", "..");
 const read = (filename) => fs.readFileSync(path.join(root, filename), "utf8");
 const json = (filename) => JSON.parse(read(filename));
 
+test("recovered release gates retain opt-in deployment and explicit Windows coverage", () => {
+  const workflow = read(".github/workflows/ci.yml");
+  assert.match(workflow, /vars\.COOLIFY_DEPLOY_ENABLED == 'true'/);
+  assert.match(workflow, /videocrunch-windows:/);
+  assert.match(workflow, /visory-report-windows:/);
+  assert.match(
+    workflow,
+    /needs: \[verify, videocrunch-windows, visory-report-windows, container\]/,
+  );
+  assert.match(workflow, /TOOLS_NATIVE_REPORT_TESTS: '1'/);
+  const scripts = json("src/package.json").scripts;
+  assert.match(
+    scripts["test:videocrunch:api"],
+    /tools\/videocrunch\/test\/server\.test\.js/,
+  );
+  assert.doesNotMatch(
+    scripts["test:unit"],
+    /tools\/videocrunch\/test\/server\.test\.js/,
+  );
+});
+
 function fixture(t) {
   const folder = fs.mkdtempSync(path.join(os.tmpdir(), "moorkyz-structure-"));
   t.after(() => fs.rmSync(folder, { recursive: true, force: true }));
@@ -102,15 +123,18 @@ test("the single root launcher and internal namespace alias delegate to one core
     "moorkyz",
     "src/.moorkyz/scripts/tools.moorkyz.com.cjs",
   ]) {
-    assert.match(
-      read(entrypoint),
-      /require\("[^"]*moorkyz\.cjs"\)/,
-    );
+    assert.match(read(entrypoint), /require\("[^"]*moorkyz\.cjs"\)/);
     assert.doesNotMatch(read(entrypoint), /function |spawn\(|createServer\(/);
   }
-  assert.equal(typeof require("../../.moorkyz/scripts/helpers/storage.cjs").createLog, "function");
+  assert.equal(
+    typeof require("../../.moorkyz/scripts/helpers/storage.cjs").createLog,
+    "function",
+  );
   assert.equal(fs.existsSync(path.join(root, "docs/legacy/READM.html")), false);
-  assert.equal(fs.existsSync(path.join(root, "src/docs/legacy/READM.html")), false);
+  assert.equal(
+    fs.existsSync(path.join(root, "src/docs/legacy/READM.html")),
+    false,
+  );
 });
 
 test("both launcher configs resolve existing workspace scripts and preserve their preferred ports", () => {

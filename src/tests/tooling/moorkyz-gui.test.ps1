@@ -810,7 +810,7 @@ setTimeout(() => {
         )
         if ($launchCommand -eq 'RUN') {
             $autoStart.FileName = $env:ComSpec
-            $autoStart.Arguments = '/d /c RUN.cmd'
+            $autoStart.Arguments = '/d /c .\RUN.cmd'
         }
         if ($launchCommand -eq 'EXE') {
             $autoStart.FileName = $LauncherExe

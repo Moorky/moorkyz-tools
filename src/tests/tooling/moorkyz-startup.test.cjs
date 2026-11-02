@@ -312,7 +312,7 @@ test(
     assert.match(direct.stdout, /0\. Exit/);
     assert.match(direct.stdout, /nothing was started/);
     if (process.platform === "win32") {
-      const batch = run(process.env.ComSpec, ["/d", "/s", "/c", "RUN.cmd"]);
+      const batch = run(process.env.ComSpec, ["/d", "/s", "/c", ".\\RUN.cmd"]);
       assert.equal(batch.status, 0, batch.stdout + batch.stderr);
       const steps = (text) =>
         text

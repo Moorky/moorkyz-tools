@@ -42,3 +42,11 @@ without privileged operations or third-party dependencies.
 Report exact commands and observed `PASS`, `FAIL`, `NOT RUN` or `N/A` in a
 task-specific audit. Automated tests are not independent security, manual
 accessibility, clean-VM, container or production readiness certification.
+
+The portal gate excludes native Visory report fixtures unless
+`TOOLS_NATIVE_REPORT_TESTS=1`. Its required Windows job builds the native test
+project first and then runs those browser fixtures explicitly. VideoCrunch API
+tests have a separate required Windows job and local command:
+`pnpm --dir src test:videocrunch:api`. Both jobs gate the container/production
+workflow; production additionally requires `COOLIFY_DEPLOY_ENABLED=true`.
+No test is silently counted as passed because its platform is unavailable.

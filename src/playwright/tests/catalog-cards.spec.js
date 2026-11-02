@@ -1,5 +1,6 @@
 import { expect, test } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
+import { TOOL_INDEX } from "../../packages/portal/src/data/tool-index.ts";
 
 test("catalog cards have compact icon-free headings and top-right version labels", async ({
   page,
@@ -23,7 +24,10 @@ test("catalog cards have compact icon-free headings and top-right version labels
         ).toHaveCount(0);
         await expect(card).not.toContainText(/[↗→]/);
         const version = card.locator(".tool-card-top .tool-version");
-        await expect(version).toHaveText("v1.0.0");
+        const id = await card.locator(".tool-id").innerText();
+        const tool = TOOL_INDEX.find((entry) => entry.id === id);
+        expect(tool, `Registered metadata for ${id}`).toBeDefined();
+        await expect(version).toHaveText(`v${tool.version}`);
         await expect(version).toHaveCSS("font-family", /DM Mono/);
         const metrics = await card.evaluate((element) => {
           const category = element.querySelector(".tool-category");

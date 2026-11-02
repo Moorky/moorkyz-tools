@@ -1,6 +1,7 @@
 import { expect, test } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { readFile } from "node:fs/promises";
+import { TOOL_INDEX } from "../../packages/portal/src/data/tool-index.ts";
 
 const origin = `http://127.0.0.1:${process.env.TOOLS_MOORKYZ_COM_PORTAL_PORT ?? process.env.PORTAL_TEST_PORT ?? "4174"}`;
 
@@ -108,7 +109,7 @@ test("catalog cards open complete tool pages, source tree and dormant local serv
   await expect(
     page.getByRole("heading", { name: "A little more useful." }),
   ).toBeVisible();
-  await expect(page.locator(".tool-card")).toHaveCount(5);
+  await expect(page.locator(".tool-card")).toHaveCount(TOOL_INDEX.length);
   await expect(page.locator(".tool-card").first()).toContainText(
     "Design, preview and export",
   );
@@ -275,6 +276,14 @@ test("tool catalog and detail pages remain accessible and fit mobile in both the
         "color",
         theme === "dark" ? "rgb(247, 244, 252)" : "rgb(32, 27, 43)",
       );
+      for (const label of await page
+        .locator(".tool-form label:visible")
+        .all()) {
+        await expect(label).toHaveCSS(
+          "color",
+          theme === "dark" ? "rgb(247, 244, 252)" : "rgb(32, 27, 43)",
+        );
+      }
       await page.evaluate(
         () =>
           new Promise((resolve) =>
