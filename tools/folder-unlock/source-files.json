@@ -1,0 +1,10 @@
+[
+  "README.md",
+  "LICENSE",
+  "Unlock-Folder.ps1",
+  "Run.cmd",
+  "helpers/FolderUnlock.ps1",
+  "tests/Verify.ps1",
+  "portal.json",
+  "source-files.json"
+]

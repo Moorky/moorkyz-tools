@@ -1,0 +1,44 @@
+{
+  "order": 60,
+  "tool": {
+    "slug": "folder-unlock",
+    "id": "moorkyz-tools-folder-unlock",
+    "title": "Moorkyz Folder Unlock",
+    "category": "LOCAL FILE UTILITY",
+    "version": "0.1.0",
+    "releaseDate": null,
+    "updatedOn": "2026-11-02",
+    "summary": "Identify applications holding a working folder open and request a normal close only after saving and confirming.",
+    "catalogDescription": "Find out which application still has a working folder open before moving or archiving it. This standalone Windows script reads Microsoft Handle results, shows matching processes and can request normal closure of one reviewed application. It never force-stops applications, changes permissions or deletes files. Install Handle and review its license yourself; the scanner requires elevation. Preview mode needs neither. Source and disposable tests are included, while elevated live integration remains a manual release check.",
+    "usefulness": 7,
+    "description": "A local PowerShell utility for inspecting folder file handles and optionally requesting normal closure of a specific, revalidated application owned by the current user. This unpublished tool has no portal service connection, automatic installation, persistent state, permission changes or deletion.",
+    "limitations": [
+      "Requires Windows PowerShell 5.1 or PowerShell 7 on Windows.",
+      "Actual scanning requires separately installed, Microsoft-signed Sysinternals Handle, a user-accepted license and an elevated shell.",
+      "A scan is not proof that a folder can be moved or deleted. Protected processes and permission problems require manual resolution.",
+      "Disposable regression tests do not certify elevated real-world integration."
+    ],
+    "useCases": [
+      "Find a file-locking application before moving a development folder.",
+      "Request normal closure of one reviewed application without force-termination.",
+      "Inspect matching handles as JSON without changing application or file state."
+    ],
+    "setup": [
+      {
+        "title": "Read the source and prerequisites",
+        "text": "Download and extract the source ZIP. Read README.md and obtain Microsoft Sysinternals Handle separately. Nothing is installed or started by opening this page."
+      },
+      {
+        "title": "Preview a specific working folder",
+        "text": "Preview validates the path without starting a scanner or modifying files.",
+        "command": ".\\Unlock-Folder.ps1 -Target 'C:\\Work\\example' -DryRun"
+      },
+      {
+        "title": "Inspect locally",
+        "text": "After reviewing Microsoft's license and opening an elevated shell yourself, supply the matching Microsoft-signed executable. Close applications manually unless you explicitly select and confirm a PID.",
+        "command": ".\\Unlock-Folder.ps1 -Target 'C:\\Work\\example' -HandlePath 'C:\\Tools\\Handle\\handle64.exe'"
+      }
+    ],
+    "source": {}
+  }
+}
