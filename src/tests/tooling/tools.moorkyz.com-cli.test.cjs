@@ -15,7 +15,7 @@ const path = require("node:path");
 const { after, test } = require("node:test");
 
 const repoRoot = path.resolve(__dirname, "../../..");
-const cli = path.join(repoRoot, "src/.moorkyz/launchers/tools.moorkyz.com.cjs");
+const cli = path.join(repoRoot, "src/.moorkyz/scripts/tools.moorkyz.com.cjs");
 const fixtures = [];
 
 function fixture() {

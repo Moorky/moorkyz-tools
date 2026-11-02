@@ -1,3 +1,4 @@
-#!/bin/sh
-# POSIX launcher for the project-agnostic Node.js CLI.
-exec node "$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)/moorkyz.cjs" "$@"
+#!/usr/bin/env node
+"use strict";
+
+require("./src/.moorkyz/scripts/moorkyz.cjs");

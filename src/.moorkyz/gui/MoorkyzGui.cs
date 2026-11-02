@@ -17,6 +17,7 @@ using System.Windows.Media.Animation;
 using System.Windows.Media.Effects;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace Moorkyz
 {
@@ -28,19 +29,46 @@ namespace Moorkyz
         private readonly string nodePath;
         private readonly List<Button> motionControls = new List<Button>();
         private readonly List<MaterialCard> materialCards = new List<MaterialCard>();
+        private readonly HashSet<string> visitedViews = new HashSet<string>();
+        private readonly List<FrameworkElement> entrancePanels = new List<FrameworkElement>();
         private readonly Dictionary<Button, string> actions = new Dictionary<Button, string>();
         private readonly object outputLock = new object();
-        private readonly StringBuilder pendingOutput = new StringBuilder();
-        private readonly StringBuilder recentErrors = new StringBuilder();
-        private readonly TextBox output;
+        private readonly List<LogRecord> pendingOutput = new List<LogRecord>();
+        private readonly List<LogRecord> recentErrors = new List<LogRecord>();
+        private int recentErrorsSize;
+        private readonly List<LogRecord> pendingErrors = new List<LogRecord>();
+        private int pendingOutputSize;
+        private int pendingErrorsSize;
+        private readonly TerminalSearch logsSearch;
+        private readonly TerminalSearch errorsSearch;
+        private readonly ReportView reports;
+        private readonly DiagnosticSettings diagnosticSettings;
+        private bool updatingDiagnosticSettings;
+        private readonly DiagnosticTerminal output;
+        private readonly DiagnosticTerminal errorOutput;
         private readonly TextBlock runStatus;
+        private readonly Stopwatch errorClock = new Stopwatch();
+        private double errorIntervalSeconds;
+        private int errorIntervalCount;
+        private readonly Stopwatch commandClock = new Stopwatch();
+        private readonly DispatcherTimer elapsedTimer;
+        private CommandJournal journal;
+        private string loggingFailure;
+        private bool logsVisible = true;
+        private bool errorsVisible = true;
+        private int logsTransition;
+        private int errorsTransition;
         private readonly CheckBox motionToggle;
         private readonly ComboBox projectSelector;
         private readonly WrapPanel cards;
         private readonly TimeSpan duration;
         private readonly TimeSpan bounceDuration;
         private bool outputScheduled;
+        private bool outputTruncated;
+        private bool errorsTruncated;
         private bool closed;
+        private readonly bool startupRequired;
+        private bool startupPassed;
         private Point dragOrigin;
         private Button dragSource;
         private DragPreview dragPreview;
@@ -52,9 +80,11 @@ namespace Moorkyz
         public int DragPreset { get; private set; }
         public int MovePreset { get; private set; }
         public int LastExitCode { get; private set; }
+        public string LastReportPath { get; private set; }
 
-        public ControlGui(string source, string root, string entryPoint, string nodePath, string[] projects, string defaultProject)
+        public ControlGui(string source, string root, string entryPoint, string nodePath, string[] projects, string defaultProject, bool startup = false)
         {
+            startupRequired = startup;
             this.root = System.IO.Path.GetFullPath(root);
             this.entryPoint = System.IO.Path.GetFullPath(entryPoint);
             this.nodePath = System.IO.Path.GetFullPath(nodePath);
@@ -66,8 +96,28 @@ namespace Moorkyz
                 Window.Resources.MergedDictionaries.Add((ResourceDictionary)XamlReader.Load(stream));
             duration = ((Duration)Window.FindResource("Motion.Duration")).TimeSpan;
             bounceDuration = ((Duration)Window.FindResource("Motion.BounceDuration")).TimeSpan;
-            output = Find<TextBox>("Output");
+            output = CreateTerminal("Output", "OutputHost", "Command output", 220);
+            errorOutput = CreateTerminal("Errors", "ErrorsHost", "Command errors", 160);
             runStatus = Find<TextBlock>("RunStatus");
+            logsSearch = new TerminalSearch(Window, this.root, false, output);
+            errorsSearch = new TerminalSearch(Window, this.root, true, errorOutput);
+            Find<ContentControl>("LogsSearchHost").Content = logsSearch;
+            Find<ContentControl>("ErrorsSearchHost").Content = errorsSearch;
+            diagnosticSettings = new DiagnosticSettings(this.root);
+            reports = new ReportView(Window, this.root);
+            Find<ContentControl>("ReportsHost").Content = reports;
+            reports.Configure(diagnosticSettings.Hits, diagnosticSettings.Compact);
+            var hitLimit = Find<ComboBox>("SearchHitLimit");
+            for (int hits = 1; hits <= 10; hits++) hitLimit.Items.Add(hits);
+            hitLimit.SelectedItem = diagnosticSettings.Hits;
+            var timestamp = Find<ComboBox>("TimestampFormat");
+            timestamp.Items.Add("yyyy-MM-dd HH:mm:ss");
+            timestamp.Items.Add("HH:mm:ss");
+            timestamp.SelectedIndex = diagnosticSettings.Compact ? 1 : 0;
+            logsSearch.Configure(diagnosticSettings.Hits, diagnosticSettings.Compact);
+            errorsSearch.Configure(diagnosticSettings.Hits, diagnosticSettings.Compact);
+            hitLimit.SelectionChanged += delegate { SaveDiagnosticSettings(); };
+            timestamp.SelectionChanged += delegate { SaveDiagnosticSettings(); };
             motionToggle = Find<CheckBox>("MotionToggle");
             projectSelector = Find<ComboBox>("ProjectSelector");
             cards = Find<WrapPanel>("ActionCards");
@@ -90,7 +140,7 @@ namespace Moorkyz
             AddAction("Status", "Inspect tracked processes and URLs.", "status", false);
             AddAction("Restart", "Replace this CLI's managed service.", "restart", false);
             AddAction("Stop", "Stop only this CLI's verified service.", "stop", false);
-            AddAction("Logs", "Read the latest 80 service log lines.", "logs", false);
+            AddAction("Logs", "Read the complete current service log snapshot.", "logs", false);
             AddAction("Doctor", "Check local setup. Installs nothing.", "doctor", false);
             AddAction("Build", "Run the existing build script.", "build", false);
             AddAction("Test", "Run the existing test script.", "test", false);
@@ -105,6 +155,22 @@ namespace Moorkyz
             brandHome.Click += delegate { ShowView(false); };
             overviewNav.Click += delegate { ShowView(false); };
             effectsNav.Click += delegate { ShowView(true); };
+            var diagnosticsNav = Find<Button>("DiagnosticsNav");
+            AttachMotion(diagnosticsNav);
+            diagnosticsNav.Click += delegate { ShowDiagnostics(); };
+            Find<Button>("StartupRetry").Click += delegate { RunCommand("startup"); };
+            var reportsNav = Find<Button>("ReportsNav");
+            AttachMotion(reportsNav);
+            reportsNav.Click += delegate { ShowReports(); };
+            Window.Activated += delegate { SetForegroundTiming(true); };
+            Window.Deactivated += delegate { SetForegroundTiming(false); };
+            Window.StateChanged += delegate { SetForegroundTiming(Window.IsActive && Window.WindowState != WindowState.Minimized); };
+            var logsHandle = Find<Button>("LogsHandle");
+            var errorsHandle = Find<Button>("ErrorsHandle");
+            AttachMotion(logsHandle);
+            AttachMotion(errorsHandle);
+            logsHandle.Click += delegate { SetTerminalVisible(false, !logsVisible); };
+            errorsHandle.Click += delegate { SetTerminalVisible(true, !errorsVisible); };
             AddSelector("HOVER", new[] { "Scale + lift", "Violet glow", "Surface light" }, delegate(int value) { HoverPreset = value; ResetMotion(); });
             AddSelector("PRESS", new[] { "Spring bounce", "Ripple", "Inset pulse" }, delegate(int value) { PressPreset = value; ResetMotion(); });
             AddSelector("DRAG", new[] { "Lift", "Ghost", "Outline" }, delegate(int value) { DragPreset = value; });
@@ -122,6 +188,12 @@ namespace Moorkyz
             Window.Closed += delegate
             {
                 closed = true;
+                elapsedTimer.Stop();
+                errorClock.Stop();
+                logsSearch.Dispose();
+                errorsSearch.Dispose();
+                reports.Dispose();
+                SettleEntrance();
                 ResetMotion();
                 if (dragPreview != null) dragPreview.Dispose();
                 SystemParameters.StaticPropertyChanged -= OnSystemSettingChanged;
@@ -136,6 +208,19 @@ namespace Moorkyz
             };
             UpdateActions();
             UpdateMotion();
+            Window.Loaded += delegate
+            {
+                foreach (string name in new[] { "Overview", "Effects", "Diagnostics", "Reports" })
+                    if (Find<ScrollViewer>(name).Visibility == Visibility.Visible) EnterView(name);
+            };
+            elapsedTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(250) };
+            elapsedTimer.Tick += delegate { UpdateElapsed(); };
+            elapsedTimer.Start();
+            if (startup)
+            {
+                ShowDiagnostics();
+                Window.Loaded += delegate { Window.Dispatcher.BeginInvoke(new Action(delegate { RunCommand("startup"); })); };
+            }
         }
 
         public T Find<T>(string name) where T : FrameworkElement
@@ -300,11 +385,196 @@ namespace Moorkyz
 
         public void ShowView(bool effects)
         {
-            Find<ScrollViewer>("Overview").Visibility = effects ? Visibility.Collapsed : Visibility.Visible;
-            Find<ScrollViewer>("Effects").Visibility = effects ? Visibility.Visible : Visibility.Collapsed;
-            Find<Button>("OverviewNav").Style = (Style)Window.FindResource(effects ? "QuietButton" : "PrimaryButton");
-            Find<Button>("EffectsNav").Style = (Style)Window.FindResource(effects ? "PrimaryButton" : "QuietButton");
-            AnimateMove(effects ? (FrameworkElement)Find<ScrollViewer>("Effects") : Find<ScrollViewer>("Overview"), 0, 12);
+            SwitchView(effects ? "Effects" : "Overview");
+        }
+
+        public void ShowDiagnostics()
+        {
+            SwitchView("Diagnostics");
+        }
+
+        public void ShowReports()
+        {
+            if (Find<ScrollViewer>("Reports").Visibility == Visibility.Visible) return;
+            SwitchView("Reports");
+            reports.Refresh();
+        }
+
+        private void SetForegroundTiming(bool active)
+        {
+            lock (outputLock) { if (journal != null) journal.SetForeground(active); }
+        }
+
+        private void SwitchView(string view)
+        {
+            if (Find<ScrollViewer>(view).Visibility == Visibility.Visible) return;
+            SettleEntrance();
+            foreach (string name in new[] { "Overview", "Effects", "Diagnostics", "Reports" })
+                Find<ScrollViewer>(name).Visibility = name == view ? Visibility.Visible : Visibility.Collapsed;
+            Find<Button>("OverviewNav").Style = (Style)Window.FindResource(view == "Overview" ? "PrimaryButton" : "QuietButton");
+            Find<Button>("EffectsNav").Style = (Style)Window.FindResource(view == "Effects" ? "PrimaryButton" : "QuietButton");
+            Find<Button>("DiagnosticsNav").Style = (Style)Window.FindResource(view == "Diagnostics" ? "PrimaryButton" : "QuietButton");
+            Find<Button>("ReportsNav").Style = (Style)Window.FindResource(view == "Reports" ? "PrimaryButton" : "QuietButton");
+            if (Window.IsLoaded) EnterView(view);
+        }
+
+        private void EnterView(string view)
+        {
+            var scroll = Find<ScrollViewer>(view);
+            scroll.ScrollToTop();
+            if (!visitedViews.Add(view))
+            {
+                AnimateMove(scroll, 0, 12);
+                return;
+            }
+            if (!MotionEnabled) return;
+            CollectEntrancePanels(scroll.Content as FrameworkElement);
+            for (int i = 0; i < entrancePanels.Count; i++)
+            {
+                var panel = entrancePanels[i];
+                var group = panel.RenderTransform as TransformGroup;
+                var translate = group == null ? panel.RenderTransform as TranslateTransform : group.Children[1] as TranslateTransform;
+                if (translate == null) panel.RenderTransform = translate = new TranslateTransform();
+                TimeSpan delay = TimeSpan.FromMilliseconds(i * 90);
+                panel.BeginAnimation(UIElement.OpacityProperty, EntranceAnimation(0, 1, delay));
+                translate.BeginAnimation(TranslateTransform.YProperty, EntranceAnimation(18, 0, delay));
+            }
+        }
+
+        private DoubleAnimationUsingKeyFrames EntranceAnimation(double from, double to, TimeSpan delay)
+        {
+            var animation = new DoubleAnimationUsingKeyFrames { FillBehavior = FillBehavior.Stop };
+            animation.KeyFrames.Add(new DiscreteDoubleKeyFrame(from, KeyTime.FromTimeSpan(TimeSpan.Zero)));
+            animation.KeyFrames.Add(new DiscreteDoubleKeyFrame(from, KeyTime.FromTimeSpan(delay)));
+            animation.KeyFrames.Add(new EasingDoubleKeyFrame(to, KeyTime.FromTimeSpan(delay + duration),
+                new CubicEase { EasingMode = EasingMode.EaseOut }));
+            return animation;
+        }
+
+        private void CollectEntrancePanels(FrameworkElement element)
+        {
+            if (element == null) return;
+            if (element is Border || element is Button)
+            {
+                entrancePanels.Add(element);
+                return;
+            }
+            var panel = element as Panel;
+            if (panel != null)
+                foreach (UIElement child in panel.Children) CollectEntrancePanels(child as FrameworkElement);
+            else
+            {
+                var host = element as ContentControl;
+                if (host != null) CollectEntrancePanels(host.Content as FrameworkElement);
+            }
+        }
+
+        private void SettleEntrance()
+        {
+            foreach (var panel in entrancePanels)
+            {
+                panel.BeginAnimation(UIElement.OpacityProperty, null);
+                var group = panel.RenderTransform as TransformGroup;
+                var translate = group == null ? panel.RenderTransform as TranslateTransform : group.Children[1] as TranslateTransform;
+                if (translate != null) translate.BeginAnimation(TranslateTransform.YProperty, null);
+            }
+            entrancePanels.Clear();
+        }
+
+        public void SetTerminalVisible(bool errors, bool visible)
+        {
+            if (errors) { errorsVisible = visible; errorsTransition++; }
+            else { logsVisible = visible; logsTransition++; }
+            int transition = errors ? errorsTransition : logsTransition;
+            var pane = Find<Grid>(errors ? "ErrorsPane" : "LogsPane");
+            var handle = Find<Button>(errors ? "ErrorsHandle" : "LogsHandle");
+            if (!visible && pane.IsKeyboardFocusWithin) handle.Focus();
+            string label = (visible ? "Hide " : "Show ") + (errors ? "errors" : "logs");
+            handle.Content = "_" + label;
+            AutomationProperties.SetName(handle, label);
+            bool collapsed = pane.Visibility == Visibility.Collapsed;
+            double startHeight = pane.Visibility == Visibility.Collapsed ? 0 : pane.ActualHeight;
+            double startOpacity = pane.Opacity;
+            pane.BeginAnimation(FrameworkElement.HeightProperty, null);
+            pane.BeginAnimation(UIElement.OpacityProperty, null);
+            var translate = pane.RenderTransform as TranslateTransform;
+            double startY = translate == null ? 0 : translate.Y;
+            if (translate == null) pane.RenderTransform = translate = new TranslateTransform();
+            translate.BeginAnimation(TranslateTransform.YProperty, null);
+            pane.Visibility = Visibility.Visible;
+            pane.Height = double.NaN;
+            pane.Measure(new Size(Math.Max(1, ((FrameworkElement)pane.Parent).ActualWidth), double.PositiveInfinity));
+            double height = visible ? pane.DesiredSize.Height : 0;
+            pane.Height = visible ? double.NaN : 0;
+            pane.Opacity = 1;
+            translate.Y = 0;
+            if (!MotionEnabled)
+            {
+                pane.Visibility = visible ? Visibility.Visible : Visibility.Collapsed;
+                return;
+            }
+            var ease = new CubicEase { EasingMode = EasingMode.EaseOut };
+            var resize = new DoubleAnimation(startHeight, height, duration) { EasingFunction = ease, FillBehavior = FillBehavior.Stop };
+            resize.Completed += delegate
+            {
+                if (transition != (errors ? errorsTransition : logsTransition)) return;
+                pane.Visibility = visible ? Visibility.Visible : Visibility.Collapsed;
+            };
+            pane.BeginAnimation(FrameworkElement.HeightProperty, resize);
+            pane.BeginAnimation(UIElement.OpacityProperty, new DoubleAnimation(collapsed ? 0 : startOpacity, visible ? 1 : 0, duration) { FillBehavior = FillBehavior.Stop });
+            translate.BeginAnimation(TranslateTransform.YProperty, new DoubleAnimation(collapsed ? 12 : startY, visible ? 0 : 12, duration) { EasingFunction = ease, FillBehavior = FillBehavior.Stop });
+        }
+
+        private void UpdateElapsed()
+        {
+            Find<TextBlock>("ElapsedStatus").Text = "Time spent: " + DiagnosticPresentation.Duration(commandClock.Elapsed.TotalSeconds);
+            lock (outputLock)
+            {
+                Find<TextBlock>("ErrorElapsedStatus").Text = errorClock.IsRunning
+                    ? "Time since last error: " + DiagnosticPresentation.Duration(errorClock.Elapsed.TotalSeconds)
+                    : "Time since last error: unavailable - no errors this session.";
+                Find<TextBlock>("ErrorAverageStatus").Text = errorIntervalCount > 0
+                    ? "Average interval: " + DiagnosticPresentation.Duration(errorIntervalSeconds / errorIntervalCount) + " (this session)"
+                    : "Average interval: unavailable - needs two errors this session.";
+            }
+        }
+
+        private DiagnosticTerminal CreateTerminal(string name, string host, string label, double height)
+        {
+            var terminal = new DiagnosticTerminal {
+                IsReadOnly = true, IsUndoEnabled = false, Height = height, Margin = new Thickness(0, 10, 0, 0),
+                FontFamily = new FontFamily("Consolas"), FontSize = 12,
+                VerticalScrollBarVisibility = ScrollBarVisibility.Auto, HorizontalScrollBarVisibility = ScrollBarVisibility.Auto,
+                Style = (Style)Window.FindResource(typeof(RichTextBox))
+            };
+            AutomationProperties.SetName(terminal, label);
+            Window.RegisterName(name, terminal);
+            Find<ContentControl>(host).Content = terminal;
+            return terminal;
+        }
+
+        private void SaveDiagnosticSettings()
+        {
+            if (updatingDiagnosticSettings) return;
+            var hits = Find<ComboBox>("SearchHitLimit");
+            var timestamp = Find<ComboBox>("TimestampFormat");
+            try
+            {
+                diagnosticSettings.Save((int)hits.SelectedItem, timestamp.SelectedIndex == 1);
+                logsSearch.Configure(diagnosticSettings.Hits, diagnosticSettings.Compact);
+                errorsSearch.Configure(diagnosticSettings.Hits, diagnosticSettings.Compact);
+                reports.Configure(diagnosticSettings.Hits, diagnosticSettings.Compact);
+                if (Find<ScrollViewer>("Reports").Visibility == Visibility.Visible) reports.Refresh();
+            }
+            catch (Exception error)
+            {
+                updatingDiagnosticSettings = true;
+                hits.SelectedItem = diagnosticSettings.Hits;
+                timestamp.SelectedIndex = diagnosticSettings.Compact ? 1 : 0;
+                updatingDiagnosticSettings = false;
+                runStatus.Text = "Diagnostic settings were not saved; previous values restored.";
+                QueueOutput("Settings failed: " + error.Message, true, false);
+            }
         }
 
         private void AttachMotion(Button button)
@@ -468,16 +738,20 @@ namespace Moorkyz
             motionToggle.IsEnabled = SystemParameters.ClientAreaAnimation;
             foreach (MaterialCard card in materialCards) card.SetMotionEnabled(MotionEnabled);
             Find<TextBlock>("MotionStatus").Text = !SystemParameters.ClientAreaAnimation ? "Windows animations are off." : MotionEnabled ? "Subtle / " + duration.TotalMilliseconds + " ms" : "Reduced motion";
+            Find<ProgressBar>("CommandProgress").IsIndeterminate = IsBusy && MotionEnabled;
             if (!MotionEnabled)
             {
+                SettleEntrance();
                 ResetMotion();
                 if (dragPreview != null) dragPreview.Dispose();
-                foreach (string name in new[] { "Overview", "Effects", "MotionPreview" })
+                foreach (string name in new[] { "Overview", "Effects", "Diagnostics", "Reports", "MotionPreview" })
                 {
                     var element = Find<FrameworkElement>(name);
                     element.BeginAnimation(UIElement.OpacityProperty, null);
                     element.RenderTransform = Transform.Identity;
                 }
+                SetTerminalVisible(false, logsVisible);
+                SetTerminalVisible(true, errorsVisible);
             }
         }
 
@@ -490,8 +764,9 @@ namespace Moorkyz
         private void UpdateActions()
         {
             bool selected = projectSelector.SelectedItem != null;
-            foreach (Button button in actions.Keys) button.IsEnabled = !IsBusy && selected;
+            foreach (Button button in actions.Keys) button.IsEnabled = !IsBusy && selected && (!startupRequired || startupPassed);
             projectSelector.IsEnabled = !IsBusy;
+            Find<Button>("StartupRetry").IsEnabled = !IsBusy;
         }
 
         public static string QuoteArgument(string value)
@@ -506,28 +781,63 @@ namespace Moorkyz
         public bool RunCommand(string command)
         {
             if (IsBusy) return false;
-            if (!actions.ContainsValue(command)) throw new ArgumentException("Unsupported GUI action: " + command);
-            if (projectSelector.SelectedItem == null)
+            if (command != "startup" && !actions.ContainsValue(command)) throw new ArgumentException("Unsupported GUI action: " + command);
+            if (command != "startup" && startupRequired && !startupPassed)
+            {
+                runStatus.Text = "Startup checks must pass before project actions. Use Retry startup checks.";
+                return false;
+            }
+            if (command != "startup" && projectSelector.SelectedItem == null)
             {
                 runStatus.Text = "Choose a project before running an action.";
                 return false;
             }
-            string project = (string)projectSelector.SelectedItem;
+            string project = command == "startup" ? "checkout" : (string)projectSelector.SelectedItem;
+            ShowDiagnostics();
+            try
+            {
+                journal = new CommandJournal(root, entryPoint, command, project);
+            }
+            catch (Exception error)
+            {
+                LastExitCode = 1;
+                commandClock.Reset();
+                LastReportPath = null;
+                Find<TextBox>("ReportPath").Text = "No report: logging setup failed.";
+                Find<ProgressBar>("CommandProgress").Value = 0;
+                Find<ProgressBar>("CommandProgress").IsIndeterminate = false;
+                Find<TextBlock>("AverageStatus").Text = "Average unavailable: command was not started.";
+                runStatus.Text = "Command not started: cannot create full logs.";
+                runStatus.Foreground = DiagnosticPresentation.Level(Window, "FAIL");
+                Find<TextBox>("ReportPath").Foreground = runStatus.Foreground;
+                QueueOutput("Logging setup failed: " + error.Message, true, false);
+                if (command == "startup") Find<Button>("StartupRetry").Visibility = Visibility.Visible;
+                return false;
+            }
             IsBusy = true;
+            loggingFailure = null;
+            LastReportPath = System.IO.Path.Combine(journal.DirectoryPath, "report.xml");
+            Find<TextBox>("ReportPath").Text = journal.DirectoryPath;
             LastExitCode = -1;
             UpdateActions();
             ResetMotion();
-            output.Clear();
-            lock (outputLock) recentErrors.Clear();
-            output.AppendText("> " + System.IO.Path.GetFileNameWithoutExtension(entryPoint) + " " + command + " " + project + Environment.NewLine);
-            output.BringIntoView();
+            lock (outputLock) { recentErrors.Clear(); recentErrorsSize = 0; }
+            QueueOutput("> " + System.IO.Path.GetFileNameWithoutExtension(entryPoint) + " " + command + " " + project);
+            commandClock.Restart();
+            SetForegroundTiming(Window.IsActive && Window.WindowState != WindowState.Minimized);
+            Find<TextBlock>("AverageStatus").Text = "Average: pending completed reports for " + command + " / " + project + ".";
+            Find<ProgressBar>("CommandProgress").Value = 0;
+            Find<ProgressBar>("CommandProgress").IsIndeterminate = MotionEnabled;
             runStatus.Text = "Running " + command + " for " + project + "...";
+            runStatus.Foreground = (Brush)Window.FindResource("Diagnostic.Diagnostics");
+            Find<TextBox>("ReportPath").Foreground = (Brush)Window.FindResource("Diagnostic.Reference");
             Task.Factory.StartNew(delegate
             {
                 int code;
                 try
                 {
-                    var start = new ProcessStartInfo(nodePath, QuoteArgument(entryPoint) + " " + command + " " + project)
+                    var start = new ProcessStartInfo(nodePath, QuoteArgument(entryPoint) +
+                        (command == "startup" ? " __startup" : " " + command + " " + project + (command == "logs" ? " --all" : "")))
                     {
                         WorkingDirectory = root,
                         UseShellExecute = false,
@@ -537,6 +847,7 @@ namespace Moorkyz
                         StandardOutputEncoding = Encoding.UTF8,
                         StandardErrorEncoding = Encoding.UTF8
                     };
+                    start.EnvironmentVariables["MOORKYZ_HEADLESS"] = "1";
                     using (var process = new Process { StartInfo = start })
                     {
                         process.OutputDataReceived += delegate(object sender, DataReceivedEventArgs e) { if (e.Data != null) QueueOutput(e.Data); };
@@ -553,58 +864,144 @@ namespace Moorkyz
                     QueueOutput("Could not run command: " + error.Message, true);
                     code = 1;
                 }
+                commandClock.Stop();
+                double average = 0;
+                int completed = 0;
+                try
+                {
+                    if (loggingFailure != null) throw new IOException(loggingFailure);
+                    journal.Complete(code, commandClock.Elapsed.TotalSeconds);
+                    average = journal.AverageSeconds;
+                    completed = journal.CompletedRuns;
+                }
+                catch (Exception error)
+                {
+                    loggingFailure = error.Message;
+                    QueueOutput("Full logging/report failed: " + error.Message, true, false);
+                }
+                finally
+                {
+                    try { journal.Dispose(); }
+                    catch (Exception error)
+                    {
+                        loggingFailure = error.Message;
+                        QueueOutput("Closing full logs failed: " + error.Message, true, false);
+                    }
+                    journal = null;
+                }
                 Window.Dispatcher.BeginInvoke(new Action(delegate
                 {
                     if (code != 0)
                     {
-                        string errors;
-                        lock (outputLock) errors = recentErrors.ToString();
-                        if (errors.Length > 0) QueueOutput("Recent stderr:" + Environment.NewLine + errors);
+                        lock (outputLock)
+                            foreach (LogRecord record in recentErrors)
+                                AddPending(pendingOutput, record, ref pendingOutputSize, ref outputTruncated);
                     }
                     FlushOutput();
-                    LastExitCode = code;
+                    LastExitCode = code != 0 ? code : loggingFailure == null ? 0 : 1;
                     IsBusy = false;
-                    runStatus.Text = command + (code == 0 ? " completed" : " failed") + " (exit " + code + ").";
-                    runStatus.Foreground = (Brush)Window.FindResource(code == 0 ? "Text" : "Focus");
+                    if (command == "startup")
+                    {
+                        startupPassed = LastExitCode == 0;
+                        Find<Button>("StartupRetry").Visibility = startupPassed ? Visibility.Collapsed : Visibility.Visible;
+                    }
+                    Find<ProgressBar>("CommandProgress").IsIndeterminate = false;
+                    Find<ProgressBar>("CommandProgress").Value = LastExitCode == 0 ? 1 : 0;
+                    runStatus.Text = command + (code == 0 ? " completed" : " failed") + " (exit " + code + ")." +
+                        (loggingFailure == null ? "" : " Full logging/report FAILED; inspect Errors.");
+                    runStatus.Foreground = DiagnosticPresentation.Level(Window, LastExitCode == 0 ? "PASS" : "FAIL");
+                    Find<TextBox>("ReportPath").Foreground = runStatus.Foreground;
+                    Find<TextBlock>("AverageStatus").Text = loggingFailure == null
+                        ? "Average for " + command + " / " + project + ": " + DiagnosticPresentation.Duration(average) + " across " + completed + " completed reports (including failures)."
+                        : "Average unavailable: logging/report failed.";
+                    UpdateElapsed();
                     UpdateActions();
+                    if (Find<ScrollViewer>("Reports").Visibility == Visibility.Visible) reports.Refresh();
                 }));
             });
             return true;
         }
 
-        private void QueueOutput(string line, bool error = false)
+        private void QueueOutput(string line, bool error = false, bool persist = true)
         {
+            line = CommandJournal.Redact(line);
             lock (outputLock)
             {
-                if (error)
+                foreach (string message in line.Replace("\r\n", "\n").Replace('\r', '\n').Split('\n'))
                 {
-                    recentErrors.AppendLine(line);
-                    if (recentErrors.Length > 8000) recentErrors.Remove(0, recentErrors.Length - 8000);
+                    var record = new LogRecord { Timestamp = DateTime.UtcNow, Level = LogRecord.DetectLevel(message, error), Message = message };
+                    if (persist && journal != null && loggingFailure == null)
+                    {
+                        try { record = journal.Write(message, error); }
+                        catch (Exception failure)
+                        {
+                            loggingFailure = failure.Message;
+                            record.Message += " [Full logging failed: " + CommandJournal.Redact(failure.Message) + "]";
+                            record.Level = "ERROR";
+                        }
+                    }
+                    if (error || LogRecord.IsError(record.Level))
+                    {
+                        if (errorClock.IsRunning)
+                        {
+                            errorIntervalSeconds += errorClock.Elapsed.TotalSeconds;
+                            errorIntervalCount++;
+                        }
+                        errorClock.Restart();
+                        LogRecord errorRecord = record.Copy();
+                        errorRecord.File = record.ErrorFile;
+                        errorRecord.Line = record.ErrorLine;
+                        AddPending(pendingErrors, errorRecord, ref pendingErrorsSize, ref errorsTruncated);
+                        bool trimmed = false;
+                        AddPending(recentErrors, record.Copy(), ref recentErrorsSize, ref trimmed, 8000);
+                    }
+                    AddPending(pendingOutput, record, ref pendingOutputSize, ref outputTruncated);
                 }
-                pendingOutput.AppendLine(line);
-                if (pendingOutput.Length > OutputLimit) pendingOutput.Remove(0, pendingOutput.Length - OutputLimit);
                 if (outputScheduled) return;
                 outputScheduled = true;
             }
             Window.Dispatcher.BeginInvoke(new Action(FlushOutput));
         }
 
+        private static void AddPending(List<LogRecord> target, LogRecord record, ref int size, ref bool truncated, int maximum = OutputLimit)
+        {
+            if (record.Message.Length > maximum - 100)
+            {
+                record = record.Copy();
+                record.Message = record.Message.Substring(record.Message.Length - maximum + 100);
+                truncated = true;
+            }
+            target.Add(record);
+            size += record.Display(false).Length + Environment.NewLine.Length;
+            while (size > maximum && target.Count > 1)
+            {
+                size -= target[0].Display(false).Length + Environment.NewLine.Length;
+                target.RemoveAt(0);
+                truncated = true;
+            }
+        }
+
         private void FlushOutput()
         {
-            string text;
+            List<LogRecord> text;
+            List<LogRecord> errors;
+            bool lostOutput;
+            bool lostErrors;
             lock (outputLock)
             {
-                text = pendingOutput.ToString();
+                text = new List<LogRecord>(pendingOutput);
                 pendingOutput.Clear();
+                errors = new List<LogRecord>(pendingErrors);
+                pendingErrors.Clear();
+                pendingOutputSize = pendingErrorsSize = 0;
+                lostOutput = outputTruncated;
+                lostErrors = errorsTruncated;
+                outputTruncated = false;
+                errorsTruncated = false;
                 outputScheduled = false;
             }
-            output.AppendText(text);
-            if (output.Text.Length > OutputLimit)
-            {
-                string notice = "[Earlier output omitted from this window]" + Environment.NewLine;
-                output.Text = notice + output.Text.Substring(output.Text.Length - OutputLimit + notice.Length);
-            }
-            output.ScrollToEnd();
+            logsSearch.Append(text, lostOutput);
+            errorsSearch.Append(errors, lostErrors);
         }
 
         private void OnClosing(object sender, CancelEventArgs e)

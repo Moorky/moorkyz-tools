@@ -9,7 +9,7 @@ const { test } = require("node:test");
 
 const root = path.resolve(__dirname, "../../..");
 function fixtureEnvironment() {
-  const env = { ...process.env, CI: "1" };
+  const env = { ...process.env, CI: "1", MOORKYZ_HEADLESS: "1" };
   // pnpm disables recursive verification inside its lifecycle environment.
   // These fixtures model a standalone launcher, using their own workspace policy.
   for (const key of Object.keys(env)) {
@@ -68,8 +68,8 @@ for (const launcher of ["moorkyz", "tools.moorkyz.com"]) {
     const cli = path.join(
       root,
       launcher === "moorkyz"
-        ? "moorkyz.cjs"
-        : "src/.moorkyz/launchers/tools.moorkyz.com.cjs",
+        ? "moorkyz"
+        : "src/.moorkyz/scripts/tools.moorkyz.com.cjs",
     );
     function run(...args) {
       return spawnSync(process.execPath, [cli, ...args], {

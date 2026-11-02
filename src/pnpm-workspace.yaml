@@ -2,3 +2,4 @@ packages:
   - packages/*
 
 verifyDepsBeforeRun: error
+enableGlobalVirtualStore: false

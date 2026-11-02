@@ -1,5 +1,5 @@
 import { execFileSync } from "node:child_process";
-import { readFileSync } from "node:fs";
+import { lstatSync, readFileSync } from "node:fs";
 
 const paths = execFileSync(
   "git",
@@ -16,6 +16,12 @@ const patterns = [
   /\bgithub_pat_[A-Za-z0-9_]{70,255}\b/,
 ];
 for (const path of paths) {
+  const source = lstatSync(path, { throwIfNoEntry: false });
+  if (!source || source.isDirectory()) continue;
+  if (!source.isFile()) {
+    findings.push(`${path}: source is not a regular file; inspection refused`);
+    continue;
+  }
   if (
     !/\.(?:[cm]?[jt]sx?|ps1|json|ya?ml|md|html|css|cmd|sh|cs|xaml|csproj|slnx?|props|targets)$/.test(
       path,

@@ -7,9 +7,9 @@ It is not an automatic template updater.
 
 | System                                 | Entrypoint                                        | Purpose                                                          |
 | -------------------------------------- | ------------------------------------------------- | ---------------------------------------------------------------- |
-| [Local CLI](cli/README.md)             | Root `moorkyz` / `moorkyz.cmd`                    | Explicit project lifecycle, diagnostics and recoverable storage  |
+| [Local CLI](../.moorkyz/scripts/README.md)             | Root `moorkyz` / `moorkyz.cmd`                    | Explicit project lifecycle, diagnostics and recoverable storage  |
 | [Maintenance](maintenance/README.md)   | `node src/.template/maintenance/run-checkups.cjs` | Read-only runnable-source syntax checks                          |
-| [Task audits](../../.audits/README.md) | `node moorkyz.cjs audit "task title"`             | Evidence from the [audit template](../../docs/AUDIT_TEMPLATE.md) |
+| [Task audits](../../.audits/README.md) | `node moorkyz audit "task title"`             | Evidence from the [audit template](../docs/AUDIT_TEMPLATE.md) |
 
 Each system keeps its entrypoint and README together; implementation helpers
 live under `helpers/`. Root launchers remain thin compatibility entrypoints.

@@ -38,6 +38,8 @@
             <TextBlock Text="WORKSPACE" Style="{DynamicResource Eyebrow}" Margin="6,6,0,14"/>
             <Button x:Name="OverviewNav" Content="_Overview" Style="{DynamicResource PrimaryButton}" HorizontalContentAlignment="Left" Margin="0,0,0,10"/>
             <Button x:Name="EffectsNav" Content="_Interaction lab" Style="{DynamicResource QuietButton}" HorizontalContentAlignment="Left"/>
+            <Button x:Name="DiagnosticsNav" Content="_Logs &amp; Errors" Style="{DynamicResource QuietButton}" HorizontalContentAlignment="Left" Margin="0,10,0,0"/>
+            <Button x:Name="ReportsNav" Content="_Reports" Style="{DynamicResource QuietButton}" HorizontalContentAlignment="Left" Margin="0,10,0,0"/>
             <Border Height="1" Background="{DynamicResource Border}" Margin="6,24,6,18"/>
             <TextBlock Text="DEEP BLUE&#10;+ VIOLET" Foreground="{DynamicResource Focus}" FontSize="12" LineHeight="20" Margin="6,0"/>
           </StackPanel>
@@ -65,16 +67,56 @@
             <TextBlock Text="Quick actions" FontSize="20" FontWeight="SemiBold"/>
             <TextBlock Text="Click to run. Drag to reorder, or focus a card and press Alt + an arrow key. Order lasts for this window." Style="{DynamicResource MutedText}" FontSize="12" Margin="0,7,0,16"/>
             <WrapPanel x:Name="ActionCards" Margin="3,3,0,6"/>
-            <Border Style="{DynamicResource Panel}">
+          </StackPanel>
+        </ScrollViewer>
+        <ScrollViewer x:Name="Reports" Visibility="Collapsed" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+          <ContentControl x:Name="ReportsHost" Margin="4,0,12,4"/>
+        </ScrollViewer>
+        <ScrollViewer x:Name="Diagnostics" Visibility="Collapsed" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+          <StackPanel Margin="4,0,12,4">
+            <TextBlock Text="Logs &amp; Errors" Foreground="{DynamicResource Diagnostic.Diagnostics}" FontSize="30" FontWeight="SemiBold"/>
+            <TextBlock Text="Read-only command terminals. Hiding a pane never stops logging." Style="{DynamicResource MutedText}" Margin="0,9,0,18"/>
+            <Border Style="{DynamicResource Panel}" Margin="0,0,0,16">
               <StackPanel>
-                <TextBlock Text="Command output" FontSize="18" FontWeight="SemiBold"/>
-                <TextBlock x:Name="RunStatus" Text="Idle - no commands have run." Style="{DynamicResource MutedText}" Margin="0,8,0,12" AutomationProperties.LiveSetting="Polite"/>
-                <TextBox x:Name="Output" IsReadOnly="True" AcceptsReturn="True" TextWrapping="NoWrap"
-                         VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"
-                         Height="210" FontFamily="Consolas" FontSize="12" AutomationProperties.Name="Command output"/>
-                <TextBlock Text="Closing this window does not stop services managed by the CLI. Use Stop explicitly." Style="{DynamicResource MutedText}" FontSize="11" Margin="0,12,0,0"/>
+                <TextBlock x:Name="RunStatus" Text="Idle - no commands have run." Style="{DynamicResource MutedText}" AutomationProperties.LiveSetting="Polite"/>
+                <Button x:Name="StartupRetry" Content="_Retry startup checks" Visibility="Collapsed" Style="{DynamicResource QuietButton}" Margin="0,8,0,0" AutomationProperties.Name="Retry failed startup checklist"/>
+                <ProgressBar x:Name="CommandProgress" Height="6" Minimum="0" Maximum="1" Value="0" Margin="0,12,0,10" AutomationProperties.Name="Command activity"/>
+                <TextBox x:Name="ReportPath" Foreground="{DynamicResource Diagnostic.Reference}" IsReadOnly="True" BorderThickness="0" TextWrapping="Wrap" Text="No command reports yet." Margin="0,8,0,0" AutomationProperties.Name="Full logs and report location"/>
+                <WrapPanel Margin="0,10,0,0">
+                  <TextBlock Text="Search hits" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                  <ComboBox x:Name="SearchHitLimit" MinWidth="65" AutomationProperties.Name="Maximum search hits (1 to 10)" Margin="0,0,16,0"/>
+                  <TextBlock Text="Timestamp (UTC)" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                  <ComboBox x:Name="TimestampFormat" MinWidth="180" AutomationProperties.Name="Log timestamp format"/>
+                </WrapPanel>
               </StackPanel>
             </Border>
+            <Border Style="{DynamicResource Panel}" Margin="0,0,0,16">
+              <StackPanel>
+                <Button x:Name="LogsHandle" Foreground="{DynamicResource Diagnostic.Success}" Content="_Hide logs" Style="{DynamicResource QuietButton}" HorizontalContentAlignment="Left" AutomationProperties.Name="Hide logs" ToolTip="Show or hide the read-only log terminal. Logging continues."/>
+                <TextBlock x:Name="ElapsedStatus" Text="Time spent: 0 s" Foreground="{DynamicResource Diagnostic.Statistics}" FontSize="11" Margin="0,8,0,0"/>
+                <TextBlock x:Name="AverageStatus" Text="Average: unavailable - no completed task." Foreground="{DynamicResource Diagnostic.Statistics}" FontSize="11" Margin="0,6,0,0"/>
+                <Grid x:Name="LogsPane" ClipToBounds="True">
+                  <StackPanel>
+                    <ContentControl x:Name="LogsSearchHost"/>
+                    <ContentControl x:Name="OutputHost"/>
+                  </StackPanel>
+                </Grid>
+              </StackPanel>
+            </Border>
+            <Border Style="{DynamicResource Panel}">
+              <StackPanel>
+                <Button x:Name="ErrorsHandle" Foreground="{DynamicResource Diagnostic.Error}" Content="_Hide errors" Style="{DynamicResource QuietButton}" HorizontalContentAlignment="Left" AutomationProperties.Name="Hide errors" ToolTip="Show or hide the read-only error terminal. Error capture continues."/>
+                <TextBlock x:Name="ErrorElapsedStatus" Text="Time since last error: unavailable - no errors this session." Foreground="{DynamicResource Diagnostic.Statistics}" FontSize="11" Margin="0,8,0,0"/>
+                <TextBlock x:Name="ErrorAverageStatus" Text="Average interval: unavailable - needs two errors this session." Foreground="{DynamicResource Diagnostic.Statistics}" FontSize="11" Margin="0,6,0,0"/>
+                <Grid x:Name="ErrorsPane" ClipToBounds="True">
+                  <StackPanel>
+                    <ContentControl x:Name="ErrorsSearchHost"/>
+                    <ContentControl x:Name="ErrorsHost"/>
+                  </StackPanel>
+                </Grid>
+              </StackPanel>
+            </Border>
+            <TextBlock Text="Live previews are bounded; full redacted output and timing reports remain on disk. No service is stopped by hiding a pane or closing an idle window." Style="{DynamicResource MutedText}" FontSize="11" Margin="0,12,0,0"/>
           </StackPanel>
         </ScrollViewer>
         <ScrollViewer x:Name="Effects" Visibility="Collapsed" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">

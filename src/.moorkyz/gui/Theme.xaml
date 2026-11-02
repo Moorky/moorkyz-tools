@@ -16,11 +16,19 @@
   <SolidColorBrush x:Key="Focus" Color="{StaticResource Color.Focus}"/>
   <SolidColorBrush x:Key="Text" Color="{StaticResource Color.Text}"/>
   <SolidColorBrush x:Key="Muted" Color="{StaticResource Color.Muted}"/>
+  <SolidColorBrush x:Key="Diagnostic.Timestamp" Color="#B3BED8"/>
+  <SolidColorBrush x:Key="Diagnostic.Trace" Color="#B3BED8"/>
+  <SolidColorBrush x:Key="Diagnostic.Success" Color="#7CE5AD"/>
+  <SolidColorBrush x:Key="Diagnostic.Warning" Color="#FFD280"/>
+  <SolidColorBrush x:Key="Diagnostic.Error" Color="#FF979F"/>
+  <SolidColorBrush x:Key="Diagnostic.Diagnostics" Color="#8ACBFF"/>
+  <SolidColorBrush x:Key="Diagnostic.Statistics" Color="#C7B7FF"/>
+  <SolidColorBrush x:Key="Diagnostic.Reference" Color="#8EDDD8"/>
   <Thickness x:Key="Space.Panel">24</Thickness>
   <CornerRadius x:Key="Radius.Panel">16</CornerRadius>
   <CornerRadius x:Key="Radius.Control">9</CornerRadius>
-  <Duration x:Key="Motion.Duration">0:0:0.18</Duration>
-  <Duration x:Key="Motion.BounceDuration">0:0:0.42</Duration>
+  <Duration x:Key="Motion.Duration">0:0:0.32</Duration>
+  <Duration x:Key="Motion.BounceDuration">0:0:0.56</Duration>
 
   <Style TargetType="Window">
     <Setter Property="Background" Value="{StaticResource Background}"/>
@@ -54,6 +62,42 @@
       <Setter.Value>
         <ControlTemplate>
           <Border BorderBrush="{StaticResource Focus}" BorderThickness="2" CornerRadius="10" Margin="-4"/>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+  <Style TargetType="ListBox">
+    <Setter Property="Background" Value="{StaticResource Background}"/>
+    <Setter Property="Foreground" Value="{StaticResource Text}"/>
+    <Setter Property="BorderBrush" Value="{StaticResource Border}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="Padding" Value="6"/>
+  </Style>
+  <Style TargetType="ListBoxItem">
+    <Setter Property="Foreground" Value="{StaticResource Text}"/>
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="BorderBrush" Value="Transparent"/>
+    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+    <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="ListBoxItem">
+          <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
+                  BorderThickness="1" CornerRadius="6" Padding="8" Margin="0,0,0,4">
+            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"/>
+          </Border>
+          <ControlTemplate.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+              <Setter Property="Background" Value="{StaticResource Raised}"/>
+            </Trigger>
+            <Trigger Property="IsSelected" Value="True">
+              <Setter Property="Background" Value="{StaticResource Raised}"/>
+              <Setter Property="BorderBrush" Value="{StaticResource Focus}"/>
+            </Trigger>
+            <Trigger Property="IsKeyboardFocusWithin" Value="True">
+              <Setter Property="BorderBrush" Value="{StaticResource Focus}"/>
+            </Trigger>
+          </ControlTemplate.Triggers>
         </ControlTemplate>
       </Setter.Value>
     </Setter>
@@ -197,6 +241,16 @@
     </Setter>
   </Style>
   <Style TargetType="TextBox">
+    <Setter Property="Background" Value="{StaticResource Background}"/>
+    <Setter Property="Foreground" Value="{StaticResource Text}"/>
+    <Setter Property="BorderBrush" Value="{StaticResource Border}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="Padding" Value="14"/>
+    <Setter Property="CaretBrush" Value="{StaticResource Focus}"/>
+    <Setter Property="SelectionBrush" Value="#6040D8"/>
+    <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
+  </Style>
+  <Style TargetType="RichTextBox">
     <Setter Property="Background" Value="{StaticResource Background}"/>
     <Setter Property="Foreground" Value="{StaticResource Text}"/>
     <Setter Property="BorderBrush" Value="{StaticResource Border}"/>

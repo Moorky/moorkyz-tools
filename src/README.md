@@ -11,8 +11,8 @@ From the repository root:
 pnpm --dir src install --frozen-lockfile
 pnpm --dir src build
 pnpm --dir src check
-.\moorkyz.cmd help
-.\moorkyz.cmd gui
+node .\moorkyz help
+node .\moorkyz gui
 ```
 
 | Area | Responsibility |
@@ -30,5 +30,5 @@ The CLI also still accepts a legacy root configuration when explicitly supplied
 in another project. A dependency install remains explicit; starting the portal
 must not silently repair an out-of-sync installation.
 
-See the [repository structure](../docs/engineering/repository-structure.md) for
+See the [repository structure](docs/engineering/repository-structure.md) for
 the ownership rules and retained root/container compatibility exceptions.

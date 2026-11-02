@@ -2,7 +2,8 @@ param(
     [Parameter(Mandatory = $true)][string]$Root,
     [Parameter(Mandatory = $true)][string]$EntryPoint,
     [Parameter(Mandatory = $true)][string]$NodePath,
-    [Parameter(Mandatory = $true)][string]$ProjectData
+    [Parameter(Mandatory = $true)][string]$ProjectData,
+    [switch]$Startup
 )
 
 $ErrorActionPreference = 'Stop'
@@ -14,11 +15,11 @@ $references = @(
     [System.Xaml.XamlReader].Assembly.Location,
     [System.Xml.XmlReader].Assembly.Location
 )
-$sources = @('Motion.cs', 'MoorkyzGui.cs') | ForEach-Object { Join-Path $PSScriptRoot $_ }
+$sources = @('Motion.cs', 'TerminalSearch.cs', 'ReportView.cs', 'CommandJournal.cs', 'MoorkyzGui.cs') | ForEach-Object { Join-Path $PSScriptRoot $_ }
 Add-Type -Path $sources -ReferencedAssemblies $references
 $projects = [Text.Encoding]::UTF8.GetString([Convert]::FromBase64String($ProjectData)) | ConvertFrom-Json
 $window = [Moorkyz.ControlGui]::new(
     $PSScriptRoot, $Root, $EntryPoint, $NodePath,
-    [string[]]$projects.names, [string]$projects.defaultProject
+    [string[]]$projects.names, [string]$projects.defaultProject, [bool]$Startup
 )
 $window.Window.ShowDialog() | Out-Null

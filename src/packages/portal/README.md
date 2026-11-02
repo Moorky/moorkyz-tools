@@ -17,8 +17,8 @@ and deterministic ZIP assets. The source viewer renders text, never executes it.
 The portal keeps its nonce-based CSP. Both local service gateways default off
 and acquire no connection or polling until the user enables/opens them.
 
-See [the tool guide](../../../docs/portal/modular-tools.md) and
-[verification](../../../docs/engineering/testing.md). Historical audits remain
+See [the tool guide](../../docs/portal/modular-tools.md) and
+[verification](../../docs/engineering/testing.md). Historical audits remain
 unchanged; the old SDK, large Playground and Studio are no longer active scope.
 
 The footer links to the separate [Moorkyz Evidence workspace](https://evidence.moorkyz.com).

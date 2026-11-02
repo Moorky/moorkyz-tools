@@ -2,7 +2,7 @@
 
 const fs = require("node:fs");
 const { spawnSync } = require("node:child_process");
-const { scopedPath } = require("../../cli/helpers/storage.cjs");
+const { scopedPath } = require("../../../.moorkyz/scripts/helpers/storage.cjs");
 
 function checkSyntax(root, files) {
   const base = fs.realpathSync(root);
