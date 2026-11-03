@@ -11,6 +11,10 @@ describe older revisions and are not current product requirements.
 
 ## Required practice
 
+- For agent task ownership and handoffs, use the
+  [scheduler](src/AGENT_SCHEDULER.md). The existing [control-center task
+  schedule](src/docs/engineering/control-center-task-schedule.md) remains the
+  project backlog; do not duplicate its history.
 - Inspect the existing implementation and relevant documentation before edits.
 - Keep tools independent. Portal navigation must not depend on an individual tool.
 - Keep every tool's canonical source under `tools/` in this repository. Tools
